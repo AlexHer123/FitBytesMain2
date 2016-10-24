@@ -8,8 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.content.Intent;
 
 public class MainActivity extends AppCompatActivity {
+
+    Integer num = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,15 +20,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+    }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+    public void mealPlanButtonOnClick(View view){
+        Intent intent = new Intent(this, MealPlan.class);
+        startActivity(intent);
+    }
+
+    protected static boolean goalSet = false;
+    protected static DefaultGoals goal1 = new DefaultGoals();
+    protected static DefaultGoals goal2 = new DefaultGoals();
+    public void fitnessTrackerButtonOnClick(View view) {
+        Intent intent = new Intent(this, FitnessTracker.class);
+        startActivity(intent);
+    }
+
+    public void ingredientButtonOnClick(View view) {
+        Intent intent = new Intent(this, Ingredients.class);
+        startActivity(intent);
+    }
+
+    public void recipeButtonOnClick(View view){
+        Intent intent = new Intent(this, Recipes.class);
+        startActivity(intent);
     }
 
     @Override
