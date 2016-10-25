@@ -8,9 +8,9 @@ import android.view.View;
 
 public class FitnessTracker extends AppCompatActivity {
 
-    DefaultGoals goal1;
-    DefaultGoals goal2;
-    boolean check1 = false;
+    private DefaultGoals goal1;
+    private DefaultGoals goal2;
+    private boolean check1 = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,5 +37,4 @@ public class FitnessTracker extends AppCompatActivity {
         goal1 = MainActivity.goal1;
         goal2 = MainActivity.goal2;
     }
-
 }
