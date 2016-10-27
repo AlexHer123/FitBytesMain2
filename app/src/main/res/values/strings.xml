@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">FitBytes</string>
     <string name="action_settings">Settings</string>
+    <string name="fitness_tracker">Fitness Tracker</string>
+    <string name="daily_goal_1">Daily Goal 1</string>
+    <string name="daily_goal_2">Daily Goal 1</string>
 </resources>

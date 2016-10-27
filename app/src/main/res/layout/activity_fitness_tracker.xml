@@ -12,7 +12,7 @@
     tools:context="com.example.alex.fitbytes.FitnessTracker">
 
     <TextView
-        android:text="Fitness Tracker"
+        android:text="@string/fitness_tracker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -29,7 +29,7 @@
         android:layout_below="@+id/textView4"
         android:layout_centerHorizontal="true">
 
-        <TextView
+        <!--<TextView
             android:text="Weekly Goal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,31 +40,31 @@
             android:text="Weekly Goal 1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/weeklyGoal1" />
+            android:id="@+id/weeklyGoal1" />-->
 
         <TextView
-            android:text="Daily Goal"
+            android:text="Daily Goals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/textView6"
             android:textSize="20sp" />
 
         <CheckBox
-            android:text="Daily Goal 1"
+            android:text="@string/daily_goal_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/dailyGoal1"
-            android:onClick="goal1Checked"
-            android:checked="false"
+            android:onClick="goalCheck"
             android:textColorLink="?attr/colorAccent" />
 
         <CheckBox
-            android:text="Daily Goal 2"
+            android:text="@string/daily_goal_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/dailyGoal2" />
+            android:id="@+id/dailyGoal2"
+            android:onClick="goalCheck"/>
 
-        <TextView
+        <!--<TextView
             android:text="Your Goals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
             android:text="Your Goal 2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/checkBox5" />
+            android:id="@+id/checkBox5" />-->
 
     </LinearLayout>
 </RelativeLayout>
