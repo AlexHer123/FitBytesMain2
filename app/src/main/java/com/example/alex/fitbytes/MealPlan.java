@@ -25,6 +25,7 @@ public class MealPlan extends AppCompatActivity {
     private List<String> mealList;
     private String month;
     private String date;
+    private DBHandler db = new DBHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +41,9 @@ public class MealPlan extends AppCompatActivity {
             numbers[i] = date.get(Calendar.DAY_OF_MONTH);
             date.add(Calendar.DAY_OF_MONTH, 1);
         }
-        mealList = new ArrayList<String>();
-        mealList.add("Oct 19");
-        mealList.add("Oct 25");
-        mealList.add("Nov 4");
+//        db.removeAll(); // USED TEMPORARILY TO CLEAR DATABASE
+        mealList = db.getAllPlans();
+
         createDropdowns();
         createMeals();
 
@@ -52,8 +52,17 @@ public class MealPlan extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                mealList.add(makeMealPlan());
+                String plan = makeMealPlan();
+                mealList.add(plan);
                 MealPlan.this.createMeals();
+                db.addPlan(plan);
+                // Reading all shops
+                Log.d("Reading: ", "Reading all shops..");
+                List<String> allDates = db.getAllPlans();
+
+                for (String tempDate : allDates) {
+                    Log.d("Date: ", tempDate);
+                }
 
                 // Displays a message
                 Context context = getApplicationContext();
