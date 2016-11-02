@@ -84,7 +84,7 @@
                 android:layout_alignTop="@+id/monthSpinner" />
 
             <Button
-                android:id="@+id/submitMeal"
+                android:id="@+id/addMeal"
                 android:text="+ add"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

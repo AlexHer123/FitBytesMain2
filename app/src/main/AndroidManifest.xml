@@ -21,7 +21,7 @@
         <activity android:name=".MealPlan" />
         <activity android:name=".FitnessTracker" />
         <activity android:name=".Ingredients" />
-        <activity android:name=".Recipes"></activity>
+        <activity android:name=".Recipes" />
     </application>
 
 </manifest>
