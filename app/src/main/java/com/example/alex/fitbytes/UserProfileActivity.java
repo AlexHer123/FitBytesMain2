@@ -1,20 +1,13 @@
 package com.example.alex.fitbytes;
 
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.TextView;
 
+public class UserProfileActivity extends AppCompatActivity {
 
-/**
- * Created by shaun on 10/24/2016.
- */
-
-public class UserProfile  extends AppCompatActivity{
-
-
-
-    int height, weight;
+    double height, weight;
     double BMI;
     boolean isHealthyBMI;
 
@@ -22,15 +15,15 @@ public class UserProfile  extends AppCompatActivity{
     int healthyBMImax = 25;
     int BMIconversionFactor = 703;
 
-    EditText heightEditText = (EditText)findViewById(R.id.userProfileUserHeight);
-    EditText weightEditText = (EditText)findViewById(R.id.userProfileUserWeight);
-    TextView BMItextView = (TextView)findViewById(R.id.userProfileBMI);
-    TextView isBMIhealthyTextView = (TextView)findViewById(R.id.userProfileIsBMIhealthy);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        EditText heightEditText = (EditText)findViewById(R.id.userProfileUserHeight);
+        EditText weightEditText = (EditText)findViewById(R.id.userProfileUserWeight);
+        TextView BMItextView = (TextView)findViewById(R.id.userProfileUserBMI);
+        TextView isBMIhealthyTextView = (TextView)findViewById(R.id.userProfileIsBMIhealthy);
 
         height = 70;
         weight = 180;
@@ -41,20 +34,19 @@ public class UserProfile  extends AppCompatActivity{
         BMItextView.setText(""+BMI);
 
         if(isHealthyBMI){
-            isBMIhealthyTextView.setText("Your BMI is in the healthy range");
+            isBMIhealthyTextView.setText("Your BMI is in the healthy range" + healthyBMImin +"-" + healthyBMImax);
         }
         else{
-            isBMIhealthyTextView.setText("Your BMI is not in the healthy range");
+            isBMIhealthyTextView.setText("Your BMI is not in the healthy range of " + healthyBMImin +"-" + healthyBMImax);
         }
 
     }
 
-
-    public int getHeight() {
+    public double getHeight() {
         return height;
     }
 
-    public int getWeight() {
+    public double getWeight() {
         return weight;
     }
 

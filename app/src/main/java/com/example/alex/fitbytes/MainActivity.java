@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void userProfileButtonOnClick(View view){
-        Intent intent = new Intent(this, UserProfile.class);
+        Intent intent = new Intent(this, UserProfileActivity.class);
         startActivity(intent);
     }
 
