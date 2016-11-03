@@ -25,6 +25,7 @@ public class UserProfile  extends AppCompatActivity{
     EditText heightEditText = (EditText)findViewById(R.id.userProfileUserHeight);
     EditText weightEditText = (EditText)findViewById(R.id.userProfileUserWeight);
     TextView BMItextView = (TextView)findViewById(R.id.userProfileBMI);
+    TextView isBMIhealthyTextView = (TextView)findViewById(R.id.userProfileIsBMIhealthy);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,13 @@ public class UserProfile  extends AppCompatActivity{
         heightEditText.setText(""+height, TextView.BufferType.EDITABLE);
         weightEditText.setText(""+weight, TextView.BufferType.EDITABLE);
         BMItextView.setText(""+BMI, TextView.BufferType.EDITABLE);
+
+        if(isHealthyBMI){
+            isBMIhealthyTextView.setText("Your BMI is in the healthy range");
+        }
+        else{
+            isBMIhealthyTextView.setText("Your BMI is not in the healthy range");
+        }
 
     }
 

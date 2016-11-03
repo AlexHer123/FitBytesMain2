@@ -7,27 +7,17 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/userProfileBMI"
-        android:layout_alignLeft="@+id/userProfileUserWeight"
-        android:layout_alignStart="@+id/userProfileUserWeight"
-        android:id="@+id/userProfileUserBMI"
-        android:textSize="30sp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginTop="98dp"
         android:id="@+id/userProfileIsBMIhealthy"
         android:textSize="30sp"
         android:layout_below="@+id/userProfileUserBMI"
-        android:layout_toRightOf="@+id/userProfileBMI"
-        android:layout_toEndOf="@+id/userProfileBMI"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_alignRight="@+id/userProfileUserWeight"
+        android:layout_alignEnd="@+id/userProfileUserWeight"
+        android:layout_alignLeft="@+id/userProfileWeight"
+        android:layout_alignStart="@+id/userProfileWeight" />
 
     <TextView
-        android:text="Weight"
+        android:text="Weight(lbs)"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="69dp"
@@ -38,19 +28,6 @@
         android:layout_alignStart="@+id/userProfileHeight" />
 
     <TextView
-        android:text="Height"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="38dp"
-        android:layout_marginStart="38dp"
-        android:id="@+id/userProfileHeight"
-        android:textSize="30sp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="11dp" />
-
-    <TextView
         android:text="BMI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -59,9 +36,7 @@
         android:textSize="30sp"
         android:layout_below="@+id/userProfileWeight"
         android:layout_alignLeft="@+id/userProfileWeight"
-        android:layout_alignStart="@+id/userProfileWeight"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp" />
+        android:layout_alignStart="@+id/userProfileWeight" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -70,11 +45,12 @@
         android:ems="10"
         android:layout_above="@+id/userProfileWeight"
         android:layout_toRightOf="@+id/userProfileWeight"
-        android:layout_toEndOf="@+id/userProfileWeight"
         android:layout_marginLeft="14dp"
         android:layout_marginStart="14dp"
         android:id="@+id/userProfileUserHeight"
-        android:editable="true" />
+        android:editable="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -84,6 +60,34 @@
         android:layout_alignTop="@+id/userProfileWeight"
         android:layout_alignLeft="@+id/userProfileUserHeight"
         android:layout_alignStart="@+id/userProfileUserHeight"
-        android:id="@+id/userProfileUserWeight" />
+        android:id="@+id/userProfileUserWeight"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userProfileUserBMI"
+        android:textSize="30sp"
+        android:layout_alignBaseline="@+id/userProfileBMI"
+        android:layout_alignBottom="@+id/userProfileBMI"
+        android:layout_alignLeft="@+id/userProfileUserWeight"
+        android:layout_alignStart="@+id/userProfileUserWeight"
+        android:layout_marginLeft="42dp"
+        android:layout_marginStart="42dp" />
+
+    <TextView
+        android:text="Height(in)"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginStart="12dp"
+        android:id="@+id/userProfileHeight"
+        android:textSize="30sp"
+        android:layout_marginTop="11dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
