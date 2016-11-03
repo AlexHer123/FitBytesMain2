@@ -34,7 +34,8 @@
         <activity
             android:name=".UpcomingPlans"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserProfileActivity"></activity>
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".UserStatsActivity"></activity>
     </application>
 
 </manifest>
