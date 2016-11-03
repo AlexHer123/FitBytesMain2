@@ -4,19 +4,6 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="98dp"
-        android:id="@+id/userProfileIsBMIhealthy"
-        android:textSize="30sp"
-        android:layout_below="@+id/userProfileUserBMI"
-        android:layout_alignRight="@+id/userProfileUserWeight"
-        android:layout_alignEnd="@+id/userProfileUserWeight"
-        android:layout_alignLeft="@+id/userProfileWeight"
-        android:layout_alignStart="@+id/userProfileWeight" />
-
-    <TextView
         android:text="Weight(lbs)"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,5 +76,18 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userProfileIsBMIhealthy"
+        android:textSize="30sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="78dp"
+        android:layout_alignLeft="@+id/userProfileBMI"
+        android:layout_alignStart="@+id/userProfileBMI" />
 
 </RelativeLayout>

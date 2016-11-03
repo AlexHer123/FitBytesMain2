@@ -18,15 +18,18 @@ public class UserProfileActivity extends AppCompatActivity {
     int healthyBMImax = 25;
     int BMIconversionFactor = 703;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
         final EditText heightEditText = (EditText)findViewById(R.id.userProfileUserHeight);
-        EditText weightEditText = (EditText)findViewById(R.id.userProfileUserWeight);
-        TextView BMItextView = (TextView)findViewById(R.id.userProfileUserBMI);
-        TextView isBMIhealthyTextView = (TextView)findViewById(R.id.userProfileIsBMIhealthy);
+        final EditText weightEditText = (EditText)findViewById(R.id.userProfileUserWeight);
+        final TextView isBMIhealthyTextView= (TextView)findViewById(R.id.userProfileIsBMIhealthy);
+        final TextView BMItextView = (TextView)findViewById(R.id.userProfileUserBMI);
+
+
 
         height = 70;
         weight = 180;
@@ -34,32 +37,44 @@ public class UserProfileActivity extends AppCompatActivity {
 
         heightEditText.setText(""+height);
         weightEditText.setText(""+weight);
-        BMItextView.setText(""+BMI);
+        BMItextView.setText(BMItoString());
 
-        if(isHealthyBMI){
-            isBMIhealthyTextView.setText("Your BMI is in the healthy range" + healthyBMImin +"-" + healthyBMImax);
-        }
-        else{
-            isBMIhealthyTextView.setText("Your BMI is not in the healthy range of " + healthyBMImin +"-" + healthyBMImax);
-        }
+        isBMIhealthyTextView.setText(toHealthyBMIstring());
 
-        heightEditText.addTextChangedListener(new TextWatcher() {
+        TextWatcher heightTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
-            public void afterTextChanged(Editable s) {
-
-                height =  s.length();
-                heightEditText.setText(""+height);
-
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                height = Double.parseDouble(charSequence.toString());
+                calculateBMI();
+                BMItextView.setText(BMItoString());
+                isBMIhealthyTextView.setText(toHealthyBMIstring());
             }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-        });
-
-
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+        heightEditText.addTextChangedListener(heightTextWatcher);
 
 
+        TextWatcher weightTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                weight = Double.parseDouble(charSequence.toString());
+                calculateBMI();
+                BMItextView.setText(BMItoString());
+                isBMIhealthyTextView.setText(toHealthyBMIstring());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+        };
+        weightEditText.addTextChangedListener(weightTextWatcher);
     }
 
     public double getHeight() {
@@ -80,7 +95,22 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void calculateBMI(){
         BMI = BMIconversionFactor*(weight/(height*height));     // 703*weight/height^2
+        isHealthyBMI = false;
         if (BMI > healthyBMImin && BMI < healthyBMImax)
             isHealthyBMI = true;
+    }
+
+    private String toHealthyBMIstring(){
+        if(isHealthyBMI)
+            return "Your BMI is in the healthy range of " + healthyBMImin +"-" + healthyBMImax;
+        else
+            return "Your BMI is not in the healthy range of " + healthyBMImin +"-" + healthyBMImax;
+    }
+
+    private String BMItoString(){
+        String bmiString;
+        bmiString = Double.toString(BMI);
+        bmiString = bmiString.substring(0,5);
+        return bmiString;
     }
 }
