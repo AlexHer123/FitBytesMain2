@@ -1,5 +1,6 @@
 package com.example.alex.fitbytes;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -29,10 +30,19 @@ public class UserProfileActivity extends AppCompatActivity {
         final TextView isBMIhealthyTextView= (TextView)findViewById(R.id.userProfileIsBMIhealthy);
         final TextView BMItextView = (TextView)findViewById(R.id.userProfileUserBMI);
 
+        SharedPreferences preferences = getApplicationContext().getSharedPreferences("userProfilePref", MODE_PRIVATE);
+        final SharedPreferences.Editor prefEditor = preferences.edit();
 
+//        prefEditor.clear();
+//        prefEditor.commit();
 
-        height = 70;
-        weight = 180;
+        // load height and weight from sharedPreferences with default values 70 and 170
+        height = Double.parseDouble(preferences.getString("HEIGHT", "70"));
+        weight = Double.parseDouble(preferences.getString("WEIGHT", "170"));
+
+        //height = 70;
+        //weight = 170;
+
         calculateBMI();
 
         heightEditText.setText(""+height);
@@ -47,10 +57,22 @@ public class UserProfileActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                height = Double.parseDouble(charSequence.toString());
-                calculateBMI();
-                BMItextView.setText(BMItoString());
-                isBMIhealthyTextView.setText(toHealthyBMIstring());
+                try {
+                    height = Double.parseDouble(charSequence.toString());
+
+                    // convert height to string and store in shared preferences
+                    prefEditor.putString("HEIGHT", Double.toString(height));
+                    prefEditor.commit();
+
+                    calculateBMI();
+                    BMItextView.setText(BMItoString());
+                    isBMIhealthyTextView.setText(toHealthyBMIstring());
+                }
+                //clear BMI fields when editText is empty
+                catch(IllegalArgumentException e){
+                    BMItextView.setText("");
+                    BMI = 0;
+                }
             }
 
             @Override
@@ -65,10 +87,22 @@ public class UserProfileActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                weight = Double.parseDouble(charSequence.toString());
-                calculateBMI();
-                BMItextView.setText(BMItoString());
-                isBMIhealthyTextView.setText(toHealthyBMIstring());
+                try {
+                    weight = Double.parseDouble(charSequence.toString());
+
+                    // convert weight to string and store in shared preferences
+                    prefEditor.putString("WEIGHT", Double.toString(weight));
+                    prefEditor.commit();
+
+                    calculateBMI();
+                    BMItextView.setText(BMItoString());
+                    isBMIhealthyTextView.setText(toHealthyBMIstring());
+                }
+                //clear BMI fields when editText is empty
+                catch(IllegalArgumentException e){
+                    BMItextView.setText("");
+                    BMI = 0;
+                }
             }
 
             @Override
