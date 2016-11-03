@@ -5,8 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,10 +18,14 @@ import java.util.List;
 public class DBHandler extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "mealsPlanned";
+    private static final String DATABASE_NAME = "fitbytes.db";
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String col_1_ID = "ID";
-    private static final String col_2_DATE = "date";
+    private static final String col_2_DATE = "Date";
+    private static final String col_3_RECIPE = "Recipe";
+
+    private static final String TABLE_DATE = "currentDate";
+    private static final String TD_col_1_DATE = "Date";
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,8 +34,11 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
-                + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " TEXT" + ")";
+                + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " TEXT, " + col_3_RECIPE + " TEXT" + ")";
         db.execSQL(CREATE_MEALPLAN_TABLE);
+
+        String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
+        db.execSQL(CREATE_CURRENT_DATE_TABLE);
     }
 
     @Override
@@ -38,22 +47,34 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // Adding new shop
-    public void addPlan(String plan) {
+    // Adding new meal
+    public boolean addPlan(String date, String recipe) {
+        // Search for duplicate date
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(col_2_DATE, plan);
-        // Inserting Row
-        db.insert(TABLE_MEALPLAN, null, values);
-        db.close(); // Closing database connection
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // Only add if date does not exist
+        if (!cursor.moveToFirst()){
+            ContentValues values = new ContentValues();
+            values.put(col_2_DATE, date);
+            values.put(col_3_RECIPE, recipe);
+            // Inserting Row
+            db.insert(TABLE_MEALPLAN, null, values);
+            return true;
+        }
+
+        return false;
+
     }
+
 
     // Getting All Shops
     public List<String> getAllPlans() {
         List<String> planList = new ArrayList<String>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN;
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " ORDER BY " + col_2_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -61,19 +82,46 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                String tempDate = cursor.getString(1);
-                planList.add(tempDate);
+                //mealContainer temp = new mealContainer(cursor.getString(1), cursor.getString(2)); // cursor.getString(1);
+                planList.add(cursor.getString(1) + " " + cursor.getString(2));
             } while (cursor.moveToNext());
         }
+
         return planList;
     }
 
-    // Empty the table
-    public void removeAll(){
-        List<String> planList = new ArrayList<String>();
+    public void removePlan(String date){
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = '" + date + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int planID = cursor.getInt(0);
+            db.delete(TABLE_MEALPLAN, col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+    }
+
+    public void addCurrentDate(int date){
+        // Search for duplicate date
+        String selectQuery = "SELECT * FROM " + TABLE_DATE;// + " WHERE " + col_2_DATE + " = '" + date + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // Only add if date does not exist
+        if (!cursor.moveToFirst()){
+            ContentValues values = new ContentValues();
+            values.put(TD_col_1_DATE, date);
+            // Inserting Row
+            db.insert(TABLE_DATE, null, values);
+
+        }
+
+    }
+
+    public List<Integer> getAllDates() {
+        List<Integer> dateList = new ArrayList<Integer>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN;
+        String selectQuery = "SELECT * FROM " + TABLE_DATE+ " ORDER BY " + TD_col_1_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -81,10 +129,11 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                int planID = cursor.getInt(0);
-                db.delete(TABLE_MEALPLAN, col_1_ID + " = ?", new String[] { String.valueOf(planID) });
+                dateList.add(cursor.getInt(0));
             } while (cursor.moveToNext());
         }
+
+        return dateList;
     }
 
 }

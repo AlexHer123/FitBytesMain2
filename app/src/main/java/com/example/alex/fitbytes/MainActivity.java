@@ -1,18 +1,28 @@
 package com.example.alex.fitbytes;
 
 import android.os.Bundle;
+import android.support.annotation.IntegerRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Calendar;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     Integer num = 0;
+    private DBHandler db = new DBHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +30,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate = df.format(c.getTime());
+        int date = Integer.parseInt(formattedDate);
+        db.addCurrentDate(date);
+
+        List<Integer> dateList = db.getAllDates();
+        for (int a : dateList){
+            Log.d("HERE IT IS: ", Integer.toString(a));
+        }
     }
 
     public void mealPlanButtonOnClick(View view){
         Intent intent = new Intent(this, MealPlan.class);
+//        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2
         startActivity(intent);
     }
 
