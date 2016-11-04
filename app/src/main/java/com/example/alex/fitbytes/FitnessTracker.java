@@ -1,65 +1,92 @@
 package com.example.alex.fitbytes;
 
-import android.graphics.Color;
+import android.app.Dialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class FitnessTracker extends AppCompatActivity {
     private ArrayList<Goal> goals;
-    private Goal goal1;
-    private Goal goal2;
-    //private boolean check1 = false;
+    private DBHandler goalsDatabase = new DBHandler(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fitness_tracker);
-        setGoals();
-        ((CheckBox) findViewById(R.id.dailyGoal1)).setText(goal1.getGoal());
-        ((CheckBox) findViewById(R.id.dailyGoal2)).setText(goal2.getGoal());
+        //if(goals == null) goals = new ArrayList<>();
+        Button addButton = (Button) findViewById(R.id.addGoal);
+        addButton.setOnClickListener(new View.OnClickListener() {
+                                         @Override
+                                         public void onClick(View v) {
+                                             goals.add(new DefaultGoal());
+                                             //goalsDatabase.
+                                             //createGoals();
+                                             CharSequence text = "A new goal has added.";
+                                             Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+                                             toast.show();
+                                         }
+                                     }
+
+        );
     }
 
-    public void goalCheck(View view){
-        //CheckBox checkbox = (CheckBox) findViewById(R.id.dailyGoal1);
-        /*if (check1) {
-            checkbox.setText(goal1.getGoal());
-            check1 = false;
+    private void createGoals(){
+        ListView goalsListView = (ListView)findViewById(R.id.daily_goals);
+        ArrayList<String> goalie = new ArrayList<>();
+        for(Goal goal : goals){
+            goalie.add(goal.getDescription());
         }
-        else{
-            checkbox.setText(goal1.getGoal() + " (DONE)");
-            check1 = true;
-        }*/
-        boolean checked = ((CheckBox) view).isChecked();
-        switch(view.getId()) {
-            case R.id.dailyGoal1:
-                if (checked) {
-                    ((CheckBox) view).setText(goal1.getGoal() + " (DONE)");
-                    goal1.setStatus(true);
-                }
-                else {
-                    ((CheckBox) view).setText(goal1.getGoal());
-                    goal1.setStatus(false);
-                }
-                break;
-            case R.id.dailyGoal2:
-                if (checked) {
-                    ((CheckBox) view).setText(goal2.getGoal() + " (DONE)");
-                    goal2.setStatus(true);
-                }
-                else {
-                    ((CheckBox) view).setText(goal2.getGoal());
-                    goal1.setStatus(false);
-                }
-                break;
-        }
-    }
+        ArrayAdapter<String> myArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, goalie);
+        goalsListView.setAdapter(myArrayAdapter);
 
-    private void setGoals() {
-        goal1 = MainActivity.goal1;
-        goal2 = MainActivity.goal2;
-    }
-}
+        /*goalsListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                final String selectedRow = parent.getItemAtPosition(position).toString();
+                final Dialog dialog = new Dialog(FitnessTracker.this);
+                //dialog.setTitle();
+                dialog.setContentView(R.layout.activity_meal_popup);
+                *//*TextView mealText = (TextView)dialog.findViewById(R.id.mp_meal_text);
+                mealText.setText(thisMeal);*//*
+                dialog.show();
+
+                Button editButton = (Button)dialog.findViewById((R.id.mp_button_edit));
+                editButton.setOnClickListener(new AdapterView.OnClickListener(){
+
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+
+                    }
+                });
+                // Set up listener for delete button
+                Button deleteButton = (Button)dialog.findViewById(R.id.mp__button_delete);
+                deleteButton.setOnClickListener(new AdapterView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //db.removePlan(thisDate);
+                        createGoals();
+                        dialog.dismiss();
+
+                        // Displays a message
+                        Context context = getApplicationContext();
+                        CharSequence text = "Goal Removed";
+                        int duration = Toast.LENGTH_SHORT;
+                        Toast toast = Toast.makeText(context, text, duration);
+                        toast.show();
+                    }
+                });
+            }
+            });*/
+        }
+        }
+

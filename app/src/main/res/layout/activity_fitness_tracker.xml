@@ -41,6 +41,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/weeklyGoal1" />-->
+        <Button android:id="@+id/addGoal"
+            android:text="Add a Goal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:text="Daily Goals"
@@ -49,7 +53,8 @@
             android:id="@+id/textView6"
             android:textSize="20sp" />
 
-        <CheckBox
+
+        <!--<CheckBox
             android:text="@string/daily_goal_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +67,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/dailyGoal2"
-            android:onClick="goalCheck"/>
+            android:onClick="goalCheck"/>-->
+        <ListView
+            android:id="@+id/daily_goals"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </ListView>
+
+
+
 
         <!--<TextView
             android:text="Your Goals"

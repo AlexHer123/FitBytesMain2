@@ -23,10 +23,12 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String col_1_ID = "ID";
     private static final String col_2_DATE = "Date";
     private static final String col_3_RECIPE = "Recipe";
+    //private static final String col_4_GOAL_DESC = "Description";
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
 
+    private static final String TABLE_FITNESS = "fitnessTracker";
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -39,6 +41,10 @@ public class DBHandler extends SQLiteOpenHelper {
 
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
+
+        /*String CREATE_FITNESS_TRACKER_TABLE =
+                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",
+                        TABLE_FITNESS, col_1_ID, col_2_DATE, col_3)*/
     }
 
     @Override
