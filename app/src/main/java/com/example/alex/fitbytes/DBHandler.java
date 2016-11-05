@@ -122,16 +122,16 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        // Remove old date
         if (cursor.moveToFirst()) {
             int planID = cursor.getInt(0);
             db.delete(TABLE_DATE, TD_col_1_DATE + " = ?", new String[]{String.valueOf(planID)});
-            ContentValues values = new ContentValues();
-            values.put(TD_col_1_DATE, date);
-            // Inserting Row
-            db.insert(TABLE_DATE, null, values);
-
         }
-
+        // Add new current date
+        ContentValues values = new ContentValues();
+        values.put(TD_col_1_DATE, date);
+        // Inserting Row
+        db.insert(TABLE_DATE, null, values);
     }
 
     public int getCurrentDate() {

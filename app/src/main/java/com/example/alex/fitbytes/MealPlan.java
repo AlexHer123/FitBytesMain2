@@ -56,7 +56,6 @@ public class MealPlan extends AppCompatActivity {
                 displayPopup("Edit canceled");
             }
         });
-
         setEditVisibility(View.INVISIBLE);
 
         // Set add button listener

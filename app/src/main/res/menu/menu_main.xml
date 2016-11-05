@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.alex.fitbytes.MainActivity">
     <item
+        android:id="@+id/action_mealPlan"
+        android:orderInCategory="100"
+        android:title="Meal Plan"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="@string/action_settings"

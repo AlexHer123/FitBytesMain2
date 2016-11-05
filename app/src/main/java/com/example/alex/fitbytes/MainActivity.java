@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
         db.addCurrentDate(date);
-
     }
 
     public void mealPlanButtonOnClick(View view){
