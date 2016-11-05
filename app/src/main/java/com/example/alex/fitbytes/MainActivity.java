@@ -37,10 +37,6 @@ public class MainActivity extends AppCompatActivity {
         int date = Integer.parseInt(formattedDate);
         db.addCurrentDate(date);
 
-        List<Integer> dateList = db.getAllDates();
-        for (int a : dateList){
-            Log.d("HERE IT IS: ", Integer.toString(a));
-        }
     }
 
     public void mealPlanButtonOnClick(View view){

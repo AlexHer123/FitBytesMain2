@@ -17,8 +17,9 @@ import java.util.List;
 
 public class DBHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "fitbytes.db";
+
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String col_1_ID = "ID";
     private static final String col_2_DATE = "Date";
@@ -34,11 +35,13 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
-                + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " TEXT, " + col_3_RECIPE + " TEXT" + ")";
+                + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " INTEGER, " + col_3_RECIPE + " INTEGER" + ")";
         db.execSQL(CREATE_MEALPLAN_TABLE);
 
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
+
+
     }
 
     @Override
@@ -48,9 +51,9 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Adding new meal
-    public boolean addPlan(String date, String recipe) {
+    public boolean addPlan(int date, int recipe) {
         // Search for duplicate date
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = '" + date + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -68,8 +71,19 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
+    // Get the recipe for a meal plan
+    public int getMealRecipe(int date){
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst())
+            return cursor.getInt(2);
+        return -1;
+    }
 
-    // Getting All Shops
+
+
+    // Getting All Meal Plans
     public List<String> getAllPlans() {
         List<String> planList = new ArrayList<String>();
 
@@ -82,16 +96,15 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                //mealContainer temp = new mealContainer(cursor.getString(1), cursor.getString(2)); // cursor.getString(1);
-                planList.add(cursor.getString(1) + " " + cursor.getString(2));
+                planList.add(cursor.getInt(1) + " " + cursor.getInt(2));
             } while (cursor.moveToNext());
         }
 
         return planList;
     }
 
-    public void removePlan(String date){
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = '" + date + "'";
+    public void removePlan(int date){
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -106,34 +119,29 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // Only add if date does not exist
-        if (!cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
+            int planID = cursor.getInt(0);
+            db.delete(TABLE_DATE, TD_col_1_DATE + " = ?", new String[]{String.valueOf(planID)});
             ContentValues values = new ContentValues();
             values.put(TD_col_1_DATE, date);
-            // Inserting Row
             db.insert(TABLE_DATE, null, values);
-
         }
-
     }
 
-    public List<Integer> getAllDates() {
-        List<Integer> dateList = new ArrayList<Integer>();
+    public int getCurrentDate() {
+        int date = -1;
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_DATE+ " ORDER BY " + TD_col_1_DATE + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_DATE;// + " ORDER BY " + TD_col_1_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
-            do {
-                dateList.add(cursor.getInt(0));
-            } while (cursor.moveToNext());
+                date = cursor.getInt(0);
         }
-
-        return dateList;
+        return date;
     }
 
 }
