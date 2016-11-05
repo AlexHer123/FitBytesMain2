@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -15,7 +16,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class FitnessTracker extends AppCompatActivity {
+public class FitnessTracker extends MainActivity {
     private ArrayList<Goal> goals;
     private DBHandler goalsDatabase = new DBHandler(this);
 
@@ -38,6 +39,15 @@ public class FitnessTracker extends AppCompatActivity {
                                      }
 
         );
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_fitnessTracker) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void createGoals(){

@@ -2,10 +2,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.alex.fitbytes.MainActivity">
+
+    <item
+        android:id="@+id/action_userProfile"
+        android:orderInCategory="100"
+        android:title="User Name"
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_mealPlan"
         android:orderInCategory="100"
         android:title="Meal Plan"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_recipe"
+        android:orderInCategory="100"
+        android:title="Recipes"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_pantry"
+        android:orderInCategory="100"
+        android:title="Pantry"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_fitnessTracker"
+        android:orderInCategory="100"
+        android:title="Fitness Tracker"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings"

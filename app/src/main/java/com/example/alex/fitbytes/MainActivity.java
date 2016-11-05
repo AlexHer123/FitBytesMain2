@@ -28,8 +28,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // Creates a toolbar for MainActivity but throws the exception for other classes
+        try {
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+        }catch (IllegalStateException e){}
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -38,31 +41,31 @@ public class MainActivity extends AppCompatActivity {
         db.addCurrentDate(date);
     }
 
-    public void mealPlanButtonOnClick(View view){
-        Intent intent = new Intent(this, MealPlan.class);
-//        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2
-        startActivity(intent);
-    }
-
-    public void fitnessTrackerButtonOnClick(View view) {
-        Intent intent = new Intent(this, FitnessTracker.class);
-        startActivity(intent);
-    }
-
-    public void ingredientButtonOnClick(View view) {
-        Intent intent = new Intent(this, Ingredients.class);
-        startActivity(intent);
-    }
-
-    public void recipeButtonOnClick(View view){
-        Intent intent = new Intent(this, Recipes.class);
-        startActivity(intent);
-    }
-
-    public void userProfileButtonOnClick(View view){
-        Intent intent = new Intent(this, UserProfileActivity.class);
-        startActivity(intent);
-    }
+//    public void mealPlanButtonOnClick(View view){
+//        Intent intent = new Intent(this, MealPlan.class);
+////        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2
+//        startActivity(intent);
+//    }
+//
+//    public void fitnessTrackerButtonOnClick(View view) {
+//        Intent intent = new Intent(this, FitnessTracker.class);
+//        startActivity(intent);
+//    }
+//
+//    public void ingredientButtonOnClick(View view) {
+//        Intent intent = new Intent(this, Ingredients.class);
+//        startActivity(intent);
+//    }
+//
+//    public void recipeButtonOnClick(View view){
+//        Intent intent = new Intent(this, Recipes.class);
+//        startActivity(intent);
+//    }
+//
+//    public void userProfileButtonOnClick(View view){
+//        Intent intent = new Intent(this, UserProfileActivity.class);
+//        startActivity(intent);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +82,36 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        if (id == R.id.action_userProfile) {
+            Intent intent = new Intent(this, UserProfileActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_mealPlan) {
+            Intent intent = new Intent(this, MealPlan.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_recipe) {
+            Intent intent = new Intent(this, Recipes.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_pantry) {
+            Intent intent = new Intent(this, Ingredients.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.action_fitnessTracker) {
+            Intent intent = new Intent(this, FitnessTracker.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            return true;
+        }
         if (id == R.id.action_settings) {
             return true;
         }

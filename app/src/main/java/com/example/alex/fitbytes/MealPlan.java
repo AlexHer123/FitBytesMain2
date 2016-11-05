@@ -5,7 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -25,7 +28,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-public class MealPlan extends AppCompatActivity {
+public class MealPlan extends MainActivity {
 
     private String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private List<Integer> allDays = new ArrayList<Integer>();
@@ -78,7 +81,6 @@ public class MealPlan extends AppCompatActivity {
 
                 if (!editMeal) {
                     boolean added = db.addPlan(selectionDate, selectedRecipe);
-
                     // Displays a message
                     if (added)
                         message = "Meal Plan Added";
@@ -95,11 +97,19 @@ public class MealPlan extends AppCompatActivity {
                     else
                         message = "Edit not made";
                 }
-
                 MealPlan.this.createMeals(convertDates(db.getAllPlans()));
                 displayPopup(message);
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_mealPlan) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // Creates the dropdowns

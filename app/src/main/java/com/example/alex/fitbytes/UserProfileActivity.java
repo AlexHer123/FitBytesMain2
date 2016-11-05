@@ -3,13 +3,14 @@ package com.example.alex.fitbytes;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.text.TextWatcher;
 import android.text.Editable;
 
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends MainActivity {
 
     double height, weight;
     double BMI;
@@ -109,6 +110,15 @@ public class UserProfileActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {}
         };
         weightEditText.addTextChangedListener(weightTextWatcher);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_userProfile) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public double getHeight() {
