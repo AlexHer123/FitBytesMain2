@@ -45,9 +45,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //protected static boolean goalSet = false;
-    protected static Goal goal1 = new Goal();
-    protected static Goal goal2 = new Goal();
     public void fitnessTrackerButtonOnClick(View view) {
         Intent intent = new Intent(this, FitnessTracker.class);
         startActivity(intent);
