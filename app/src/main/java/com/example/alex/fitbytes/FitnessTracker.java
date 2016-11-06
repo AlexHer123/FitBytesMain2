@@ -36,6 +36,7 @@ public class FitnessTracker extends MainActivity {
         //goals = new ArrayList<>();
         getDailyGoals();
         setGoalAdapter();
+        updateGoalList();
         Button addButton = (Button) findViewById(R.id.addGoal);
         addButton.setOnClickListener(
                 new AdapterView.OnClickListener() {
@@ -98,20 +99,34 @@ public class FitnessTracker extends MainActivity {
     }
     private void updateGoalList() {
         ListView goalsListView = (ListView) findViewById(R.id.daily_goals);
-        goalsListView.setAdapter(goalAdapter);
         attachGoalListener(goalsListView);
+        goalsListView.setAdapter(goalAdapter);
+
     }
     private void attachGoalListener(ListView goalsListView){
         goalsListView.setOnItemClickListener(
                 new AdapterView.OnItemClickListener(){
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
                         //setEditVisibility(View.INVISIBLE);
-                        //final Goal selectedGoal = (Goal) parent.getItemAtPosition(position);
+                        final long selectedGoal = parent.getItemIdAtPosition(position);
                         final String selectedRow = parent.getItemAtPosition(position).toString();
                         final Dialog dialog = new Dialog(FitnessTracker.this);
                         dialog.setTitle("Goal: " + selectedRow);
+                        dialog.setContentView(R.layout.goal_dialog);
                         dialog.show();
+
+                        Button finishButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                        finishButton.setOnClickListener(
+                                new AdapterView.OnClickListener(){
+                                    @Override
+                                    public void onClick(View v){
+                                        //goalDB.removeGoal(selectedRow);
+                                        dialog.dismiss();
+                                        displayPopup("Goal has been completed");
+                                    }
+                                }
+                        );
                     }
                 }
         );

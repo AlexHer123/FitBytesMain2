@@ -126,12 +126,12 @@ public class DBHandler extends SQLiteOpenHelper
         return list;
     }
 
-    public void removeGoal(int date){
+    public void removeGoal(String description){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date
+                GOAL_DESCRIPTION,
+                description
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -139,7 +139,6 @@ public class DBHandler extends SQLiteOpenHelper
             int goalID = cursor.getInt(0);
             db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
         }
-        cursor.close();
     }
 
     // Adding new meal
