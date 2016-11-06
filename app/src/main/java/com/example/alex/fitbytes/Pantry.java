@@ -29,19 +29,26 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
         pantrySearchView = (SearchView) findViewById(R.id.pantrySearch);
 
         ingredients = new ArrayList<>();
-        ingredients.add(new IngredientItem("Peanut Butter",8, OZ));
-        ingredients.add(new IngredientItem("Jelly",8, OZ));
-        ingredients.add(new IngredientItem("Bread",8, NONE));
-        ingredients.add(new IngredientItem("Milk",128, OZ));
-        ingredients.add(new IngredientItem("Cheerios",2, CUP));
-        ingredients.add(new IngredientItem("Water",10,CUP));
-        ingredients.add(new IngredientItem("Ramen pack",1,NONE));
-        ingredients.add(new IngredientItem("Ramen seasoning",1,NONE));
-        ingredients.add(new IngredientItem("Cheese(slice)",2,NONE));
-        ingredients.add(new IngredientItem("Butter",1, TBSP));
-        ingredients.add(new IngredientItem("Salt",1,TBSP));
-        ingredients.add(new IngredientItem("Tomato Sauce",15,OZ));
-        ingredients.add(new IngredientItem("Spaghetti noodles",16,OZ));
+        ingredients.add(new IngredientItem("Peanut Butter",8, "OZ"));
+        ingredients.add(new IngredientItem("Jelly",8, "OZ"));
+        ingredients.add(new IngredientItem("Bread",8, "NONE"));
+        ingredients.add(new IngredientItem("Milk",128, "OZ"));
+        ingredients.add(new IngredientItem("Cheerios",2, "CUP"));
+        ingredients.add(new IngredientItem("Water",10,"CUP"));
+        ingredients.add(new IngredientItem("Ramen pack",1,"NONE"));
+        ingredients.add(new IngredientItem("Ramen seasoning",1,"NONE"));
+        ingredients.add(new IngredientItem("Cheese(slice)",2,"NONE"));
+        ingredients.add(new IngredientItem("Butter",1, "TBSP"));
+        ingredients.add(new IngredientItem("Salt",1,"TBSP"));
+        ingredients.add(new IngredientItem("Tomato Sauce",15,"OZ"));
+        ingredients.add(new IngredientItem("Spaghetti noodles",16,"OZ"));
+
+        for (IngredientItem item : ingredients){
+            db.addIngredient(item);
+        }
+
+        ingredients = db.getAllIngredients();
+        
 
         ingredientAdapter = new IngredientAdapter(Pantry.this,ingredients);
         ingredientsListView.setAdapter(ingredientAdapter);

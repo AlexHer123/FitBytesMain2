@@ -35,10 +35,11 @@ public class DBHandler extends SQLiteOpenHelper
 
     private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
 
-    //private static final String TABLE_INGREDIENTS = "ingredient";
-    //private static final String TI_1_NAME = "Name";
-    //private static final String TI_2_DATE = "Date";
-    //private static final String TI_3_RECIPE = "Recipe";
+    private static final String TABLE_INGREDIENTS = "ingredient";
+    private static final String TI_col_1_ID = "ID";
+    private static final String TI_col_2_NAME = "Name";
+    private static final String TI_col_3_AMOUNT = "Amount";
+    private static final String TI_col_4_MEASUREMENT = "Measurement";
 
     private static final String TABLE_RECIPES = "recipe";
     private static final String TR_col_1_ID = "ID";
@@ -53,20 +54,26 @@ public class DBHandler extends SQLiteOpenHelper
     public void onCreate(SQLiteDatabase db)
     {
         String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
-                + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " INTEGER, " + col_3_RECIPE + " INTEGER" + ")";
+            + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " INTEGER, " + col_3_RECIPE + " INTEGER" + ")";
         db.execSQL(CREATE_MEALPLAN_TABLE);
 
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
+
+        String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPES + "("
+                + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_NAME + " TEXT, " + TR_col_3_ORIGINALNAME + " TEXT" + ")";
+        db.execSQL(CREATE_RECIPE_TABLE);
+
+        String CREATE_INGREDIENTS_TABLE = "CREATE TABLE " + TABLE_INGREDIENTS + "("
+                + TI_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TI_col_2_NAME + " TEXT, " + TI_col_3_AMOUNT + " REAL, " + TI_col_4_MEASUREMENT + " TEXT" + ")";
+        db.execSQL(CREATE_INGREDIENTS_TABLE);
 
         String CREATE_FITNESS_TRACKER_TABLE =
                 String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER)",
                         TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION);
         db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
 
-        String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPES + "("
-                + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_NAME + " TEXT, " + TR_col_3_ORIGINALNAME + " TEXT" + ")";
-        db.execSQL(CREATE_RECIPE_TABLE);
+
     }
 
     @Override
@@ -289,9 +296,26 @@ public class DBHandler extends SQLiteOpenHelper
 
     }
 
-    public void addIngredient()
+    public boolean addIngredient(IngredientItem item)
     {
+        // Search for duplicate ingredient
+        String selectQuery = "SELECT * FROM " + TABLE_INGREDIENTS + " WHERE " + TI_col_2_NAME + " = '" + item.getName() + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
+        // Only add if ingredient does not exist
+        if (!cursor.moveToFirst()){
+            ContentValues values = new ContentValues();
+            values.put(TI_col_2_NAME, item.getName());
+            values.put(TI_col_3_AMOUNT, item.getAmount());
+            values.put(TI_col_4_MEASUREMENT, item.getMeasurement().toString());
+            Log.d("STRING TYPE: ", item.getMeasurement().toString());
+            // Inserting Row
+            db.insert(TABLE_INGREDIENTS, null, values);
+
+            return true;
+        }
+        return false;
     }
 
     public void removeIngredient()
@@ -299,11 +323,30 @@ public class DBHandler extends SQLiteOpenHelper
 
     }
 
-    public List<IngredientItem> getAllIngredients()
+    public ArrayList<IngredientItem> getAllIngredients()
     {
-        List<IngredientItem> ingredientList = new ArrayList<IngredientItem>();
+        ArrayList<IngredientItem> allIngredients = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_INGREDIENTS;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
-        return ingredientList;
+        if (cursor.moveToFirst()) {
+            do {
+                IngredientItem item = new IngredientItem(cursor.getString(1), cursor.getFloat(2), cursor.getString(3), cursor.getInt(0));
+                allIngredients.add(item);
+            } while (cursor.moveToNext());
+        }
+
+        return allIngredients;
     }
 
+    protected void resetDatabase(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INGREDIENTS);
+        onCreate(db);
+    }
 }

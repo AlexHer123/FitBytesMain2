@@ -32,7 +32,8 @@ public class MealPlan extends MainActivity {
 
     private String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private List<Integer> allDays = new ArrayList<Integer>();
-    private String[] recipes = {"PB&J", "Ramen", "BBQ Chicken", "Cereal", "Grilled Cheese", "Spaghetti & Meatballs", "Hamburger", "Oatmeal", "Nachos","Chicken Burrito"};
+//    private String[] recipes = {"PB&J", "Ramen", "BBQ Chicken", "Cereal", "Grilled Cheese", "Spaghetti & Meatballs", "Hamburger", "Oatmeal", "Nachos","Chicken Burrito"};
+    private List<String> recipes = new ArrayList<>();
     private int currentMonth, currentDay, currentYear;
     private int selectedMonth, selectedDay, selectedYear, selectedRecipe;
     private int oldDate;
@@ -179,6 +180,7 @@ public class MealPlan extends MainActivity {
 
     // Create Recipe dropdown
     private void createRecipeSpinner(int defaultRecipe) {
+        recipes = db.getAllRecipes();
         Spinner recipeDropdown = (Spinner)findViewById(R.id.recipeSpinner);
         ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, recipes);
         recipeDropdown.setAdapter(recipeAdapter);
@@ -328,7 +330,7 @@ public class MealPlan extends MainActivity {
                 Date date = MDYFormat.parse(breakPlans[0]);
                 MDYFormat = new SimpleDateFormat("MMM d, yyyy");
                 String thisDate = MDYFormat.format(date);
-                stringDates.add(thisDate + " : " + recipes[mealIndex]);
+                stringDates.add(thisDate + " : " + recipes.get(mealIndex));
             } catch (ParseException e){ e.printStackTrace(); }
         }
         return stringDates;

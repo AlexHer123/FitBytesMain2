@@ -15,20 +15,21 @@ public class IngredientItem {
 
     public enum Measurement {CUP, OZ, GRAM, LB, TBSP, TSP, FLOZ, NONE}
 
-    public IngredientItem(String name, float amount, Measurement measurement/*, Category category*/)
+    public IngredientItem(String name, float amount, String measurement/*, Category category*/)
     {
         this.name = name;
         this.amount = amount;
-        this.measurement = measurement;
+        this.measurement = Measurement.valueOf(measurement);
         //this.category = category;
         this.ingredientID = 0;
     }
 
-    public IngredientItem(String name, float amount, Measurement measurement/*, Category category*/, long ingredientID)
+    public IngredientItem(String name, float amount, String measurement/*, Category category*/, int ingredientID)
     {
         this.name = name;
         this.amount = amount;
-        this.measurement = measurement;
+
+        this.measurement = Measurement.valueOf(measurement);
         //this.category = category;
         this.ingredientID = ingredientID;
     }

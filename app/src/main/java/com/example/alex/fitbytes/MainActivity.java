@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
+            db.resetDatabase();
             return true;
         }
 
