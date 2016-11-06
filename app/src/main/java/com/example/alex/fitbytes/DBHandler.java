@@ -33,7 +33,7 @@ public class DBHandler extends SQLiteOpenHelper
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
 
-    private static final String TABLE_FITNESS = "fitnessTracker";
+    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
 
     //private static final String TABLE_INGREDIENTS = "ingredient";
     //private static final String TI_1_NAME = "Name";
