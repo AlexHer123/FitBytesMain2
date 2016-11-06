@@ -21,6 +21,8 @@ public class Goal {
     private String description;
     private int date;
     private int duration;
+
+
     public Goal(){
         description = initDefaultGoal();
         date = Calendar.getInstance().get(Calendar.DATE);
@@ -28,16 +30,22 @@ public class Goal {
     public Goal(String description){
         this(description, Calendar.getInstance().get(Calendar.DAY_OF_YEAR), 1);
     }
-    public Goal(int date){
-        description = initDefaultGoal();
-        this.date = date;
-        this.duration = 1;
-    }
+//    public Goal(int date){
+//        description = initDefaultGoal();
+//        this.date = date;
+//        this.duration = 1;
+//    }
     public Goal(String description, int date, int duration){
         this.description = description;
         this.date = date;
         this.duration = duration;
     }
+
+    public Goal(int currentDate){
+        description = initDefaultGoal();
+        date = currentDate;
+    }
+
     private String initDefaultGoal(){
         String option = DEFAULT_OPTIONS[(int)(Math.random()*DEFAULT_OPTIONS.length-1)];
         String optionDescription;

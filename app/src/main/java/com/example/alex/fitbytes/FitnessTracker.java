@@ -51,6 +51,7 @@ public class FitnessTracker extends MainActivity {
         );
         //Button finishButton = (Button) findViewById(R.id.null);
         displayGoalAdapter((ListView) findViewById(R.id.daily_goals));
+        goalDB.removeGoal(goalDB.getCurrentDate());
     }
     private void setGoalAdapter(){
         List<String> goalList = new ArrayList<>();
@@ -69,7 +70,7 @@ public class FitnessTracker extends MainActivity {
         }
     }
     private Goal createDailyGoal(){
-        Goal dailyGoal = new Goal();
+        Goal dailyGoal = new Goal(goalDB.getCurrentDate());
         dailyGoal.setDuration(1);
         return dailyGoal;
     }
@@ -121,9 +122,11 @@ public class FitnessTracker extends MainActivity {
                                 new AdapterView.OnClickListener(){
                                     @Override
                                     public void onClick(View v){
-                                        //goalDB.removeGoal(selectedRow);
+                                        goalDB.removeGoal(20161107);
                                         dialog.dismiss();
                                         displayPopup("Goal has been completed");
+                                        setGoalAdapter();
+                                        updateGoalList();
                                     }
                                 }
                         );

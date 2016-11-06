@@ -133,12 +133,27 @@ public class DBHandler extends SQLiteOpenHelper
         return list;
     }
 
-    public void removeGoal(String description){
+//    public void removeGoal(String description){
+//        String selectQuery = String.format(
+//                "SELECT * FROM %s WHERE %s = %s",
+//                TABLE_FITNESS_TRACKER,
+//                GOAL_DESCRIPTION,
+//                description
+//        );
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//        if (cursor.moveToFirst()) {
+//            int goalID = cursor.getInt(0);
+//            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
+//        }
+//    }
+
+    public void removeGoal(int date){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = %s",
+                "SELECT * FROM %s WHERE %s != %s",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DESCRIPTION,
-                description
+                GOAL_DATE,
+                date
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
