@@ -2,6 +2,7 @@ package com.example.alex.fitbytes;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.widget.ListView;
@@ -65,5 +66,14 @@ public class Pantry extends AppCompatActivity implements SearchView.OnQueryTextL
     public boolean onQueryTextSubmit(String query)
     {
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_pantry) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
