@@ -7,7 +7,17 @@ import java.util.Calendar;
  */
 
 public class Goal {
-    private final String[] DEFAULT = {"push ups", "sit ups", "jumping jacks", "squats", "pullups"};
+    private final String[] DEFAULT_OPTIONS = {
+            "push ups",
+            "sit ups",
+            "jumping jacks",
+            "squats",
+            "pullups",
+            "running",
+            "walking",
+            "crunches",
+            "plank"
+    };
     private String description;
     private int date;
     private int duration;
@@ -29,10 +39,23 @@ public class Goal {
         this.duration = duration;
     }
     private String initDefaultGoal(){
-        return String.format("%s %s %s",
-                "Do",
-                (int)(Math.random()*30)+1,
-                DEFAULT[(int)(Math.random()*DEFAULT.length-1)]);
+        String option = DEFAULT_OPTIONS[(int)(Math.random()*DEFAULT_OPTIONS.length-1)];
+        String optionDescription;
+        switch(option){
+            case "walking":
+                optionDescription = "Take a walk for 20 minutes";
+                break;
+            case "running":
+                optionDescription = "Run for 2 miles";
+                break;
+            case "plank":
+                optionDescription = "Plank for 5 minutes";
+                break;
+            default:
+                optionDescription = "Do " + (int)(Math.random()*30+10)+ " " + option;
+                break;
+        }
+        return optionDescription;
     }
 
     public String getDescription(){return description;}
