@@ -28,7 +28,7 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
         this.ingredients = ingredients;
     }
 
-    private class IngredientHolder
+    public static class IngredientHolder
     {
         TextView name;
         TextView amount;
@@ -45,11 +45,19 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
         //Check if an existing view is being reused, otherwise inflate a new view from custom row layout
         if(convertView == null)
         {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_list_row,parent,false);
+            //If we don't have a view that is being used create one, and make sure you create a
+            //view holder along with it to save our view references to.
             holder = new IngredientHolder();
+
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.pantry_list_row,parent,false);
+
+            //Set our views to our view holder so that we no longer have to go back and use find view
+            //by id every time we have a new row
             holder.name = (TextView) convertView.findViewById(R.id.ingredientListItemNameID);
             holder.amount = (TextView) convertView.findViewById(R.id.ingredientAmountListItemID);
             holder.measurement = (TextView) convertView.findViewById(R.id.ingredientMeasurementListItemID);
+
+            //Use setTag to remember our view holder which is holding our references to our widgets
             convertView.setTag(holder);
         }
         else
@@ -59,43 +67,33 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
 
         holder.name.setText(ingredients.get(position).getName());
         holder.amount.setText(String.valueOf(ingredients.get(position).getAmount()));
-        holder.measurement.setText(String.valueOf(ingredients.get(position).getMeasurement()));
-
-        //Grab reference of views so we can populate them with specific note row data
-        TextView ingredientName = (TextView) convertView.findViewById(R.id.ingredientListItemNameID);
-        TextView ingredientAmount = (TextView) convertView.findViewById(R.id.ingredientAmountListItemID);
-        TextView ingredientMeasurement = (TextView) convertView.findViewById(R.id.ingredientMeasurementListItemID);
-
-        //Fill each new referenced view with data associated with note it's referencing
-        ingredientName.setText(it.getName());
-        ingredientAmount.setText(""+it.getAmount());
-        switch(it.getMeasurement()) {
+        switch(ingredients.get(position).getMeasurement()) {
             case CUP:
-                ingredientMeasurement.setText("cup");
+                holder.measurement.setText("cup");
                 break;
             case GRAM:
-                ingredientMeasurement.setText("gram");
+                holder.measurement.setText("gram");
                 break;
             case FLOZ:
-                ingredientMeasurement.setText("fl. oz.");
+                holder.measurement.setText("fl. oz.");
                 break;
             case OZ:
-                ingredientMeasurement.setText("oz");
+                holder.measurement.setText("oz");
                 break;
             case LB:
-                ingredientMeasurement.setText("lb");
+                holder.measurement.setText("lb");
                 break;
             case TBSP:
-                ingredientMeasurement.setText("tbsp");
+                holder.measurement.setText("tbsp");
                 break;
             case TSP:
-                ingredientMeasurement.setText("tsp");
+                holder.measurement.setText("tsp");
                 break;
             case NONE:
-                ingredientMeasurement.setText("");
+                holder.measurement.setText("");
                 break;
             default:
-                ingredientMeasurement.setText("");
+                holder.measurement.setText("");
                 break;
         }
 

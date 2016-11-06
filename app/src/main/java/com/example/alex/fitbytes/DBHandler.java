@@ -15,8 +15,8 @@ import java.util.List;
  * Created by Alex on 10/31/2016.
  */
 
-public class DBHandler extends SQLiteOpenHelper {
-
+public class DBHandler extends SQLiteOpenHelper
+{
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "fitbytes.db";
     private static final String TABLE_MEALPLAN = "mealPlan";
@@ -29,12 +29,19 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TD_col_1_DATE = "Date";
 
     private static final String TABLE_FITNESS = "fitnessTracker";
+
+    //private static final String TABLE_INGREDIENTS = "ingredient";
+    //private static final String TI_1_NAME = "Name";
+    //private static final String TI_2_DATE = "Date";
+    //private static final String TI_3_RECIPE = "Recipe";
+
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(SQLiteDatabase db)
+    {
         String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
                 + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " INTEGER, " + col_3_RECIPE + " INTEGER" + ")";
         db.execSQL(CREATE_MEALPLAN_TABLE);
@@ -48,13 +55,15 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
         onCreate(db);
     }
 
     // Adding new meal
-    public boolean addPlan(int date, int recipe) {
+    public boolean addPlan(int date, int recipe)
+    {
         // Search for duplicate date
         String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -69,13 +78,12 @@ public class DBHandler extends SQLiteOpenHelper {
             db.insert(TABLE_MEALPLAN, null, values);
             return true;
         }
-
         return false;
-
     }
 
     // Get the recipe for a meal plan
-    public int getMealRecipe(int date){
+    public int getMealRecipe(int date)
+    {
         String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -87,7 +95,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // Getting All Meal Plans
-    public List<String> getAllPlans() {
+    public List<String> getAllPlans()
+    {
         List<String> planList = new ArrayList<String>();
 
         // Select All Query
@@ -106,7 +115,8 @@ public class DBHandler extends SQLiteOpenHelper {
         return planList;
     }
 
-    public void removePlan(int date){
+    public void removePlan(int date)
+    {
         String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -116,7 +126,8 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public void addCurrentDate(int date){
+    public void addCurrentDate(int date)
+    {
         // Search for duplicate date
         String selectQuery = "SELECT * FROM " + TABLE_DATE;// + " WHERE " + col_2_DATE + " = '" + date + "'";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -134,7 +145,8 @@ public class DBHandler extends SQLiteOpenHelper {
         db.insert(TABLE_DATE, null, values);
     }
 
-    public int getCurrentDate() {
+    public int getCurrentDate()
+    {
         int date = -1;
 
         // Select All Query
@@ -148,6 +160,23 @@ public class DBHandler extends SQLiteOpenHelper {
                 date = cursor.getInt(0);
         }
         return date;
+    }
+
+    public void addIngredient()
+    {
+
+    }
+
+    public void removeIngredient()
+    {
+
+    }
+
+    public List<IngredientItem> getAllIngredients()
+    {
+        List<IngredientItem> ingredientList = new ArrayList<IngredientItem>();
+
+        return ingredientList;
     }
 
 }

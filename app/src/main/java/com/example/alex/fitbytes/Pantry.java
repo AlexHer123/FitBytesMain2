@@ -1,21 +1,23 @@
 package com.example.alex.fitbytes;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.widget.ListView;
 import java.util.ArrayList;
-
 import static com.example.alex.fitbytes.IngredientItem.Measurement.*;
 
-public class Pantry extends AppCompatActivity implements SearchView.OnQueryTextListener
+public class Pantry extends MainActivity implements SearchView.OnQueryTextListener
 {
     private SearchView pantrySearchView;
     private ListView ingredientsListView;
     private ArrayList<IngredientItem> ingredients;
     private IngredientAdapter ingredientAdapter;
+    private DBHandler db = new DBHandler(this);
+    private boolean editIngredient = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -38,6 +40,15 @@ public class Pantry extends AppCompatActivity implements SearchView.OnQueryTextL
 
         ingredientsListView.setTextFilterEnabled(true);
         setupSearchView();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_pantry) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupSearchView()
@@ -66,14 +77,5 @@ public class Pantry extends AppCompatActivity implements SearchView.OnQueryTextL
     public boolean onQueryTextSubmit(String query)
     {
         return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_pantry) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+    };
 }
