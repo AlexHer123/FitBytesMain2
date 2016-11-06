@@ -41,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
         db.addCurrentDate(date);
     }
 
+// THE UNDO MENU PROCESS
+//    Uncomment button stuff
+//    Uncomment xml in content_main
+//    Change all main classes to extend AppCompatActivity
+//    Remove overrides of onOptionsItemSelected in each class
+//    Can leave menu stuff, but don't click on it in the app
+
 //    public void mealPlanButtonOnClick(View view){
 //        Intent intent = new Intent(this, MealPlan.class);
 ////        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2

@@ -40,6 +40,11 @@ public class DBHandler extends SQLiteOpenHelper
     //private static final String TI_2_DATE = "Date";
     //private static final String TI_3_RECIPE = "Recipe";
 
+    private static final String TABLE_RECIPES = "recipe";
+    private static final String TR_col_1_ID = "ID";
+    private static final String TR_col_2_NAME = "newName";
+    private static final String TR_col_3_ORIGINALNAME = "originalName";
+
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -58,6 +63,10 @@ public class DBHandler extends SQLiteOpenHelper
                 String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER)",
                         TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION);
         db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
+
+        String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPES + "("
+                + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_NAME + " TEXT, " + TR_col_3_ORIGINALNAME + " TEXT" + ")";
+        db.execSQL(CREATE_RECIPE_TABLE);
     }
 
     @Override
@@ -232,6 +241,53 @@ public class DBHandler extends SQLiteOpenHelper
                 date = cursor.getInt(0);
         }
         return date;
+    }
+
+    public boolean addRecipe(String formatName, String oldName){
+        // Search for duplicate recipe
+        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + formatName + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // Only add if recipe does not exist
+        if (!cursor.moveToFirst()){
+            ContentValues values = new ContentValues();
+            values.put(TR_col_2_NAME, formatName);
+            values.put(TR_col_3_ORIGINALNAME, oldName);
+            // Inserting Row
+            db.insert(TABLE_RECIPES, null, values);
+
+            return true;
+        }
+        return false;
+    }
+
+    public String getRecipe(String name){
+        // Search for recipe
+        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + name + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()){
+            return cursor.getString(1);
+        }
+        return "NONE";
+    }
+
+    public List<String> getAllRecipes(){
+        List<String> recipeList = new ArrayList<String>();
+        String selectQuery = "SELECT * FROM " + TABLE_RECIPES;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                recipeList.add(cursor.getString(2));
+            } while (cursor.moveToNext());
+        }
+
+        return recipeList;
+
     }
 
     public void addIngredient()
