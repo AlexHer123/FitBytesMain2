@@ -69,7 +69,7 @@ public class DBHandler extends SQLiteOpenHelper
     }
 
     public boolean addGoal(String description, int date, int duration){
-        String selectQuery = String.format(
+        /*String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
                 GOAL_DATE,
@@ -85,7 +85,14 @@ public class DBHandler extends SQLiteOpenHelper
             db.insert(TABLE_FITNESS_TRACKER, null, values);
             return true;
         }
-        return false;
+        return false;*/
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GOAL_DESCRIPTION, description);
+        values.put(GOAL_DATE, date);
+        values.put(GOAL_DURATION, duration);
+        db.insert(TABLE_FITNESS_TRACKER, null, values);
+        return true;
     }
 
     public List<Goal> getAllGoals(){

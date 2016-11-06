@@ -16,7 +16,7 @@ public class Goal {
         date = Calendar.getInstance().get(Calendar.DATE);
     }
     public Goal(String description){
-        this(description, Calendar.getInstance().get(Calendar.DATE), 1);
+        this(description, Calendar.getInstance().get(Calendar.DAY_OF_YEAR), 1);
     }
     public Goal(int date){
         description = initDefaultGoal();
