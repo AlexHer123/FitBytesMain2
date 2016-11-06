@@ -83,10 +83,8 @@ public class DBHandler extends SQLiteOpenHelper
             values.put(GOAL_DESCRIPTION, description);
             values.put(GOAL_DURATION, duration);
             db.insert(TABLE_FITNESS_TRACKER, null, values);
-            cursor.close();
             return true;
         }
-        cursor.close();
         return false;
     }
 
@@ -101,12 +99,14 @@ public class DBHandler extends SQLiteOpenHelper
         Cursor cursor = db.rawQuery(selectQuery, null);
         if(cursor.moveToFirst()){
             do{
-                //cursor.getString();
-                Goal g = new Goal();
+                String description = cursor.getString(1);
+                int date = cursor.getInt(2);
+                int duration = cursor.getInt(3);
+                Goal g = new Goal(description, date, duration);
                 list.add(g);
             } while(cursor.moveToNext());
         }
-        cursor.close();
+        //cursor.close();
         return list;
     }
 

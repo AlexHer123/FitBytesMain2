@@ -16,15 +16,17 @@ public class Goal {
         date = Calendar.getInstance().get(Calendar.DATE);
     }
     public Goal(String description){
-        this(description, Calendar.getInstance().get(Calendar.DATE));
+        this(description, Calendar.getInstance().get(Calendar.DATE), 1);
     }
     public Goal(int date){
         description = initDefaultGoal();
         this.date = date;
+        this.duration = 1;
     }
-    public Goal(String description, int date){
+    public Goal(String description, int date, int duration){
         this.description = description;
         this.date = date;
+        this.duration = duration;
     }
     private String initDefaultGoal(){
         return String.format("%s %s %s",
