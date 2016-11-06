@@ -5,6 +5,8 @@
     <string name="daily_goal_1">Daily Goal 1</string>
     <string name="daily_goal_2">Daily Goal 1</string>
     <string name="title_activity_upcoming_plans">UpcomingPlans</string>
+    <string name="pantryTitle">Pantry</string>
+    <string name="recipeTitle">Recipes</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

@@ -11,11 +11,11 @@
     tools:context="com.example.alex.fitbytes.Recipes">
 
     <TextView
-        android:text="Recipes"
+        android:id="@+id/recipeTitleID"
+        android:text="@string/recipeTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="57dp"
-        android:id="@+id/textView2"
         android:textSize="36sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />

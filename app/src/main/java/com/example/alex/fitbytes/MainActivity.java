@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_pantry) {
-            Intent intent = new Intent(this, Ingredients.class);
+            Intent intent = new Intent(this, Pantry.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
