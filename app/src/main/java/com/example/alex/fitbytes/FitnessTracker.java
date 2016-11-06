@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -47,6 +48,7 @@ public class FitnessTracker extends MainActivity {
                     }
                 }
         );
+        //Button finishButton = (Button) findViewById(R.id.null);
         displayGoalAdapter((ListView) findViewById(R.id.daily_goals));
     }
     private void setGoalAdapter(){
@@ -92,10 +94,27 @@ public class FitnessTracker extends MainActivity {
     private void addGoal(Goal goal){
         goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration());
         goalAdapter.add(goal.getDescription());
+
     }
     private void updateGoalList() {
         ListView goalsListView = (ListView) findViewById(R.id.daily_goals);
         goalsListView.setAdapter(goalAdapter);
+        attachGoalListener(goalsListView);
+    }
+    private void attachGoalListener(ListView goalsListView){
+        goalsListView.setOnItemClickListener(
+                new AdapterView.OnItemClickListener(){
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id){
+                        //setEditVisibility(View.INVISIBLE);
+                        //final Goal selectedGoal = (Goal) parent.getItemAtPosition(position);
+                        final String selectedRow = parent.getItemAtPosition(position).toString();
+                        final Dialog dialog = new Dialog(FitnessTracker.this);
+                        dialog.setTitle("Goal: " + selectedRow);
+                        dialog.show();
+                    }
+                }
+        );
     }
 }
 
