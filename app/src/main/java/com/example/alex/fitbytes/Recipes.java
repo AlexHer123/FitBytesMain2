@@ -66,27 +66,23 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
     private void createRecipeList(){
         List<String> allRecipes = db.getAllRecipes();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
-        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, allRecipes);
+        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
         recipeDropdown.setAdapter(recipeAdapter);
 
         // Listener for date dropdown
-        recipeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        recipeDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Create dialog popup
-
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("HERE: ", "DSJFLDSIJFOIDSJFOIDSJF");
                 final Dialog dialog = new Dialog(Recipes.this);
                 dialog.setTitle(parent.getItemAtPosition(position).toString());
-                dialog.setContentView(R.layout.activity_meal_popup);
-//                TextView mealText = (TextView)dialog.findViewById(R.id.mp_meal_text);
-//                mealText.setText(rowRecipe);
+                dialog.setContentView(R.layout.activity_recipe_popup);
+//                TextView mealText = (TextView)dialog.findViewById(R.id.mp_recipe_name);
+//                mealText.setText("ODIJFOPDSJFOIJ\nasdfhadsfklhadfkljhadsf\nasodifsfdoidjaf");
                 dialog.show();
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // DO NOTHING
-            }
+
         });
     }
 
