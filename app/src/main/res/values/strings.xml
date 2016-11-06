@@ -97,4 +97,7 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="title_activity_test">Test</string>
+    <string name="daily_goals">Daily Goals</string>
+    <string name="add_a_goal">Add a Goal</string>
+    <string name="go_to_weekly_goals">Go to Weekly Goals</string>
 </resources>

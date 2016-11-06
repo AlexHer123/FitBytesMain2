@@ -1,34 +1,46 @@
 package com.example.alex.fitbytes;
 
+import java.util.Calendar;
+
 /**
  * Created by Alex on 10/21/2016.
  */
 
-public abstract class Goal {
-    //private final String[] exercise = {"push ups", "sit ups", "jumping jacks", "squats", "pullups"};
-    //private int[] weight = {20, 20, 20, 20, 20};
+public class Goal {
+    private final String[] DEFAULT = {"push ups", "sit ups", "jumping jacks", "squats", "pullups"};
     private String description;
-    //private boolean isChecked;
-
+    private int date;
+    private int duration;
     public Goal(){
-        //description = makeGoal();
-        this("Nothing yet");
+        description = initDefaultGoal();
+        date = Calendar.getInstance().get(Calendar.DATE);
     }
     public Goal(String description){
-        //description = makeGoal();
-        this.description = description;
-        //isChecked = false;
+        this(description, Calendar.getInstance().get(Calendar.DATE));
     }
+    public Goal(int date){
+        description = initDefaultGoal();
+        this.date = date;
+    }
+    public Goal(String description, int date){
+        this.description = description;
+        this.date = date;
+    }
+    private String initDefaultGoal(){
+        return String.format("%s %s %s",
+                "Do",
+                (int)(Math.random()*30)+1,
+                DEFAULT[(int)(Math.random()*DEFAULT.length-1)]);
+    }
+
     public String getDescription(){return description;}
-    //public boolean isChecked(){return isChecked;}
-    /*public void setStatus(boolean status){
-        isChecked = status;
-    }*/
+    public int getDate(){return date;}
+    public int getDuration(){return duration; }
     public void setDescription(String description){
         this.description = description;
     }
-    /*private String makeGoal(){
-        int rand = (int) (Math.random()*4);
-        return "Do 10 " + exercise[rand];
-    }*/
+    public void setDate(int date){
+        this.date = date;
+    }
+    public void setDuration(int duration){ this.duration = duration; }
 }

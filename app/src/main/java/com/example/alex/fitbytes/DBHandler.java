@@ -23,12 +23,21 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String col_1_ID = "ID";
     private static final String col_2_DATE = "Date";
     private static final String col_3_RECIPE = "Recipe";
-    //private static final String col_4_GOAL_DESC = "Description";
+
+    /*private static final String[] FITNESS_TRACKER = {
+            "Goal_ID",
+            "Goal_DESCRIPT",
+            "Date"
+    };*/
+    private static final String GOAL_ID = "goal_id";
+    private static final String GOAL_DESCRIPTION = "goal_description";
+    private static final String GOAL_DATE = "goal_date";
+    private static final String GOAL_DURATION = "goal_duration";
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
 
-    private static final String TABLE_FITNESS = "fitnessTracker";
+    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -42,15 +51,75 @@ public class DBHandler extends SQLiteOpenHelper {
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
 
-        /*String CREATE_FITNESS_TRACKER_TABLE =
-                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",
-                        TABLE_FITNESS, col_1_ID, col_2_DATE, col_3)*/
+        String CREATE_FITNESS_TRACKER_TABLE =
+                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER)",
+                        TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION);
+        db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
         onCreate(db);
+    }
+
+    public boolean addGoal(String description, int date, int duration){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = %s",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DATE,
+                date
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(!cursor.moveToFirst()){
+            ContentValues values = new ContentValues();
+            values.put(GOAL_DATE, date);
+            values.put(GOAL_DESCRIPTION, description);
+            values.put(GOAL_DURATION, duration);
+            db.insert(TABLE_FITNESS_TRACKER, null, values);
+            cursor.close();
+            return true;
+        }
+        cursor.close();
+        return false;
+    }
+
+    public List<Goal> getAllGoals(){
+        List<Goal> list = new ArrayList<>();
+        String selectQuery = String.format(
+                "SELECT * FROM %s ORDER BY %s ASC",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DATE
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst()){
+            do{
+                //cursor.getString();
+                Goal g = new Goal();
+                list.add(g);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return list;
+    }
+
+    public void removeGoal(int date){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = %s",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DATE,
+                date
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int goalID = cursor.getInt(0);
+            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
+        }
+        cursor.close();
     }
 
     // Adding new meal
