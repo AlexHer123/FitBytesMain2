@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_userProfile"
         android:orderInCategory="100"
-        android:title="User Name"
+        android:title="User Profile"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_mealPlan"

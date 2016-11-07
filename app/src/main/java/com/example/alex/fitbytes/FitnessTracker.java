@@ -102,7 +102,6 @@ public class FitnessTracker extends MainActivity {
         ListView goalsListView = (ListView) findViewById(R.id.daily_goals);
         attachGoalListener(goalsListView);
         goalsListView.setAdapter(goalAdapter);
-
     }
     private void attachGoalListener(ListView goalsListView){
         goalsListView.setOnItemClickListener(

@@ -19,7 +19,7 @@ import java.util.List;
 
 public class Recipes extends MainActivity implements SearchView.OnQueryTextListener
 {
-    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
+//    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
     private DBHandler db = new DBHandler(this);
 
 
@@ -29,7 +29,7 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
 
-        storeAllRecipes();
+//        storeAllRecipes();
         createRecipeList();
     }
 
@@ -37,8 +37,7 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-        if (id == R.id.action_recipe)
-        {
+        if (id == R.id.action_recipe) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -57,14 +56,12 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         return false;
     }
 
-    private void storeAllRecipes()
-    {
-        for (String r: recipes)
-        {
-            String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
-            boolean added = db.addRecipe(formatRecipe, r);
-        }
-    }
+//    private void storeAllRecipes(){
+//        for (String r: recipes){
+//            String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
+//            boolean added = db.addRecipe(formatRecipe, r);
+//        }
+//    }
 
     private void createRecipeList()
     {
@@ -89,4 +86,5 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
 
         });
     }
+
 }

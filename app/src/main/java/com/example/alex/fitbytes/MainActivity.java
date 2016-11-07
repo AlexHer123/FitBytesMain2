@@ -22,6 +22,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     Integer num = 0;
+    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
     private DBHandler db = new DBHandler(this);
 
     @Override
@@ -38,7 +39,16 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
+//        db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
+        storeAllRecipes();
+    }
+
+    private void storeAllRecipes(){
+        for (String r: recipes){
+            String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
+            boolean added = db.addRecipe(formatRecipe, r);
+        }
     }
 
 // THE UNDO MENU PROCESS

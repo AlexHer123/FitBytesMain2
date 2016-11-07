@@ -297,7 +297,7 @@ public class DBHandler extends SQLiteOpenHelper
 
     public List<String> getAllRecipes(){
         List<String> recipeList = new ArrayList<String>();
-        String selectQuery = "SELECT * FROM " + TABLE_RECIPES;
+        String selectQuery = "SELECT * FROM " + TABLE_RECIPES +  " ORDER BY " + TR_col_2_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -351,9 +351,14 @@ public class DBHandler extends SQLiteOpenHelper
                 allIngredients.add(item);
             } while (cursor.moveToNext());
         }
-
         return allIngredients;
     }
+
+    public void removeOldStuff(int oldDate){
+        removePlan(oldDate);
+        removeGoal(oldDate);
+    }
+
 
     protected void resetDatabase(){
         SQLiteDatabase db = this.getWritableDatabase();

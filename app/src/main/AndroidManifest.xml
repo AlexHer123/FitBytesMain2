@@ -21,7 +21,13 @@
         </activity>
         <activity
             android:name=".MealPlan"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <activity
             android:name=".FitnessTracker"
             android:screenOrientation="portrait" />
@@ -34,13 +40,8 @@
         <activity
             android:name=".UpcomingPlans"
             android:screenOrientation="portrait" />
-        <activity android:name=".UserProfileActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".UserProfileActivity"/>
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
         <activity android:name=".UserStatsActivity" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
         <meta-data
