@@ -4,7 +4,8 @@ package com.example.alex.fitbytes;
  * Created by Austin on 11/5/2016.
  */
 
-public class IngredientItem {
+public class IngredientItem
+{
     private String name;
     private float amount;
     private long ingredientID;

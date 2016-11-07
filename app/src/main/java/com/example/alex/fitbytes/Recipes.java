@@ -37,7 +37,8 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
     public boolean onOptionsItemSelected(MenuItem item)
     {
         int id = item.getItemId();
-        if (id == R.id.action_recipe) {
+        if (id == R.id.action_recipe)
+        {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -56,14 +57,17 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         return false;
     }
 
-    private void storeAllRecipes(){
-        for (String r: recipes){
+    private void storeAllRecipes()
+    {
+        for (String r: recipes)
+        {
             String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
             boolean added = db.addRecipe(formatRecipe, r);
         }
     }
 
-    private void createRecipeList(){
+    private void createRecipeList()
+    {
         List<String> allRecipes = db.getAllRecipes();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
         ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
@@ -85,5 +89,4 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
 
         });
     }
-
 }

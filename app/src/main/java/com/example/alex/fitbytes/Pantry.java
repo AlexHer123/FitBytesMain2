@@ -43,26 +43,26 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
         ingredients.add(new IngredientItem("Tomato Sauce",15,"OZ"));
         ingredients.add(new IngredientItem("Spaghetti noodles",16,"OZ"));
 
-        for (IngredientItem item : ingredients){
+        for (IngredientItem item : ingredients)
+        {
             db.addIngredient(item);
         }
 
         ingredients = db.getAllIngredients();
-        
 
         ingredientAdapter = new IngredientAdapter(Pantry.this,ingredients);
         ingredientsListView.setAdapter(ingredientAdapter);
 
         ingredientsListView.setTextFilterEnabled(true);
         setupSearchView();
-
-
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         int id = item.getItemId();
-        if (id == R.id.action_pantry) {
+        if (id == R.id.action_pantry)
+        {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -82,9 +82,11 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
         if(TextUtils.isEmpty(newText))
         {
             ingredientsListView.clearTextFilter();
+            //ingredientAdapter.getFilter().filter(null);
         }
         else
         {
+            //ingredientAdapter.getFilter().filter(newText);
             ingredientsListView.setFilterText(newText);
         }
         return true;
