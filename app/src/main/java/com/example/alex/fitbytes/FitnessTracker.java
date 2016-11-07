@@ -55,7 +55,13 @@ public class FitnessTracker extends MainActivity {
     }
     private void setGoalAdapter(){
         List<String> goalList = new ArrayList<>();
-        for(Goal goal : goalDB.getAllGoals()){ goalList.add(goal.getDescription()); }
+        for(Goal goal : goalDB.getAllGoals()){
+            if(goal.getCompleted()) {
+                goalList.add(goal.getDescription() + " (Done)");
+            } else {
+                goalList.add(goal.getDescription());
+            }
+        }
         goalAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalList);
     }
     private void displayGoalAdapter(ListView listView) {
@@ -65,7 +71,7 @@ public class FitnessTracker extends MainActivity {
         if(goalDB.getAllGoals().isEmpty()){
             Goal[] g = {createDailyGoal(), createDailyGoal(), createDailyGoal()};
             for(Goal goal : g){
-                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration());
+                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
             }
         }
     }
@@ -75,26 +81,26 @@ public class FitnessTracker extends MainActivity {
         return dailyGoal;
     }
 
-    /*private void getWeeklyGoals(){
+    private void getWeeklyGoals(){
         if(goalDB.getAllGoals() == null){
             Goal[] g = {createWeeklyGoal(), createWeeklyGoal()};
             for(Goal goal : g){
-                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration());
+                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
             }
         }
-    }*/
-    /*private Goal createWeeklyGoal(){
+    }
+    private Goal createWeeklyGoal(){
         Goal weeklyGoal = new Goal();
         weeklyGoal.setDuration(7);
         return weeklyGoal;
-    }*/
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         return id == R.id.action_fitnessTracker || super.onOptionsItemSelected(item);
     }
     private void addGoal(Goal goal){
-        goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration());
+        goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
         goalAdapter.add(goal.getDescription());
 
     }
@@ -108,27 +114,52 @@ public class FitnessTracker extends MainActivity {
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
-                        //setEditVisibility(View.INVISIBLE);
-                        final long selectedGoal = parent.getItemIdAtPosition(position);
-                        final String selectedRow = parent.getItemAtPosition(position).toString();
+                        final int s = parent.getSelectedItemPosition();
+                        final String e = parent.getItemAtPosition(position).toString();
+                        int i = e.indexOf(" (Done)");
+                        String j = e;
+                        if(i != -1) {
+                            j = j.substring(0, i);
+                        }
+                        final String selectedRow = j;
                         final Dialog dialog = new Dialog(FitnessTracker.this);
                         dialog.setTitle("Goal: " + selectedRow);
                         dialog.setContentView(R.layout.goal_dialog);
                         dialog.show();
-
-                        Button finishButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
-                        finishButton.setOnClickListener(
-                                new AdapterView.OnClickListener(){
-                                    @Override
-                                    public void onClick(View v){
-                                        goalDB.removeGoal(20161107);
-                                        dialog.dismiss();
-                                        displayPopup("Goal has been completed");
-                                        setGoalAdapter();
-                                        updateGoalList();
+                        if(!goalDB.getGoal(selectedRow).getCompleted()){
+                            Button finishButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                            finishButton.setOnClickListener(
+                                    new AdapterView.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //goalDB.removeGoal(20161107);
+                                            //goalAdapter.remove(goalAdapter.getItem(s));
+                                            goalDB.setGoalCompleted(selectedRow);
+                                            dialog.dismiss();
+                                            displayPopup("Goal has been completed");
+                                            setGoalAdapter();
+                                            updateGoalList();
+                                        }
                                     }
-                                }
-                        );
+                            );
+                        } else {
+                            Button unfinishButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                            unfinishButton.setText("Mark as Incomplete");
+                            unfinishButton.setOnClickListener(
+                                    new AdapterView.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            //goalDB.removeGoal(20161107);
+                                            //goalAdapter.remove(goalAdapter.getItem(s));
+                                            goalDB.setGoalIncompleted(selectedRow);
+                                            dialog.dismiss();
+                                            displayPopup("Goal is now incomplete");
+                                            setGoalAdapter();
+                                            updateGoalList();
+                                        }
+                                    }
+                            );
+                        }
                     }
                 }
         );

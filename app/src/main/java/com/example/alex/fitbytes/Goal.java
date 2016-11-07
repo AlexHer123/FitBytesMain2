@@ -21,6 +21,7 @@ public class Goal {
     private String description;
     private int date;
     private int duration;
+    private boolean completed;
 
 
     public Goal(){
@@ -65,7 +66,8 @@ public class Goal {
         }
         return optionDescription;
     }
-
+    public boolean getCompleted(){ return completed; }
+    public void setCompleted(boolean b){ completed = b; }
     public String getDescription(){return description;}
     public int getDate(){return date;}
     public int getDuration(){return duration; }

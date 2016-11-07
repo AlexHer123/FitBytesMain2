@@ -8,18 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textSize="26sp" />
+        android:textSize="12sp" />
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <Button
-            android:text="Cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/goal_cancel"
-            android:layout_weight="1" />
 
         <Button
             android:text="Mark As Complete"

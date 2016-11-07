@@ -29,6 +29,7 @@ public class DBHandler extends SQLiteOpenHelper
     private static final String GOAL_DESCRIPTION = "goal_description";
     private static final String GOAL_DATE = "goal_date";
     private static final String GOAL_DURATION = "goal_duration";
+    private static final String GOAL_COMPLETED = "goal_completed";
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
@@ -69,8 +70,8 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL(CREATE_INGREDIENTS_TABLE);
 
         String CREATE_FITNESS_TRACKER_TABLE =
-                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER)",
-                        TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION);
+                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s BOOLEAN)",
+                        TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION, GOAL_COMPLETED);
         db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
 
 
@@ -84,7 +85,7 @@ public class DBHandler extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean addGoal(String description, int date, int duration){
+    public boolean addGoal(String description, int date, int duration, boolean completed){
         /*String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
@@ -107,8 +108,42 @@ public class DBHandler extends SQLiteOpenHelper
         values.put(GOAL_DESCRIPTION, description);
         values.put(GOAL_DATE, date);
         values.put(GOAL_DURATION, duration);
+        values.put(GOAL_COMPLETED, completed);
         db.insert(TABLE_FITNESS_TRACKER, null, values);
         return true;
+    }
+    public Goal getGoal(String name){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DESCRIPTION,
+                name
+        );
+        System.out.println(selectQuery);
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        Goal g = new Goal(cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
+        g.setCompleted(cursor.getInt(4) > 0);
+        return g;
+    }
+    public void setGoalCompleted(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_COMPLETED,
+                1,
+                GOAL_DESCRIPTION,
+                name));
+    }
+    public void setGoalIncompleted(String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_COMPLETED,
+                0,
+                GOAL_DESCRIPTION,
+                name));
     }
 
     public List<Goal> getAllGoals(){
@@ -125,7 +160,9 @@ public class DBHandler extends SQLiteOpenHelper
                 String description = cursor.getString(1);
                 int date = cursor.getInt(2);
                 int duration = cursor.getInt(3);
+                boolean completed = cursor.getInt(4) > 0;
                 Goal g = new Goal(description, date, duration);
+                g.setCompleted(completed);
                 list.add(g);
             } while(cursor.moveToNext());
         }
