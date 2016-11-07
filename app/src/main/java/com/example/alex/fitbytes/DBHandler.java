@@ -169,6 +169,31 @@ public class DBHandler extends SQLiteOpenHelper
         //cursor.close();
         return list;
     }
+    public List<Goal> getAllGoals(int dur){
+        List<Goal> list = new ArrayList<>();
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = %s ORDER BY %s ASC",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DURATION,
+                dur,
+                GOAL_DATE
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst()){
+            do{
+                String description = cursor.getString(1);
+                int date = cursor.getInt(2);
+                int duration = cursor.getInt(3);
+                boolean completed = cursor.getInt(4) > 0;
+                Goal g = new Goal(description, date, duration);
+                g.setCompleted(completed);
+                list.add(g);
+            } while(cursor.moveToNext());
+        }
+        //cursor.close();
+        return list;
+    }
 
 //    public void removeGoal(String description){
 //        String selectQuery = String.format(
@@ -187,10 +212,28 @@ public class DBHandler extends SQLiteOpenHelper
 
     public void removeGoal(int date){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s != %s",
+                "SELECT * FROM %s WHERE %s != %s and %s = %s",
                 TABLE_FITNESS_TRACKER,
                 GOAL_DATE,
-                date
+                date,
+                GOAL_DURATION,
+                1
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int goalID = cursor.getInt(0);
+            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
+        }
+    }
+    public void removeWeeklyGoal(int date){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s+7 = %s and %s = %s",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DATE,
+                date,
+                GOAL_DURATION,
+                7
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -393,6 +436,7 @@ public class DBHandler extends SQLiteOpenHelper
 
     public void removeOldStuff(int oldDate){
         removePlan(oldDate);
+        removeWeeklyGoal(oldDate);
         removeGoal(oldDate);
     }
 

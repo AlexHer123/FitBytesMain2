@@ -18,12 +18,15 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class FitnessTracker extends MainActivity {
     private ArrayAdapter<String> goalAdapter;
     private DBHandler goalDB = new DBHandler(this);
+    boolean isWeekly = false;
 
     private void displayPopup(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
@@ -35,23 +38,55 @@ public class FitnessTracker extends MainActivity {
         setContentView(R.layout.activity_fitness_tracker);
         //goals = new ArrayList<>();
         getDailyGoals();
-        setGoalAdapter();
+        getWeeklyGoals();
+        if(!isWeekly) setGoalAdapter(1);
+        else setGoalAdapter(7);
         updateGoalList();
         Button addButton = (Button) findViewById(R.id.addGoal);
         addButton.setOnClickListener(
                 new AdapterView.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Goal goal = new Goal();
-                        addGoal(goal);
-                        updateGoalList();
-                        displayPopup("Goal has been added.");
+                        if(!isWeekly) {
+                            addGoal(createDailyGoal());
+                            updateGoalList();
+                            displayPopup("Daily Goal has been added.");
+                        } else {
+                            addGoal(createWeeklyGoal());
+                            updateGoalList();
+                            displayPopup("Weekly Goal has been added.");
+                        }
+                    }
+                }
+        );
+        final Button changeButton = (Button) findViewById(R.id.toWeekly);
+        changeButton.setOnClickListener(
+                new AdapterView.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!isWeekly) {
+                            setGoalAdapter(7);
+                            updateGoalList();
+                            changeButton.setText("Go to Daily Goals");
+                            TextView tv = (TextView) findViewById(R.id.textView6);
+                            tv.setText("Weekly Goals");
+                            isWeekly = true;
+                        } else {
+                            setGoalAdapter(1);
+                            updateGoalList();
+                            changeButton.setText("Go to Weekly Goals");
+                            TextView tv = (TextView) findViewById(R.id.textView6);
+                            tv.setText("Daily Goals");
+                            isWeekly = false;
+                        }
                     }
                 }
         );
         //Button finishButton = (Button) findViewById(R.id.null);
         displayGoalAdapter((ListView) findViewById(R.id.daily_goals));
         goalDB.removeGoal(goalDB.getCurrentDate());
+        goalDB.removeWeeklyGoal(goalDB.getCurrentDate());
+
     }
     private void setGoalAdapter(){
         List<String> goalList = new ArrayList<>();
@@ -64,11 +99,22 @@ public class FitnessTracker extends MainActivity {
         }
         goalAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalList);
     }
+    private void setGoalAdapter(int i){
+        List<String> goalList = new ArrayList<>();
+        for(Goal goal : goalDB.getAllGoals(i)){
+            if(goal.getCompleted()) {
+                goalList.add(goal.getDescription() + " (Done)");
+            } else {
+                goalList.add(goal.getDescription());
+            }
+        }
+        goalAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalList);
+    }
     private void displayGoalAdapter(ListView listView) {
         listView.setAdapter(goalAdapter);
     }
     private void getDailyGoals(){
-        if(goalDB.getAllGoals().isEmpty()){
+        if(goalDB.getAllGoals(1).isEmpty()){
             Goal[] g = {createDailyGoal(), createDailyGoal(), createDailyGoal()};
             for(Goal goal : g){
                 goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
@@ -82,7 +128,7 @@ public class FitnessTracker extends MainActivity {
     }
 
     private void getWeeklyGoals(){
-        if(goalDB.getAllGoals() == null){
+        if(goalDB.getAllGoals(7).isEmpty()){
             Goal[] g = {createWeeklyGoal(), createWeeklyGoal()};
             for(Goal goal : g){
                 goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
@@ -102,7 +148,6 @@ public class FitnessTracker extends MainActivity {
     private void addGoal(Goal goal){
         goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
         goalAdapter.add(goal.getDescription());
-
     }
     private void updateGoalList() {
         ListView goalsListView = (ListView) findViewById(R.id.daily_goals);
@@ -137,7 +182,9 @@ public class FitnessTracker extends MainActivity {
                                             goalDB.setGoalCompleted(selectedRow);
                                             dialog.dismiss();
                                             displayPopup("Goal has been completed");
-                                            setGoalAdapter();
+                                            if(!isWeekly)
+                                                setGoalAdapter(1);
+                                            else setGoalAdapter(7);
                                             updateGoalList();
                                         }
                                     }
@@ -154,7 +201,9 @@ public class FitnessTracker extends MainActivity {
                                             goalDB.setGoalIncompleted(selectedRow);
                                             dialog.dismiss();
                                             displayPopup("Goal is now incomplete");
-                                            setGoalAdapter();
+                                            if(!isWeekly)
+                                                setGoalAdapter(1);
+                                            else setGoalAdapter(7);
                                             updateGoalList();
                                         }
                                     }
