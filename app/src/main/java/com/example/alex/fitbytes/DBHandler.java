@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.alex.fitbytes.fitnesstracker.DefaultGoal;
 import com.example.alex.fitbytes.fitnesstracker.Goal;
 
 import java.util.ArrayList;
@@ -124,7 +123,7 @@ public class DBHandler extends SQLiteOpenHelper
         String description = cursor.getString(1);
         int date = cursor.getInt(2);
         int duration = cursor.getInt(3);
-        Goal g = new DefaultGoal(description, date, duration);
+        Goal g = new Goal(description, date, duration);
         g.setCompleted(cursor.getInt(4) > 0);
         return g;
     }
@@ -162,7 +161,7 @@ public class DBHandler extends SQLiteOpenHelper
                 int date = cursor.getInt(2);
                 int duration = cursor.getInt(3);
                 boolean completed = cursor.getInt(4) > 0;
-                Goal g = new DefaultGoal(description, date, duration);
+                Goal g = new Goal(description, date, duration);
                 g.setCompleted(completed);
                 list.add(g);
             } while(cursor.moveToNext());
@@ -186,7 +185,7 @@ public class DBHandler extends SQLiteOpenHelper
                 int date = cursor.getInt(2);
                 int duration = cursor.getInt(3);
                 boolean completed = cursor.getInt(4) > 0;
-                Goal g = new DefaultGoal(description, date, duration);
+                Goal g = new Goal(description, date, duration);
                 g.setCompleted(completed);
                 list.add(g);
             } while(cursor.moveToNext());

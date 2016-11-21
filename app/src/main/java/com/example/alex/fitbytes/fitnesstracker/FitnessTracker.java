@@ -15,7 +15,6 @@ import com.example.alex.fitbytes.MainActivity;
 import com.example.alex.fitbytes.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class FitnessTracker extends MainActivity {
@@ -106,7 +105,7 @@ public class FitnessTracker extends MainActivity {
     }
     private void getDefaultGoals(){
         if(goalDB.getAllGoals().isEmpty()){
-            Goal[] g = {new DefaultGoal(DefaultGoal.Type.DAILY), new DefaultGoal(DefaultGoal.Type.WEEKLY)};
+            Goal[] g = {new Goal(Goal.Type.DAILY), new Goal(Goal.Type.WEEKLY)};
             for(Goal goal : g){
                 goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
             }
