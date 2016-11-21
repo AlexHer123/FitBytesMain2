@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
+import com.example.alex.fitbytes.fitnesstracker.FitnessTracker;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

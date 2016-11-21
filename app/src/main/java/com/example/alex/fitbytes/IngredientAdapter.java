@@ -102,20 +102,25 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
         return convertView;
     }
 
-    public Filter getFilter() {
-        return new Filter() {
+    public Filter getFilter()
+    {
+        return new Filter()
+        {
 
             @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
+            protected FilterResults performFiltering(CharSequence constraint)
+            {
                 final FilterResults oReturn = new FilterResults();
                 final ArrayList<IngredientItem> results = new ArrayList<>();
                 if (orig == null)
                     orig = ingredients;
-                if (constraint != null) {
-                    if (orig != null && orig.size() > 0) {
-                        for (final IngredientItem g : orig) {
-                            if (g.getName().toLowerCase()
-                                    .contains(constraint.toString()))
+                if (constraint != null)
+                {
+                    if (orig != null && orig.size() > 0)
+                    {
+                        for (final IngredientItem g : orig)
+                        {
+                            if (g.getName().toLowerCase().contains(constraint.toString()))
                                 results.add(g);
                         }
                     }
@@ -126,8 +131,8 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
 
             @SuppressWarnings("unchecked")
             @Override
-            protected void publishResults(CharSequence constraint,
-                                          FilterResults results) {
+            protected void publishResults(CharSequence constraint, FilterResults results)
+            {
                 ingredients = (ArrayList<IngredientItem>) results.values;
                 notifyDataSetChanged();
             }
