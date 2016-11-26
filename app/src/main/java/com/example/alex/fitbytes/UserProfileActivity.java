@@ -153,8 +153,15 @@ public class UserProfileActivity extends MainActivity {
 
     private String BMItoString(){
         String bmiString;
+
         bmiString = Double.toString(BMI);
-        bmiString = bmiString.substring(0,5);
+        int StringLength = bmiString.length();
+
+        if(StringLength > 4)
+            bmiString = bmiString.substring(0,5);
+        else
+            bmiString = bmiString.substring(0,StringLength);
+
         return bmiString;
     }
 }
