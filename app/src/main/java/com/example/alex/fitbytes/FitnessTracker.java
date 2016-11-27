@@ -7,10 +7,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class FitnessTracker extends MainActivity {
@@ -46,13 +49,41 @@ public class FitnessTracker extends MainActivity {
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        /*final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-                        dialog.setTitle("What would you like to do?");
+                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+                        dialog.setTitle("Set your goal and deadline");
                         dialog.setContentView(R.layout.goal_add_goal_dialog);
-                        dialog.show();*//*
-                        Calendar c = Calendar.getInstance();
-                        c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-                        displayToast(""+goalDB.getCurrentDate() + " " + c.getTime());*/
+                        dialog.show();
+                        final EditText editText = (EditText) dialog.findViewById(R.id.editText);
+                        final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
+                        datePicker.setMinDate(System.currentTimeMillis() - 1000);
+                        Button cancelButton = (Button) dialog.findViewById(R.id.goal_add_goal_cancel);
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                                displayToast("Goal creation has been canceled");
+                            }
+                        });
+                        Button finishButton = (Button) dialog.findViewById(R.id.goal_add_goal_finish);
+                        finishButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String goalDescription = editText.getText().toString();
+                                Calendar calendar = Calendar.getInstance();
+                                int day = datePicker.getDayOfMonth();
+                                int month = datePicker.getMonth();
+                                int year =  datePicker.getYear();
+                                calendar.set(year, month, day);
+                                String dateString = String.format("%s%s%s", calendar.get(Calendar.YEAR),
+                                        (calendar.get(Calendar.MONTH)+1), calendar.get(Calendar.DATE));
+                                //Goal g = new UserGoal()
+                                //goalDB.addGoal()
+                                dialog.dismiss();
+                                displayToast("Goal has been created");
+                                //displayToast(goalDescription + " " + dateString);
+
+                            }
+                        });
                     }
                 };
                 break;

@@ -23,18 +23,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </TableRow>
-        <TextView
+        <TableRow>
+            <TextView
             android:text="Current Goals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
             android:id="@+id/textView6"
             android:textSize="16sp" />
-        <ListView
+        </TableRow>
+        <TableRow>
+            <ListView
             android:id="@+id/current_goals"
             android:textSize="8sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </ListView>
+        </TableRow>
     </TableLayout>
 </RelativeLayout>
