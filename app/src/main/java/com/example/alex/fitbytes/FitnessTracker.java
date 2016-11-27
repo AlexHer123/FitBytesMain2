@@ -1,4 +1,4 @@
-package com.example.alex.fitbytes.fitnesstracker;
+package com.example.alex.fitbytes;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -9,10 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
-import com.example.alex.fitbytes.DBHandler;
-import com.example.alex.fitbytes.MainActivity;
-import com.example.alex.fitbytes.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,9 +101,9 @@ public class FitnessTracker extends MainActivity {
     }
     private void getDefaultGoals(){
         if(goalDB.getAllGoals().isEmpty()){
-            Goal[] g = {new Goal(Goal.Type.DAILY), new Goal(Goal.Type.WEEKLY)};
+            Goal[] g = {new DailyGoal(), new WeeklyGoal()};
             for(Goal goal : g){
-                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted());
+                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted(), goal.getType());
             }
         }
     }
