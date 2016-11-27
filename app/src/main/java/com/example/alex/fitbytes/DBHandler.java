@@ -308,6 +308,31 @@ public class DBHandler extends SQLiteOpenHelper
         }
     }
 
+    public boolean updatePlan(int oldDate, int newDate, int recipe) {
+        // Check if the new date is already in the database
+        if (oldDate != newDate) {
+            String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + newDate + "";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                return false;
+            }
+        }
+
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + oldDate + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(col_2_DATE, newDate);
+        values.put(col_3_RECIPE, recipe);
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int planID = cursor.getInt(0);
+            db.update(TABLE_MEALPLAN, values, col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+
+        return true;
+    }
+
     public void addCurrentDate(int date)
     {
         // Search for duplicate date
@@ -435,9 +460,18 @@ public class DBHandler extends SQLiteOpenHelper
     }
 
     public void removeOldStuff(int oldDate){
-        removePlan(oldDate);
-        removeWeeklyGoal(oldDate);
-        removeGoal(oldDate);
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " <= " + oldDate + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int planID = cursor.getInt(0);
+                db.delete(TABLE_MEALPLAN, col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+            }while(cursor.moveToNext());
+        }
+//        removePlan(oldDate);
+//        removeWeeklyGoal(oldDate);
+//        removeGoal(oldDate);
     }
 
 

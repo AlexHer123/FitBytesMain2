@@ -1,41 +1,29 @@
 package com.example.alex.fitbytes;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
-import java.lang.reflect.Array;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MealPlan extends MainActivity {
 
     private String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-    private List<Integer> allDays = new ArrayList<Integer>();
 //    private String[] recipes = {"PB&J", "Ramen", "BBQ Chicken", "Cereal", "Grilled Cheese", "Spaghetti & Meatballs", "Hamburger", "Oatmeal", "Nachos","Chicken Burrito"};
     private List<String> recipes = new ArrayList<>();
-    private int currentMonth, currentDay, currentYear;
-    private int selectedMonth, selectedDay, selectedYear, selectedRecipe;
+    private int currentMonth, currentDate, currentYear;
+    private int selectedMonth, selectedDate, selectedYear, selectedRecipe;
     private int oldDate;
     private int editVisible = View.INVISIBLE;
     private DBHandler db = new DBHandler(this);
@@ -53,11 +41,10 @@ public class MealPlan extends MainActivity {
         // Set cancel button listener
         Button cancelButton = (Button)findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(new AdapterView.OnClickListener(){
-
             @Override
             public void onClick(View v) {
                 setEditVisibility(View.INVISIBLE);
-                displayPopup("Edit canceled");
+                displayPopup("Edit cancelled");
             }
         });
         setEditVisibility(View.INVISIBLE);
@@ -68,14 +55,6 @@ public class MealPlan extends MainActivity {
 
             @Override
             public void onClick(View v) {
-                // Check what year to use
-                if (selectedMonth-1 < currentMonth)
-                    selectedYear = currentYear + 1;
-                else if (selectedMonth-1 == currentMonth && selectedDay < currentDay)
-                    selectedYear = currentYear + 1;
-                else
-                    selectedYear = currentYear;
-
                 // Add meal
                 String message = "";
                 int selectionDate = getSelectedDate();
@@ -89,12 +68,14 @@ public class MealPlan extends MainActivity {
                         message = "Meal Plan Already Exists";
                 }
                 else{
-                    db.removePlan(oldDate);
-                    boolean edited = db.addPlan(selectionDate, selectedRecipe);
+//                    db.removePlan(oldDate);
+                    boolean edited = db.updatePlan(oldDate, selectionDate, selectedRecipe);
                     setEditVisibility(View.INVISIBLE);
                     // Displays a message
-                    if (edited)
+                    if (edited){
                         message = "Edit made";
+//                        db.removePlan(oldDate);
+                    }
                     else
                         message = "Edit not made";
                 }
@@ -102,6 +83,55 @@ public class MealPlan extends MainActivity {
                 displayPopup(message);
             }
         });
+
+        // Set pick date button listener
+        Button pickDateButton = (Button)findViewById(R.id.pick_button);
+        pickDateButton.setOnClickListener(new AdapterView.OnClickListener() {
+            // On click, pass the current date and switch to CalendarPicker. Expect a date back.
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MealPlan.this, CalendarPicker.class);
+                intent.putExtra("currentMonth", selectedMonth-1); // Make selectedMonth zero-based
+                intent.putExtra("currentDate", selectedDate);
+                intent.putExtra("currentYear", selectedYear);
+                startActivityForResult(intent, 1);
+            }
+        });
+
+        // Set pick recipe button listener
+        Button pickRecipeButton = (Button)findViewById(R.id.button_mp_recipe);
+        pickRecipeButton.setOnClickListener(new AdapterView.OnClickListener(){
+            // On click, switch to recipe. Expect a recipe ID back
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MealPlan.this, Recipes.class);
+                startActivityForResult(intent, 2);
+            }
+        });
+    }
+
+    // Used as a response to startActivityForResult() method. Determines what happens after a return from
+    // another activity.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        // Handles return from CalendarPicker
+        if (requestCode == 1) {
+            Log.d("HKDJSHF", "kdshfdks");
+            // Set the selected date values
+            if(resultCode == Activity.RESULT_OK){
+                selectedMonth = intent.getIntExtra("month", currentMonth)+1;
+                selectedDate = intent.getIntExtra("date", currentDate);
+                selectedYear = intent.getIntExtra("year", currentYear);
+                writeDateTextView();
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
+        // Handles return from Recipes
+        else if (requestCode == 2){
+            Log.d("Hasdfasdf", "kdshfdks");
+        }
     }
 
     @Override
@@ -118,65 +148,70 @@ public class MealPlan extends MainActivity {
         // Get date information
         final Calendar date = Calendar.getInstance();
         currentMonth = date.get(Calendar.MONTH); // zero-based
-        currentDay = date.get(Calendar.DAY_OF_MONTH); // one-based
+        currentDate = date.get(Calendar.DAY_OF_MONTH); // one-based
         currentYear = date.get(Calendar.YEAR);
 
+        // Set selected date as current date. Writes it on the screen
+        selectedMonth = currentMonth+1;
+        selectedDate = currentDate;
+        selectedYear = currentYear;
+        writeDateTextView();
         // Create each individual dropdown
-        createCalendarDays(date);
-        createMonthSpinner(currentMonth);
-        createDaySpinner(currentDay-1);
+//        createCalendarDays(date);
+//        createMonthSpinner(selectedMonth);
+//        createDaySpinner(selectedDate-1);
         createRecipeSpinner(0);
     }
 
     // Create Month dropdown
-    private void createMonthSpinner(int defaultMonth) {
-        // Set up month dropdown
-        final Spinner monthDropdown = (Spinner)findViewById(R.id.monthSpinner);
-        ArrayAdapter<String> dayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthList);
-        monthDropdown.setAdapter(dayAdapter);
-        monthDropdown.setSelection(defaultMonth);
-
-        // Listener for month dropdown
-        monthDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedMonth = position+1;
-                Calendar newDate = new GregorianCalendar(Calendar.YEAR, position, 1);
-                createCalendarDays(newDate);
-                if (setDay) {
-                    createDaySpinner(0);
-                }
-                setDay = true;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // DO NOTHING
-            }
-        });
-    }
+//    private void createMonthSpinner(int defaultMonth) {
+//        // Set up month dropdown
+//        final Spinner monthDropdown = (Spinner)findViewById(R.id.monthSpinner);
+//        ArrayAdapter<String> dayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthList);
+//        monthDropdown.setAdapter(dayAdapter);
+//        monthDropdown.setSelection(defaultMonth);
+//
+//        // Listener for month dropdown
+//        monthDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                selectedMonth = position+1;
+//                Calendar newDate = new GregorianCalendar(Calendar.YEAR, position, 1);
+//                createCalendarDays(newDate);
+//                if (setDay) {
+//                    createDaySpinner(0);
+//                }
+//                setDay = true;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                // DO NOTHING
+//            }
+//        });
+//    }
 
     // Create day dropdown
-    private void createDaySpinner(int defaultDay) {
-        // Set up date dropdown
-        Spinner numDropdown = (Spinner)findViewById((R.id.daySpinner));
-        ArrayAdapter<Integer> numAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_dropdown_item, allDays);
-        numDropdown.setAdapter(numAdapter);
-        numDropdown.setSelection(defaultDay);
-
-        // Listener for date dropdown
-        numDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedDay = position+1;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // DO NOTHING
-            }
-        });
-    }
+//    private void createDaySpinner(int defaultDay) {
+//        // Set up date dropdown
+//        Spinner numDropdown = (Spinner)findViewById((R.id.daySpinner));
+//        ArrayAdapter<Integer> numAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_dropdown_item, allDays);
+//        numDropdown.setAdapter(numAdapter);
+//        numDropdown.setSelection(defaultDay);
+//
+//        // Listener for date dropdown
+//        numDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                selectedDate = position+1;
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                // DO NOTHING
+//            }
+//        });
+//    }
 
     // Create Recipe dropdown
     private void createRecipeSpinner(int defaultRecipe) {
@@ -235,12 +270,14 @@ public class MealPlan extends MainActivity {
                         // Save old date and set it as the selected date
                         oldDate = dateArrayToInt(brokenDate);
                         selectedMonth = brokenDate[0];
-                        selectedDay = brokenDate[1];
+                        selectedDate = brokenDate[1];
+                        selectedYear = brokenDate[2];
                         selectedRecipe = db.getMealRecipe(oldDate);
                         setDay = false;
+                        writeDateTextView();
                         // Recreate dropdowns using selected date
-                        createMonthSpinner(selectedMonth-1);
-                        createDaySpinner(selectedDay-1);
+//                        createMonthSpinner(selectedMonth-1);
+//                        createDaySpinner(selectedDate-1);
                         createRecipeSpinner(selectedRecipe);
                         setEditVisibility(View.VISIBLE);
                         dialog.dismiss();
@@ -265,13 +302,13 @@ public class MealPlan extends MainActivity {
     }
 
     // Used to get the number of days in a month
-    private void createCalendarDays(Calendar date) {
-        int numDays = date.getActualMaximum(Calendar.DAY_OF_MONTH);
-        allDays = new ArrayList<Integer>();
-        for (int i = 1; i <= numDays; i++){
-            allDays.add(i);
-        }
-    }
+//    private void createCalendarDays(Calendar date) {
+//        int numDays = date.getActualMaximum(Calendar.DAY_OF_MONTH);
+//        allDays = new ArrayList<Integer>();
+//        for (int i = 1; i <= numDays; i++){
+//            allDays.add(i);
+//        }
+//    }
 
     // Used by upcoming meal list to get date pieces
     private int[] separateDate(String thisDate) {
@@ -313,8 +350,8 @@ public class MealPlan extends MainActivity {
         String date = "" + selectedYear;
         if (selectedMonth < 10) date +="0";
         date += selectedMonth;
-        if (selectedDay < 10) date += "0";
-        date += selectedDay;
+        if (selectedDate < 10) date += "0";
+        date += selectedDate;
         return Integer.parseInt(date);
     }
 
@@ -340,7 +377,6 @@ public class MealPlan extends MainActivity {
     private void setEditVisibility(int visibility) {
         if (visibility == 0) editMeal = true;
         else editMeal = false;
-        Log.d("editMeal value: ", Boolean.toString(editMeal));
         Button cancelButton = (Button)findViewById(R.id.button_cancel);
         TextView editText = (TextView)findViewById(R.id.tv_editing);
         cancelButton.setVisibility(visibility);
@@ -353,5 +389,11 @@ public class MealPlan extends MainActivity {
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, message, duration);
         toast.show();
+    }
+
+    // Writes the selected date on the screens TextView.
+    private void writeDateTextView(){
+        TextView dateTextView = (TextView)findViewById(R.id.textView_mp_date);
+        dateTextView.setText(monthList[selectedMonth-1]+" " + selectedDate+ ", " + selectedYear);
     }
 }

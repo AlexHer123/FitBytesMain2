@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
-//        db.removeOldStuff(db.getCurrentDate());
+        db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
         storeAllRecipes();
     }
