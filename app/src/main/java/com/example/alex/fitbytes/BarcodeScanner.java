@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.Tracker;
@@ -37,7 +38,7 @@ public class BarcodeScanner extends AppCompatActivity {
 
 
         final SurfaceView cameraView = (SurfaceView)findViewById(R.id.camera_view);
-        TextView barcodeInfo = (TextView)findViewById(R.id.code_info);
+        final TextView barcodeInfo = (TextView)findViewById(R.id.code_info);
 
         BarcodeDetector barcodeDetector =
                 new BarcodeDetector.Builder(getApplicationContext())
@@ -76,10 +77,34 @@ public class BarcodeScanner extends AppCompatActivity {
             }
         });
 
+
+        barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
+            @Override
+            public void release() {
+            }
+
+            @Override
+            public void receiveDetections(Detector.Detections<Barcode> detections) {
+                final SparseArray<Barcode> barcodes = detections.getDetectedItems();
+
+                if (barcodes.size() != 0) {
+                    barcodeInfo.post(new Runnable() {    // Use the post method of the TextView
+                        public void run() {
+                            barcodeInfo.setText(    // Update the TextView
+                                    barcodes.valueAt(0).displayValue
+                            );
+                        }
+                    });
+                }
+            }
+        });
+
+
+
 //        if(!detector.isOperational()){
 //            Toast.makeText( getApplicationContext(), "Could not open barcode scanner.", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-    }
+    }//end onCreate
 
-}
+}//end class

@@ -30,6 +30,13 @@
             android:textSize="36sp"
             android:layout_centerHorizontal="true" />
 
+        <Button
+            android:text="Add Ingredient To Pantry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/pantryLaunchBarcode"
+            android:onClick="barcodeButtonOnClick" />
+
         <SearchView
             android:id="@+id/pantrySearch"
             android:layout_width="match_parent"

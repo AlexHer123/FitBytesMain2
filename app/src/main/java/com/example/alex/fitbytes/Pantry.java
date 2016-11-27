@@ -1,5 +1,6 @@
 package com.example.alex.fitbytes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,4 +98,10 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
     {
         return false;
     };
+
+
+    public void barcodeButtonOnClick(View view){
+        Intent intent = new Intent(this, BarcodeScanner.class);
+        startActivity(intent);
+    }
 }
