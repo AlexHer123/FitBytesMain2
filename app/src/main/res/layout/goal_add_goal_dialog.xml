@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true">
 
-    <TextView
-        android:id="@+id/goal_add_goal_dialog"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="26sp" />
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:hint="Enter your description..." />
+
+    <DatePicker
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent" />
 
     <TableRow
         android:layout_width="match_parent"
@@ -19,12 +26,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/goal_add_goal_cancel"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:elevation="0dp" />
         <Button
-            android:text="Add Goal"
+            android:text="Finish"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/goal_add_goal"
+            android:id="@+id/goal_add_goal_finish"
             android:layout_weight="1" />
     </TableRow>
 </LinearLayout>

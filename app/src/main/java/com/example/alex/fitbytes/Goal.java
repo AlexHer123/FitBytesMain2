@@ -1,13 +1,56 @@
-package com.example.alex.fitbytes.fitnesstracker;
-
-import java.util.Calendar;
+package com.example.alex.fitbytes;
 
 /**
  * Created by ger on 11/19/16.
  */
 
 public class Goal {
-    private String description;
+    private int date;
+    private int duration;
+    private boolean completed;
+    private Category category;
+    protected enum Type{
+        DAILY, WEEKLY, USER
+    }
+    private Type type;
+    public Goal(){};
+    public Goal(Category c){
+        category = c;
+    }
+    public boolean getCompleted(){
+        return completed;
+    }
+    public String getDescription(){
+        return category.getOption();
+    }
+    public int getDate(){
+        return date;
+    }
+    public int getDuration(){
+        return duration;
+    }
+    public Type getType(){
+        return type;
+    }
+    public void setCategory(Category c){
+        if(c != null) category = c;
+    }
+    public void setCompleted(boolean value){
+        completed = value;
+    }
+    public void setDescription(String description){
+        category.setOption(description);
+    }
+    public void setDuration(int duration){
+        this.duration = duration;
+    }
+    public void setType(Type type){
+        this.type = type;
+    }
+    public void setDate(int date){
+        this.date = date;
+    }
+/*    private String description;
     private int date;
     private int duration;
     private boolean completed;
@@ -86,12 +129,12 @@ public class Goal {
         this.duration = duration;
         setType();
     }
-    /*public DefaultGoal(int currentDate, int duration, Type type){
+    *//*public DefaultGoal(int currentDate, int duration, Type type){
         description = initDefaultGoal();
         date = currentDate;
         this.duration = duration;
         this.type = type;
-    }*/
+    }*//*
     private String initDefaultGoal(){
         String option = Exercise.DEFAULT_OPTIONS[(int)(Math.random()*Exercise.DEFAULT_OPTIONS.length-1)];
         String optionDescription;
@@ -110,5 +153,5 @@ public class Goal {
                 break;
         }
         return optionDescription;
-    }
+    }*/
 }

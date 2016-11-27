@@ -1,11 +1,10 @@
-package com.example.alex.fitbytes.fitnesstracker;
+package com.example.alex.fitbytes;
 
 /**
  * Created by ger on 11/19/16.
  */
 
-public class Exercise implements Category{
-    private String option;
+public class Exercise extends Category{
     public static final String[] DEFAULT_OPTIONS = {
             "push ups",
             "sit ups",
@@ -18,9 +17,12 @@ public class Exercise implements Category{
             "plank"
     };
     public Exercise(){
-        getDefault();
+        this.setOption(getDefault());
     }
-    private String getDefault(){
+    public Exercise(String option){
+        super(option);
+    }
+    protected String getDefault(){
         String option = DEFAULT_OPTIONS[(int)(Math.random()*DEFAULT_OPTIONS.length-1)];
         String optionDescription;
         switch(option){

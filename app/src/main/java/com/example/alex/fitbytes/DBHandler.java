@@ -7,8 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.alex.fitbytes.fitnesstracker.Goal;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,7 @@ public class DBHandler extends SQLiteOpenHelper
     private static final String GOAL_DATE = "goal_date";
     private static final String GOAL_DURATION = "goal_duration";
     private static final String GOAL_COMPLETED = "goal_completed";
+    private static final String GOAL_TYPE = "goal_type";
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
@@ -71,8 +70,8 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL(CREATE_INGREDIENTS_TABLE);
 
         String CREATE_FITNESS_TRACKER_TABLE =
-                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s BOOLEAN)",
-                        TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION, GOAL_COMPLETED);
+                String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s BOOLEAN, %s TEXT)",
+                        TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION, GOAL_COMPLETED, GOAL_TYPE);
         db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
 
 
@@ -86,7 +85,7 @@ public class DBHandler extends SQLiteOpenHelper
         onCreate(db);
     }
 
-    public boolean addGoal(String description, int date, int duration, boolean completed){
+    public boolean addGoal(String description, int date, int duration, boolean completed, Goal.Type type){
         /*String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
@@ -110,6 +109,7 @@ public class DBHandler extends SQLiteOpenHelper
         values.put(GOAL_DATE, date);
         values.put(GOAL_DURATION, duration);
         values.put(GOAL_COMPLETED, completed);
+        values.put(GOAL_TYPE, type.toString());
         db.insert(TABLE_FITNESS_TRACKER, null, values);
         return true;
     }
@@ -123,7 +123,16 @@ public class DBHandler extends SQLiteOpenHelper
         String description = cursor.getString(1);
         int date = cursor.getInt(2);
         int duration = cursor.getInt(3);
-        Goal g = new Goal(description, date, duration);
+
+        Goal g = null;
+        switch(cursor.getString(5)) {
+            case "DAILY":
+                g = new DailyGoal(description, date, duration);
+                break;
+            case "WEEKLY":
+                g = new WeeklyGoal(description, date, duration);
+                break;
+        }
         g.setCompleted(cursor.getInt(4) > 0);
         return g;
     }
@@ -161,7 +170,15 @@ public class DBHandler extends SQLiteOpenHelper
                 int date = cursor.getInt(2);
                 int duration = cursor.getInt(3);
                 boolean completed = cursor.getInt(4) > 0;
-                Goal g = new Goal(description, date, duration);
+                Goal g = null;
+                switch(cursor.getString(5)) {
+                    case "DAILY":
+                        g = new DailyGoal(description, date, duration);
+                        break;
+                    case "WEEKLY":
+                        g = new WeeklyGoal(description, date, duration);
+                        break;
+                }
                 g.setCompleted(completed);
                 list.add(g);
             } while(cursor.moveToNext());
@@ -185,7 +202,15 @@ public class DBHandler extends SQLiteOpenHelper
                 int date = cursor.getInt(2);
                 int duration = cursor.getInt(3);
                 boolean completed = cursor.getInt(4) > 0;
-                Goal g = new Goal(description, date, duration);
+                Goal g = null;
+                switch(cursor.getString(5)) {
+                    case "DAILY":
+                        g = new DailyGoal(description, date, duration);
+                        break;
+                    case "WEEKLY":
+                        g = new WeeklyGoal(description, date, duration);
+                        break;
+                }
                 g.setCompleted(completed);
                 list.add(g);
             } while(cursor.moveToNext());

@@ -33,7 +33,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".fitnesstracker.FitnessTracker"
+            android:name=".FitnessTracker"
+            android:label="Goal Tracker"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Pantry"
