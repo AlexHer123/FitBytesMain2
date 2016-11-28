@@ -132,6 +132,8 @@ public class DBHandler extends SQLiteOpenHelper
             case "WEEKLY":
                 g = new WeeklyGoal(description, date, duration);
                 break;
+            case "USER":
+                g = new UserGoal(description, date, duration);
         }
         g.setCompleted(cursor.getInt(4) > 0);
         return g;
@@ -178,6 +180,8 @@ public class DBHandler extends SQLiteOpenHelper
                     case "WEEKLY":
                         g = new WeeklyGoal(description, date, duration);
                         break;
+                    case "USER":
+                        g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
                 list.add(g);
@@ -210,6 +214,8 @@ public class DBHandler extends SQLiteOpenHelper
                     case "WEEKLY":
                         g = new WeeklyGoal(description, date, duration);
                         break;
+                    case "USER":
+                        g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
                 list.add(g);

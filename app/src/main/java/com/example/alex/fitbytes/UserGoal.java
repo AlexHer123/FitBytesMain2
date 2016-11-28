@@ -19,8 +19,9 @@ public class UserGoal extends Goal {
         setType(Type.USER);
     }
     public String getDescription() {
-        if(super.getDescription().contains("User: "))
+        /*if(super.getDescription().contains("User: "))
             return super.getDescription();
-        else return "User: " + super.getDescription();
+        else return "User: " + super.getDescription();*/
+        return super.getDescription();
     }
 }

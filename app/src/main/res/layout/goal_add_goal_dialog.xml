@@ -22,14 +22,14 @@
         android:layout_height="wrap_content">
 
         <Button
-            android:text="Cancel"
+            android:text="Go Back"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/goal_add_goal_cancel"
             android:layout_weight="1"
             android:elevation="0dp" />
         <Button
-            android:text="Finish"
+            android:text="Create"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/goal_add_goal_finish"
