@@ -25,103 +25,6 @@
         android:layout_marginTop="28dp"
         android:textSize="36sp" />
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="52dp">
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Spinner
-                android:id="@+id/monthSpinner"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:spinnerMode="dropdown"
-                android:layout_below="@+id/textView"
-                android:layout_centerHorizontal="true" />
-
-            <Spinner
-                android:id="@+id/daySpinner"
-                android:layout_width="75dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginRight="30dp"
-                android:layout_marginEnd="30dp"
-                android:layout_alignTop="@+id/monthSpinner" />
-
-            <Button
-                android:id="@+id/addMeal"
-                android:text="Done"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_alignTop="@+id/tableLayout"
-                android:layout_toRightOf="@+id/textView"
-                android:layout_toEndOf="@+id/textView" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <Spinner
-                android:id="@+id/recipeSpinner"
-                android:layout_width="100dp"
-                android:layout_height="match_parent" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <Button
-                android:text="Cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/button_cancel" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_marginTop="50dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-            <TextView
-                android:id="@+id/UpcomingPlans"
-                android:text="Upcoming Plans"
-                android:textSize="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/tableLayout"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true" />
-
-        </TableRow><![CDATA[
-
-
-
-
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
-
-
-
-        ]]>
-
-        <ListView
-                android:id="@+id/plannedMeals"
-                android:textSize="12dp"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-    </TableLayout>
-
     <TextView
         android:text="Editing"
         android:layout_width="wrap_content"
@@ -134,5 +37,86 @@
         android:fontFamily="sans-serif"
         android:textColor="@color/colorPrimary"
         android:textStyle="normal|bold" />
+
+    <TextView
+        android:text="Pick a Date"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_mp_date"
+        android:editable="false"
+        android:textSize="32sp"
+        android:layout_width="wrap_content"
+        android:textColor="?android:attr/textColorTertiary"
+        android:layout_below="@+id/tv_editing"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pick_button"
+        android:layout_alignBottom="@+id/textView_mp_date"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Pick a Recipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_mp_recipe"
+        android:textSize="32sp"
+        android:layout_alignBottom="@+id/button_mp_recipe"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Recipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_mp_recipe"
+        android:layout_below="@+id/pick_button"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/addMeal"
+        android:text="Done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/button_mp_recipe"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_cancel"
+        android:layout_alignBaseline="@+id/addMeal"
+        android:layout_alignBottom="@+id/addMeal"
+        android:layout_toLeftOf="@+id/addMeal"
+        android:layout_toStartOf="@+id/addMeal" />
+
+    <TextView
+        android:id="@+id/UpcomingPlans"
+        android:text="Upcoming Plans"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/button_cancel"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ListView
+            android:id="@+id/plannedMeals"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+        android:layout_below="@+id/UpcomingPlans"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

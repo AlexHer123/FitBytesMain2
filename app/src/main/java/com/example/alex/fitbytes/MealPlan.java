@@ -17,26 +17,51 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/*
+Log of changes
+- line 49 : if (!editmeal)
+- cancelButton : intent stuff
+- addButton : intent stuff
+- line 114 : comment popup
+- change onOptionSelected
+
+ */
+
+
+
 public class MealPlan extends MainActivity {
 
     private String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-//    private String[] recipes = {"PB&J", "Ramen", "BBQ Chicken", "Cereal", "Grilled Cheese", "Spaghetti & Meatballs", "Hamburger", "Oatmeal", "Nachos","Chicken Burrito"};
     private List<String> recipes = new ArrayList<>();
+    private List<MealPlanItem> mpItems = new ArrayList<>();
     private int currentMonth, currentDate, currentYear;
-    private int selectedMonth, selectedDate, selectedYear, selectedRecipe;
+    private int selectedMonth, selectedDate, selectedYear, selectedRecipeID;
+    private String selectedRecipeName;
     private int oldDate;
     private int editVisible = View.INVISIBLE;
     private DBHandler db = new DBHandler(this);
     private boolean setDay = false;
     private boolean editMeal = false;
+    private MealPlanItem mpItem = new MealPlanItem();
+    private Boolean flags[] = {false,false}; // Flags to see if we can add {date, recipeInfo}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_meal_plan);
 
+//        editMeal = getIntent().getBooleanExtra("edit", false);
+//        if (!editMeal) {
+            setEditVisibility(View.INVISIBLE);
+//        }
+//        else{
+//            MealPlanItem mpi = (MealPlanItem) getIntent().getSerializableExtra("mpItem");
+//
+//        }
+
         createDropdowns();
-        createMeals(convertDates(db.getAllPlans()));
+        mpItems = db.getAllPlans();
+        createMeals(convertDates(mpItems));
 
         // Set cancel button listener
         Button cancelButton = (Button)findViewById(R.id.button_cancel);
@@ -45,9 +70,14 @@ public class MealPlan extends MainActivity {
             public void onClick(View v) {
                 setEditVisibility(View.INVISIBLE);
                 displayPopup("Edit cancelled");
+
+//                Intent intent = new Intent(MealPlan.this, UpcomingPlans.class);
+//                setResult(Activity.RESULT_CANCELED, intent);
+//                finish();
             }
         });
-        setEditVisibility(View.INVISIBLE);
+
+
 
         // Set add button listener
         Button addButton = (Button)findViewById(R.id.addMeal);
@@ -58,27 +88,36 @@ public class MealPlan extends MainActivity {
                 // Add meal
                 String message = "";
                 int selectionDate = getSelectedDate();
-
-                if (!editMeal) {
-                    boolean added = db.addPlan(selectionDate, selectedRecipe);
+                mpItem.printContents();
+//                MealPlanItem existingMPI = db.getMealRecipe(mpItem.getDate());
+                if (!editMeal && MealPlan.this.checkFlags()) {
+                    Log.d("IN THE ADD", "1!");
+                    boolean added = db.addPlan(mpItem);
                     // Displays a message
-                    if (added)
+                    if (added) {
                         message = "Meal Plan Added";
+                        MealPlan.this.resetMealPlan();
+//                        Intent intent = new Intent(MealPlan.this, UpcomingPlans.class);
+//                        setResult(Activity.RESULT_OK, intent);
+//                        finish();
+                    }
                     else
                         message = "Meal Plan Already Exists";
                 }
-                else{
+                else if (MealPlan.this.checkFlags()){
 //                    db.removePlan(oldDate);
-                    boolean edited = db.updatePlan(oldDate, selectionDate, selectedRecipe);
+                    boolean edited = db.updatePlan(oldDate, selectionDate, selectedRecipeID, selectedRecipeName);
                     setEditVisibility(View.INVISIBLE);
                     // Displays a message
                     if (edited){
                         message = "Edit made";
+                        MealPlan.this.resetMealPlan();
 //                        db.removePlan(oldDate);
                     }
                     else
                         message = "Edit not made";
                 }
+                else message = "Invalid meal plan";
                 MealPlan.this.createMeals(convertDates(db.getAllPlans()));
                 displayPopup(message);
             }
@@ -105,6 +144,7 @@ public class MealPlan extends MainActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MealPlan.this, Recipes.class);
+                intent.putExtra("fromMP", true);
                 startActivityForResult(intent, 2);
             }
         });
@@ -116,13 +156,15 @@ public class MealPlan extends MainActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // Handles return from CalendarPicker
         if (requestCode == 1) {
-            Log.d("HKDJSHF", "kdshfdks");
             // Set the selected date values
             if(resultCode == Activity.RESULT_OK){
                 selectedMonth = intent.getIntExtra("month", currentMonth)+1;
                 selectedDate = intent.getIntExtra("date", currentDate);
                 selectedYear = intent.getIntExtra("year", currentYear);
-                writeDateTextView();
+                mpItem.setMpDate(selectedMonth, selectedDate, selectedYear);
+                mpItem.printContents();
+                setFlag(0, true);
+                writeDateTextView(monthList[selectedMonth-1]+" " + selectedDate+ ", " + selectedYear);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -130,14 +172,31 @@ public class MealPlan extends MainActivity {
         }
         // Handles return from Recipes
         else if (requestCode == 2){
-            Log.d("Hasdfasdf", "kdshfdks");
+            // Set the selected date values
+            if(resultCode == Activity.RESULT_OK){
+                selectedRecipeID = intent.getIntExtra("recipeID", -1);
+                selectedRecipeName = intent.getStringExtra("recipeName");
+                mpItem.setRecipe(selectedRecipeID, selectedRecipeName);
+                setFlag(1, true);
+                mpItem.printContents();
+                writeRecipeTextView(mpItem.getRecipeName());
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+//        if (id == R.id.action_mealPlan) {
+//            return true;
+//        }
+
         if (id == R.id.action_mealPlan) {
+            Intent intent = new Intent(this, UpcomingPlans.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -152,87 +211,12 @@ public class MealPlan extends MainActivity {
         currentYear = date.get(Calendar.YEAR);
 
         // Set selected date as current date. Writes it on the screen
-        selectedMonth = currentMonth+1;
-        selectedDate = currentDate;
-        selectedYear = currentYear;
-        writeDateTextView();
-        // Create each individual dropdown
-//        createCalendarDays(date);
-//        createMonthSpinner(selectedMonth);
-//        createDaySpinner(selectedDate-1);
-        createRecipeSpinner(0);
-    }
-
-    // Create Month dropdown
-//    private void createMonthSpinner(int defaultMonth) {
-//        // Set up month dropdown
-//        final Spinner monthDropdown = (Spinner)findViewById(R.id.monthSpinner);
-//        ArrayAdapter<String> dayAdapter= new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, monthList);
-//        monthDropdown.setAdapter(dayAdapter);
-//        monthDropdown.setSelection(defaultMonth);
-//
-//        // Listener for month dropdown
-//        monthDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                selectedMonth = position+1;
-//                Calendar newDate = new GregorianCalendar(Calendar.YEAR, position, 1);
-//                createCalendarDays(newDate);
-//                if (setDay) {
-//                    createDaySpinner(0);
-//                }
-//                setDay = true;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // DO NOTHING
-//            }
-//        });
-//    }
-
-    // Create day dropdown
-//    private void createDaySpinner(int defaultDay) {
-//        // Set up date dropdown
-//        Spinner numDropdown = (Spinner)findViewById((R.id.daySpinner));
-//        ArrayAdapter<Integer> numAdapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_spinner_dropdown_item, allDays);
-//        numDropdown.setAdapter(numAdapter);
-//        numDropdown.setSelection(defaultDay);
-//
-//        // Listener for date dropdown
-//        numDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                selectedDate = position+1;
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // DO NOTHING
-//            }
-//        });
-//    }
-
-    // Create Recipe dropdown
-    private void createRecipeSpinner(int defaultRecipe) {
-        recipes = db.getAllRecipes();
-        Spinner recipeDropdown = (Spinner)findViewById(R.id.recipeSpinner);
-        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, recipes);
-        recipeDropdown.setAdapter(recipeAdapter);
-        recipeDropdown.setSelection(defaultRecipe);
-
-        // Listener for date dropdown
-        recipeDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedRecipe = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // DO NOTHING
-            }
-        });
+//        selectedMonth = currentMonth+1;
+//        selectedDate = currentDate;
+//        selectedYear = currentYear;
+//        mpItem.setMpDate(selectedMonth, selectedDate, selectedYear);
+//        setFlag(0, true);
+//        writeDateTextView(monthList[selectedMonth-1]+" " + selectedDate+ ", " + selectedYear);
     }
 
     // Create upcoming meals list
@@ -258,7 +242,9 @@ public class MealPlan extends MainActivity {
                 final Dialog dialog = new Dialog(MealPlan.this);
                 dialog.setTitle("Meal Plan for " + rowDate);
                 dialog.setContentView(R.layout.activity_meal_popup);
-                TextView mealText = (TextView)dialog.findViewById(R.id.mp_meal_text);
+                TextView dateText = (TextView)dialog.findViewById(R.id.textView_mpPop_date);
+                dateText.setText("Meal Plan: " + rowDate);
+                TextView mealText =  (TextView)dialog.findViewById(R.id.mp_meal_text);
                 mealText.setText(rowRecipe);
                 dialog.show();
 
@@ -272,14 +258,13 @@ public class MealPlan extends MainActivity {
                         selectedMonth = brokenDate[0];
                         selectedDate = brokenDate[1];
                         selectedYear = brokenDate[2];
-                        selectedRecipe = db.getMealRecipe(oldDate);
+                        selectedRecipeName = rowRecipe;
                         setDay = false;
-                        writeDateTextView();
-                        // Recreate dropdowns using selected date
-//                        createMonthSpinner(selectedMonth-1);
-//                        createDaySpinner(selectedDate-1);
-                        createRecipeSpinner(selectedRecipe);
+                        writeDateTextView(monthList[selectedMonth-1]+" " + selectedDate+ ", " + selectedYear);
+                        writeRecipeTextView(selectedRecipeName);
                         setEditVisibility(View.VISIBLE);
+                        MealPlan.this.setFlag(0, true);
+                        MealPlan.this.setFlag(1, true);
                         dialog.dismiss();
                     }
                 });
@@ -300,15 +285,6 @@ public class MealPlan extends MainActivity {
             }
         });
     }
-
-    // Used to get the number of days in a month
-//    private void createCalendarDays(Calendar date) {
-//        int numDays = date.getActualMaximum(Calendar.DAY_OF_MONTH);
-//        allDays = new ArrayList<Integer>();
-//        for (int i = 1; i <= numDays; i++){
-//            allDays.add(i);
-//        }
-//    }
 
     // Used by upcoming meal list to get date pieces
     private int[] separateDate(String thisDate) {
@@ -356,18 +332,16 @@ public class MealPlan extends MainActivity {
     }
 
     // Used with createMeals method to change database dates to correct format
-    private List<String> convertDates(List<String> plans){
+    private List<String> convertDates(List<MealPlanItem> plans){
         List<String> stringDates = new ArrayList<String>();
-        for (String p : plans){
-            String[] breakPlans = p.split(" ");
-            int mealIndex = Integer.parseInt(breakPlans[1]);
-            // Format date to correct String and add it plus meal to list
+        for (MealPlanItem p : plans){
+            String mpiDate = Integer.toString(p.getDate());
             try {
                 SimpleDateFormat MDYFormat = new SimpleDateFormat("yyyyMMdd");
-                Date date = MDYFormat.parse(breakPlans[0]);
+                Date date = MDYFormat.parse(mpiDate);
                 MDYFormat = new SimpleDateFormat("MMM d, yyyy");
                 String thisDate = MDYFormat.format(date);
-                stringDates.add(thisDate + " : " + recipes.get(mealIndex));
+                stringDates.add(thisDate + " : " + p.getRecipeName());
             } catch (ParseException e){ e.printStackTrace(); }
         }
         return stringDates;
@@ -392,8 +366,41 @@ public class MealPlan extends MainActivity {
     }
 
     // Writes the selected date on the screens TextView.
-    private void writeDateTextView(){
+    private void writeDateTextView(String date){
         TextView dateTextView = (TextView)findViewById(R.id.textView_mp_date);
-        dateTextView.setText(monthList[selectedMonth-1]+" " + selectedDate+ ", " + selectedYear);
+        dateTextView.setText(date);
+    }
+
+    private void writeRecipeTextView(String recipeName){
+        TextView recipeTextView = (TextView)findViewById(R.id.textView_mp_recipe);
+        if (recipeName == null){
+            recipeName = "Pick a Recipe";
+        }
+        else if (recipeName.length() > 15){
+            recipeName = recipeName.substring(0, 15) + "...";
+        }
+        recipeTextView.setText(recipeName);
+    }
+
+    private void setFlag(int flagIndex, Boolean value){
+        flags[flagIndex] = value;
+    }
+
+    private Boolean checkFlags(){
+        for (Boolean b : flags){
+            if (b == false) return false;
+        }
+        return true;
+    }
+
+    private void resetMealPlan(){
+        mpItem = new MealPlanItem();
+
+        for (int i = 0; i < flags.length; i++){
+            flags[i] = false;
+        }
+
+        writeDateTextView("Pick a date");
+        writeRecipeTextView(null);
     }
 }

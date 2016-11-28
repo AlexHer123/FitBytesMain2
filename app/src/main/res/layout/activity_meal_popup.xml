@@ -1,38 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
     android:orientation="vertical"
     android:minWidth="50pt"
-    android:minHeight="50pt">
+    android:minHeight="50pt"
+    android:layout_width="350dp"
+    android:layout_height="500dp">
 
 
-    <TextView
-        android:id="@+id/mp_meal_text"
-        android:text="Meals"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="26sp" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <TextView
+            android:text="Date Here"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_mpPop_date"
+            android:textSize="32sp" />
 
-        <Button
-            android:text="Edit"
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mp_button_edit"
-            android:layout_weight="1" />
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
-        <Button
-            android:text="Delete"
+            <Button
+                android:text="Edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mp_button_edit"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Delete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/mp__button_delete"
+                android:layout_weight="1" />
+
+        </TableRow>
+
+        <TextView
+            android:id="@+id/mp_meal_text"
+            android:text="Meals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/mp__button_delete"
-            android:layout_weight="1" />
-
-    </TableRow>
+            android:layout_weight="1"
+            android:textSize="26sp"
+            android:layout_marginTop="26dp"
+            android:layout_below="@+id/textView_mpPop_date"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </RelativeLayout>
 
 </LinearLayout>

@@ -14,6 +14,8 @@ import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
 public class CalendarPicker extends AppCompatActivity {
 
     private DBHandler db = new DBHandler(this);
@@ -47,8 +49,6 @@ public class CalendarPicker extends AppCompatActivity {
         selectedDate = thisIntent.getIntExtra("currentDate", currentDate);
         selectedYear = thisIntent.getIntExtra("currentYear", currentYear);
 
-        Log.d("DATE HERE: ", ""+selectedYear+selectedMonth+selectedDate);
-
         // Set the CalendarView listener
         CalendarView calendarView = (CalendarView)findViewById(R.id.calendarView);
         calendarView.setOnDateChangeListener( new CalendarView.OnDateChangeListener() {
@@ -58,21 +58,6 @@ public class CalendarPicker extends AppCompatActivity {
                 tempDate = dayOfMonth;
                 tempYear = year;
 
-                final Dialog dialog = new Dialog(CalendarPicker.this);
-                dialog.setTitle("Meal Plan for " + tempYear+tempMonth+tempDate);
-                dialog.setContentView(R.layout.activity_meal_popup);
-                TextView mealText = (TextView)dialog.findViewById(R.id.mp_meal_text);
-                mealText.setText("Hello");
-                dialog.show();
-            }
-        });
-
-        // Set the select button listener
-        Button selectButton = (Button)findViewById(R.id.calendarSelect_button);
-        selectButton.setOnClickListener(new AdapterView.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Make sure a past date is not selected
                 if (tempMonth <= currentMonth && tempDate < currentDate && tempYear == currentYear) {
                     Context context = getApplicationContext();
                     int duration = Toast.LENGTH_SHORT;
@@ -80,19 +65,70 @@ public class CalendarPicker extends AppCompatActivity {
                     toast.show();
                 }
                 else {
-                    //
-                    selectedMonth = tempMonth;
-                    selectedDate = tempDate;
-                    selectedYear = tempYear;
-                    Intent intent = new Intent(CalendarPicker.this, MealPlan.class);
-                    intent.putExtra("month", selectedMonth);
-                    intent.putExtra("date", selectedDate);
-                    intent.putExtra("year", selectedYear);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+                    final Dialog dialog = new Dialog(CalendarPicker.this);
+                    dialog.setTitle("Meal Plan for " + tempYear + tempMonth + tempDate);
+                    dialog.setContentView(R.layout.activity_calendar_popup);
+                    TextView dateText = (TextView) dialog.findViewById((R.id.textView_calpop_date));
+                    dateText.setText("" + (tempMonth+1) + "/" + tempDate + "/" + tempYear);
+                    int date = CalendarPicker.this.dateToInt(tempMonth+1, tempDate, tempYear);
+                    MealPlanItem mpi = db.getPlan(date);
+                    TextView mealListText = (TextView) dialog.findViewById(R.id.textView_calpop_mealList);
+                    if (mpi != null){
+                        mealListText.setText(mpi.getRecipeName());
+                    }
+                    else {
+                        mealListText.setText("No meals to display");
+                    }
+
+                    // Set the select button listener
+                    dialog.show();
+                    Button selectButton = (Button) dialog.findViewById(R.id.calendarSelect_button);
+                    selectButton.setOnClickListener(new AdapterView.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            selectedMonth = tempMonth;
+                            selectedDate = tempDate;
+                            selectedYear = tempYear;
+                            Intent intent = new Intent(CalendarPicker.this, MealPlan.class);
+                            intent.putExtra("month", selectedMonth);
+                            intent.putExtra("date", selectedDate);
+                            intent.putExtra("year", selectedYear);
+                            setResult(Activity.RESULT_OK, intent);
+                            finish();
+//                        }
+                        }
+                    });
+
                 }
             }
         });
+
+//        // Set the select button listener
+//        Button selectButton = (Button)findViewById(R.id.calendarSelect_button);
+//        selectButton.setOnClickListener(new AdapterView.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                // Make sure a past date is not selected
+//                if (tempMonth <= currentMonth && tempDate < currentDate && tempYear == currentYear) {
+//                    Context context = getApplicationContext();
+//                    int duration = Toast.LENGTH_SHORT;
+//                    Toast toast = Toast.makeText(context, "Cannot select date", duration);
+//                    toast.show();
+//                }
+//                else {
+//                    //
+//                    selectedMonth = tempMonth;
+//                    selectedDate = tempDate;
+//                    selectedYear = tempYear;
+//                    Intent intent = new Intent(CalendarPicker.this, MealPlan.class);
+//                    intent.putExtra("month", selectedMonth);
+//                    intent.putExtra("date", selectedDate);
+//                    intent.putExtra("year", selectedYear);
+//                    setResult(Activity.RESULT_OK, intent);
+//                    finish();
+//                }
+//            }
+//        });
 
         // Set cancel button listener
         Button cancelButton = (Button)findViewById(R.id.calendarCancel_button);
@@ -104,5 +140,15 @@ public class CalendarPicker extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    // Used to combine the date pieces for database queries
+    private int dateToInt(int... brokenDate) {
+        String date = "" + brokenDate[2];
+        if (brokenDate[0] < 10) date += "0";
+        date += brokenDate[0];
+        if (brokenDate[1] < 10) date +="0";
+        date += brokenDate[1];
+        return Integer.parseInt(date);
     }
 }
