@@ -371,7 +371,20 @@ public class DBHandler extends SQLiteOpenHelper
         // Inserting Row
         db.insert(TABLE_DATE, null, values);
     }
-
+    public void removeGoal(Goal g){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DESCRIPTION,
+                g.getDescription()
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int goalID = cursor.getInt(0);
+            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
+        }
+    }
     public int getCurrentDate()
     {
         int date = -1;
@@ -494,5 +507,22 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INGREDIENTS);
         onCreate(db);
+    }
+
+    public void updateGoal(Goal updated, Goal current) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DURATION,
+                updated.getDuration(),
+                GOAL_DURATION,
+                current.getDuration()));
+        db.execSQL(String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DESCRIPTION,
+                updated.getDescription(),
+                GOAL_DESCRIPTION,
+                current.getDescription()));
+
     }
 }

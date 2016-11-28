@@ -2,8 +2,6 @@
     <string name="app_name">FitBytes</string>
     <string name="action_settings">Settings</string>
     <string name="fitness_tracker">Fitness Tracker</string>
-    <string name="daily_goal_1">Daily Goal 1</string>
-    <string name="daily_goal_2">Daily Goal 1</string>
     <string name="title_activity_upcoming_plans">UpcomingPlans</string>
     <string name="pantryTitle">Pantry</string>
     <string name="recipeTitle">Recipes</string>
@@ -100,4 +98,5 @@
     <string name="daily_goals">Daily Goals</string>
     <string name="add_a_goal">Add a Goal</string>
     <string name="go_to_weekly_goals">Go to Weekly Goals</string>
+    <string name="footer" />
 </resources>
