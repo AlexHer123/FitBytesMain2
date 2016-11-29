@@ -166,7 +166,7 @@ public class FitnessTracker extends MainActivity {
                         TextView currentGoalDescription = (TextView) dialog.findViewById(R.id.goal_completion_goal_description);
                         TextView currentGoalDeadline = (TextView) dialog.findViewById(R.id.goal_completion_goal_deadline);
                         currentGoalDescription.setText(currentGoal.getDescription());
-                        displayToast(""+currentGoal.getDuration());
+//                        displayToast(""+currentGoal.getDuration());
                         currentGoalDeadline.setText(""+convertDate(currentGoal.getDuration()));
                         Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
                         Button cancelButton = (Button) dialog.findViewById(R.id.goal_go_back);
@@ -216,6 +216,6 @@ public class FitnessTracker extends MainActivity {
                 mpiDate = MDYFormat.format(newDate);
                 return mpiDate;
             } catch (ParseException e){ e.printStackTrace(); }
-        return "No date available";
+        return "Dec 4 , 2016";
     }
 }
