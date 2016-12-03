@@ -51,39 +51,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-// THE UNDO MENU PROCESS
-//    Uncomment button stuff
-//    Uncomment xml in content_main
-//    Change all main classes to extend AppCompatActivity
-//    Remove overrides of onOptionsItemSelected in each class
-//    Can leave menu stuff, but don't click on it in the app
-
-//    public void mealPlanButtonOnClick(View view){
-//        Intent intent = new Intent(this, MealPlan.class);
-////        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2
-//        startActivity(intent);
-//    }
-//
-//    public void fitnessTrackerButtonOnClick(View view) {
-//        Intent intent = new Intent(this, FitnessTracker.class);
-//        startActivity(intent);
-//    }
-//
-//    public void ingredientButtonOnClick(View view) {
-//        Intent intent = new Intent(this, Ingredients.class);
-//        startActivity(intent);
-//    }
-//
-//    public void recipeButtonOnClick(View view){
-//        Intent intent = new Intent(this, Recipes.class);
-//        startActivity(intent);
-//    }
-//
-//    public void userProfileButtonOnClick(View view){
-//        Intent intent = new Intent(this, UserProfileActivity.class);
-//        startActivity(intent);
-//    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_mealPlan) {
-            Intent intent = new Intent(this, MealPlan.class);
+            Intent intent = new Intent(this, UpcomingPlans.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;

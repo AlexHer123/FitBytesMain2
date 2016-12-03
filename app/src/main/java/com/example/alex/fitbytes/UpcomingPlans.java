@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UpcomingPlans extends AppCompatActivity {
+public class UpcomingPlans extends MainActivity {
 
     private List<String> mealList;
     private DBHandler db = new DBHandler(this);
@@ -29,13 +30,16 @@ public class UpcomingPlans extends AppCompatActivity {
     private String selectedRecipeName;
     private boolean setDay = false;
     private List<MealPlanItem> mpItems = new ArrayList<>();
+    private TextView noPlans;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upcoming_plans);
 
-        mpItems = db.getAllPlans();
+        noPlans = (TextView)findViewById(R.id.textView_up_meals);
+//        mpItems = db.getAllPlans();
+        mpItems = db.getAllMealPlans();
         createMeals(convertDates(mpItems));
 
         Button addButton = (Button)findViewById(R.id.uplanAdd_button);
@@ -55,13 +59,28 @@ public class UpcomingPlans extends AppCompatActivity {
         if (requestCode == 1) {
             // Set the selected date values
             if(resultCode == Activity.RESULT_OK){
-                mpItems = db.getAllPlans();
+//                mpItems = db.getAllPlans();
+//                createMeals(convertDates(mpItems));
+
+                mpItems = db.getAllMealPlans();
                 createMeals(convertDates(mpItems));
                 displayPopup("Plan added.");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
-                displayPopup("Cancelled add");
+                displayPopup("Cancelled add.");
+            }
+        }
+        // Handles return from MealPlan after edit
+        else if (requestCode == 2){
+            if(resultCode == Activity.RESULT_OK){
+                mpItems = db.getAllMealPlans();
+                createMeals(convertDates(mpItems));
+                displayPopup("Edit made.");
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+                displayPopup("Cancelled edit.");
             }
         }
     }
@@ -81,8 +100,11 @@ public class UpcomingPlans extends AppCompatActivity {
                 final String selectedRow = parent.getItemAtPosition(position).toString();
                 String[] breakRow = selectedRow.split(" : ");
                 final String rowDate = breakRow[0];
-                final String rowRecipe = breakRow[1];
-                final int[] brokenDate = separateDate(rowDate);
+//                final String rowRecipe = breakRow[1];
+//                final int[] brokenDate = separateDate(rowDate);
+
+                final List<String> recipeNames = mpItems.get(position).getRecipeNames();
+                final int[] brokenDate = separateDate(mpItems.get(position).getDate());
 
                 // Create dialog popup
                 final Dialog dialog = new Dialog(UpcomingPlans.this);
@@ -91,7 +113,10 @@ public class UpcomingPlans extends AppCompatActivity {
                 TextView dateText = (TextView)dialog.findViewById(R.id.textView_mpPop_date);
                 dateText.setText("Meal Plan: " + rowDate);
                 TextView mealText =  (TextView)dialog.findViewById(R.id.mp_meal_text);
-                mealText.setText(rowRecipe);
+                mealText.setText("");
+                for (String n : recipeNames){
+                    mealText.append(" - " + n + "\n\n");
+                }
                 dialog.show();
 
                 // Set up listener for edit button
@@ -109,12 +134,10 @@ public class UpcomingPlans extends AppCompatActivity {
                         dialog.dismiss();
 
                         Intent intent = new Intent(UpcomingPlans.this, MealPlan.class);
-//                        intent.putExtra("oldDate", oldDate);
-//                        intent.putExtra("selectedMonth", selectedMonth);
-//                        intent.putExtra("selectedDate", selectedDate);
-//                        intent.putExtra("selectedYear", selectedYear);
                         intent.putExtra("mpItem", mpItems.get(position));
                         intent.putExtra("edit", true);
+                        startActivityForResult(intent, 2);
+
 
                     }
                 });
@@ -124,8 +147,9 @@ public class UpcomingPlans extends AppCompatActivity {
                 deleteButton.setOnClickListener(new AdapterView.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        db.removePlan(dateArrayToInt(brokenDate));
-                        createMeals(convertDates(db.getAllPlans()));
+                        db.removeMealPlan(dateArrayToInt(brokenDate));
+                        mpItems = db.getAllMealPlans();
+                        createMeals(convertDates(mpItems));
                         dialog.dismiss();
 
                         // Displays a message
@@ -134,17 +158,18 @@ public class UpcomingPlans extends AppCompatActivity {
                 });
             }
         });
+
+        checkForPlans();
     }
 
-    // Used by upcoming meal list to get date pieces
-    private int[] separateDate(String thisDate) {
+    private int[] separateDate(int thisDate) {
         int[] brokenDate = new int[3];
         int month, day, year;
 
         // Get each piece of the date
-        SimpleDateFormat editButtonFormat = new SimpleDateFormat("MMM dd, yyyy");
+        SimpleDateFormat editButtonFormat = new SimpleDateFormat("yyyyMMdd");
         try{
-            Date date = editButtonFormat.parse(thisDate);
+            Date date = editButtonFormat.parse(""+thisDate);
             editButtonFormat = new SimpleDateFormat("MM");
             month = Integer.parseInt(editButtonFormat.format(date));
             editButtonFormat = new SimpleDateFormat("d");
@@ -173,7 +198,7 @@ public class UpcomingPlans extends AppCompatActivity {
 
     // Used with createMeals method to change database dates to correct format
     private List<String> convertDates(List<MealPlanItem> plans){
-        List<String> stringDates = new ArrayList<String>();
+        List<String> stringDates = new ArrayList<>();
         for (MealPlanItem p : plans){
             String mpiDate = Integer.toString(p.getDate());
             try {
@@ -181,10 +206,19 @@ public class UpcomingPlans extends AppCompatActivity {
                 Date date = MDYFormat.parse(mpiDate);
                 MDYFormat = new SimpleDateFormat("MMM d, yyyy");
                 String thisDate = MDYFormat.format(date);
-                stringDates.add(thisDate + " : " + p.getRecipeName());
+                stringDates.add(thisDate + " : " + p.getSize() + " Meal(s) planned.");
             } catch (ParseException e){ e.printStackTrace(); }
         }
         return stringDates;
+    }
+
+    private void checkForPlans() {
+        if (mpItems.size() == 0) {
+            noPlans.setVisibility(View.VISIBLE);
+        }
+        else{
+            noPlans.setVisibility(View.INVISIBLE);
+        }
     }
 
     // Used whenever a popup happens

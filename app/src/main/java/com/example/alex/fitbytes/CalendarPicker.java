@@ -22,12 +22,10 @@ public class CalendarPicker extends AppCompatActivity {
     private int currentMonth, currentDate, currentYear;
     private int selectedMonth, selectedDate, selectedYear;
     private int tempMonth, tempDate, tempYear;
-//    private mealContainer mc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_calendar_view);
         setContentView(R.layout.content_calendar);
 
         // Get current date
@@ -35,7 +33,6 @@ public class CalendarPicker extends AppCompatActivity {
         currentYear = todaysDate/10000;
         currentMonth = ((todaysDate/100)%100)-1; // Make it zero-based
         currentDate = todaysDate % 100;
-        Log.d("DATE HERE: ", ""+currentYear+currentMonth+currentDate);
 
         // Set the temporarily selected date
         tempYear = currentYear;
@@ -71,10 +68,12 @@ public class CalendarPicker extends AppCompatActivity {
                     TextView dateText = (TextView) dialog.findViewById((R.id.textView_calpop_date));
                     dateText.setText("" + (tempMonth+1) + "/" + tempDate + "/" + tempYear);
                     int date = CalendarPicker.this.dateToInt(tempMonth+1, tempDate, tempYear);
-                    MealPlanItem mpi = db.getPlan(date);
+                    MealPlanItem mpi = db.getMealPlan(date);
                     TextView mealListText = (TextView) dialog.findViewById(R.id.textView_calpop_mealList);
+                    mealListText.setText("");
                     if (mpi != null){
-                        mealListText.setText(mpi.getRecipeName());
+                        for (String name : mpi.getRecipeNames())
+                        mealListText.append(" - " + name + "\n\n");
                     }
                     else {
                         mealListText.setText("No meals to display");
@@ -102,33 +101,6 @@ public class CalendarPicker extends AppCompatActivity {
                 }
             }
         });
-
-//        // Set the select button listener
-//        Button selectButton = (Button)findViewById(R.id.calendarSelect_button);
-//        selectButton.setOnClickListener(new AdapterView.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                // Make sure a past date is not selected
-//                if (tempMonth <= currentMonth && tempDate < currentDate && tempYear == currentYear) {
-//                    Context context = getApplicationContext();
-//                    int duration = Toast.LENGTH_SHORT;
-//                    Toast toast = Toast.makeText(context, "Cannot select date", duration);
-//                    toast.show();
-//                }
-//                else {
-//                    //
-//                    selectedMonth = tempMonth;
-//                    selectedDate = tempDate;
-//                    selectedYear = tempYear;
-//                    Intent intent = new Intent(CalendarPicker.this, MealPlan.class);
-//                    intent.putExtra("month", selectedMonth);
-//                    intent.putExtra("date", selectedDate);
-//                    intent.putExtra("year", selectedYear);
-//                    setResult(Activity.RESULT_OK, intent);
-//                    finish();
-//                }
-//            }
-//        });
 
         // Set cancel button listener
         Button cancelButton = (Button)findViewById(R.id.calendarCancel_button);
