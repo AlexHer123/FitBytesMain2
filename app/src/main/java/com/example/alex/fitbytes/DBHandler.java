@@ -414,6 +414,7 @@ public class DBHandler extends SQLiteOpenHelper
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
+            int x = 0;
             List<Map.Entry<Integer, String>> entries = new ArrayList(mpi.getRecipes().entrySet());
             int numMeals = entries.size();
             values.put(MP_col_2_DATE, newDate);
