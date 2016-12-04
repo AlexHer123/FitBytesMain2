@@ -32,7 +32,6 @@ public class MealPlan extends MainActivity {
 
     private String[] monthList = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
     private List<Integer> allDays = new ArrayList<Integer>();
-//    private String[] recipes = {"PB&J", "Ramen", "BBQ Chicken", "Cereal", "Grilled Cheese", "Spaghetti & Meatballs", "Hamburger", "Oatmeal", "Nachos","Chicken Burrito"};
     private List<String> recipes = new ArrayList<>();
     private int currentMonth, currentDay, currentYear;
     private int selectedMonth, selectedDay, selectedYear, selectedRecipe;
