@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_mealPlan) {
-            Intent intent = new Intent(this, MealPlan.class);
+            Intent intent = new Intent(this, UpcomingPlans.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;

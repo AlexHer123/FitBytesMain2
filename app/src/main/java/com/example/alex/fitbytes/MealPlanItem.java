@@ -15,7 +15,7 @@ import java.util.Map;
 public class MealPlanItem implements Serializable {
     private int mpDate;
     private int recipeID;
-    private String recipeName;
+//    private String recipeName;
     private Map<Integer, String> recipes;
 
     public MealPlanItem(){
@@ -31,10 +31,10 @@ public class MealPlanItem implements Serializable {
         mpDate = Integer.parseInt(stringDate);
     }
 
-    public void setRecipe(int id, String name){
-        recipeID = id;
-        recipeName = name;
-    }
+//    public void setRecipe(int id, String name){
+//        recipeID = id;
+//        recipeName = name;
+//    }
 
     public boolean addRecipe(int id, String name){
         if (recipes.size() >= 3)
@@ -78,12 +78,12 @@ public class MealPlanItem implements Serializable {
         return recipeID;
     }
 
-    public String getRecipeName(){
-        return recipeName;
-    }
+//    public String getRecipeName(){
+//        return recipeName;
+//    }
 
     public void printContents(){
-        Log.d("MPI: ", ""+mpDate+" "+recipeID+" "+recipeName);
+//        Log.d("MPI: ", ""+mpDate+" "+recipeID+" "+ recipeName);
         Log.d("MPI LIST: ", recipes.entrySet().toString());
     }
 }
