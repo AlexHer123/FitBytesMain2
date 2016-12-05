@@ -186,7 +186,7 @@ public class FitnessTracker extends MainActivity {
                 return true;
             case R.id.delete:
                 displayToast("Goal has been deleted");
-//                goalDB.removeGoal(currentGoal);
+                goalDB.removeGoal(currentGoal);
                 updateGoalAdapter();
                 return true;
             default:

@@ -8,10 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Alex on 10/31/2016.
@@ -21,15 +19,10 @@ public class DBHandler extends SQLiteOpenHelper
 {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "fitbytes.db";
+
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String MP_col_1_ID = "ID";
     private static final String MP_col_2_DATE = "Date";
-    private static final String MP_col_3_RECIPEID = "RecipeID";
-    private static final String MP_col_4_RECIPENAME = "RecipeName";
-
-    private static final String TABLE_MEALPLAN2 = "mealPlan2";
-    private static final String MP2_col_1_ID = "ID";
-    private static final String MP2_col_2_DATE = "Date";
     private static final String MP_col_3_RECIPEID1 = "RecipeID1";
     private static final String MP_col_4_RECIPENAME1 = "RecipeName1";
     private static final String MP_col_5_RECIPEID2 = "RecipeID2";
@@ -68,13 +61,9 @@ public class DBHandler extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
-            + MP_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + MP_col_2_DATE + " INTEGER, " + MP_col_3_RECIPEID + " INTEGER, " + MP_col_4_RECIPENAME + " TEXT)";
+        String CREATE_MEALPLAN_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL)",
+                TABLE_MEALPLAN, MP_col_1_ID, MP_col_2_DATE, MP_col_3_RECIPEID1, MP_col_4_RECIPENAME1, MP_col_5_RECIPEID2, MP_col_6_RECIPENAME2, MP_col_7_RECIPEID3, MP_col_8_RECIPENAME3);
         db.execSQL(CREATE_MEALPLAN_TABLE);
-
-        String CREATE_MEALPLAN2_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL)",
-                TABLE_MEALPLAN2, MP2_col_1_ID, MP2_col_2_DATE, MP_col_3_RECIPEID1, MP_col_4_RECIPENAME1, MP_col_5_RECIPEID2, MP_col_6_RECIPENAME2, MP_col_7_RECIPEID3, MP_col_8_RECIPENAME3);
-        db.execSQL(CREATE_MEALPLAN2_TABLE);
 
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
@@ -97,7 +86,6 @@ public class DBHandler extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
         onCreate(db);
     }
@@ -309,7 +297,7 @@ public class DBHandler extends SQLiteOpenHelper
 
     public boolean addAllMeals(MealPlanItem mpi){
         // Search for duplicate date
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " WHERE " + MP2_col_2_DATE + " = " + mpi.getDate() + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + mpi.getDate() + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -318,7 +306,7 @@ public class DBHandler extends SQLiteOpenHelper
             ContentValues values = new ContentValues();
             List<Map.Entry<Integer, String>> entries = new ArrayList(mpi.getRecipes().entrySet());
             int numMeals = entries.size();
-            values.put(MP2_col_2_DATE, mpi.getDate());
+            values.put(MP_col_2_DATE, mpi.getDate());
             switch (numMeals){
                 case 3: values.put(MP_col_7_RECIPEID3, entries.get(2).getKey());
                         values.put(MP_col_8_RECIPENAME3, entries.get(2).getValue());
@@ -328,7 +316,7 @@ public class DBHandler extends SQLiteOpenHelper
                          values.put(MP_col_4_RECIPENAME1, entries.get(0).getValue());
             }
             // Inserting Row
-            db.insert(TABLE_MEALPLAN2, null, values);
+            db.insert(TABLE_MEALPLAN, null, values);
             return true;
         }
         return false;
@@ -339,7 +327,7 @@ public class DBHandler extends SQLiteOpenHelper
         List<MealPlanItem> planList = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " ORDER BY " + MP2_col_2_DATE + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " ORDER BY " + MP_col_2_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -365,7 +353,7 @@ public class DBHandler extends SQLiteOpenHelper
     public MealPlanItem getMealPlan(int date)
     {
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " WHERE " + MP2_col_2_DATE + " = " + date + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         MealPlanItem mpi = null;
@@ -387,19 +375,19 @@ public class DBHandler extends SQLiteOpenHelper
 
     public void removeMealPlan(int date)
     {
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " WHERE " + MP2_col_2_DATE + " = " + date + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             int planID = cursor.getInt(0);
-            db.delete(TABLE_MEALPLAN2, MP2_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+            db.delete(TABLE_MEALPLAN, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
         }
     }
 
     public boolean updateMealPlan(int oldDate, int newDate, MealPlanItem mpi){
         // Check if the new date is already in the database
         if (oldDate != newDate) {
-            String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " WHERE " + MP2_col_2_DATE + " = " + newDate + "";
+            String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + newDate + "";
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor cursor = db.rawQuery(selectQuery, null);
             if (cursor.moveToFirst()) {
@@ -407,7 +395,7 @@ public class DBHandler extends SQLiteOpenHelper
             }
         }
 
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN2 + " WHERE " + MP2_col_2_DATE + " = " + oldDate + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + oldDate + "";
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -435,7 +423,7 @@ public class DBHandler extends SQLiteOpenHelper
             }
 
             int planID = cursor.getInt(0);
-            db.update(TABLE_MEALPLAN2, values, MP2_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+            db.update(TABLE_MEALPLAN, values, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
         }
 
         return true;
