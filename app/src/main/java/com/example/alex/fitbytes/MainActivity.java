@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_userProfile) {
-            Intent intent = new Intent(this, UserProfileActivity.class);
+            Intent intent = new Intent(this, UserPage.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
