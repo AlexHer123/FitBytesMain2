@@ -89,35 +89,17 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
         onCreate(db);
     }
-
-    public boolean addGoal(String description, int date, int duration, boolean completed, Goal.Type type){
-        /*String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = %s",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date
+    /*public Goal getGoal(Goal.Type type){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_TYPE, type
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if(!cursor.moveToFirst()){
-            ContentValues values = new ContentValues();
-            values.put(GOAL_DATE, date);
-            values.put(GOAL_DESCRIPTION, description);
-            values.put(GOAL_DURATION, duration);
-            db.insert(TABLE_FITNESS_TRACKER, null, values);
-            return true;
+        cursor.moveToFirst();
+        if(cursor == null){
+
         }
-        return false;*/
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(GOAL_DESCRIPTION, description);
-        values.put(GOAL_DATE, date);
-        values.put(GOAL_DURATION, duration);
-        values.put(GOAL_COMPLETED, completed);
-        values.put(GOAL_TYPE, type.toString());
-        db.insert(TABLE_FITNESS_TRACKER, null, values);
-        return true;
-    }
+    }*/
     public Goal getGoal(String name){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -230,45 +212,12 @@ public class DBHandler extends SQLiteOpenHelper
         return list;
     }
 
-//    public void removeGoal(String description){
-//        String selectQuery = String.format(
-//                "SELECT * FROM %s WHERE %s = %s",
-//                TABLE_FITNESS_TRACKER,
-//                GOAL_DESCRIPTION,
-//                description
-//        );
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//        if (cursor.moveToFirst()) {
-//            int goalID = cursor.getInt(0);
-//            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-//        }
-//    }
-
-    public void removeGoal(int date){
+    public void removeGoals(){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s != %s and %s = %s",
+                "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
                 GOAL_DURATION,
-                1
-        );
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            int goalID = cursor.getInt(0);
-            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-        }
-    }
-    public void removeDailyGoal(int date){
-        String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s < %s and %s = %s",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
-                GOAL_DURATION,
-                1
+                getCurrentDate()
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -278,14 +227,11 @@ public class DBHandler extends SQLiteOpenHelper
         }
     }
 
-    public void removeWeeklyGoal(int date){
+    public void removeGoal(Goal goal){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s+7 = %s and %s = %s",
+                "SELECT * FROM %s WHERE %s = '%s'",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
-                GOAL_DURATION,
-                7
+                GOAL_DESCRIPTION, goal.getDescription()
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -594,5 +540,16 @@ public class DBHandler extends SQLiteOpenHelper
                 GOAL_DESCRIPTION,
                 current.getDescription()));
 
+    }
+
+    public void addGoal(Goal goal) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GOAL_DESCRIPTION, goal.getDescription());
+        values.put(GOAL_DATE, goal.getDate());
+        values.put(GOAL_DURATION, goal.getDuration());
+        values.put(GOAL_COMPLETED, goal.getCompleted());
+        values.put(GOAL_TYPE, goal.getType().toString());
+        db.insert(TABLE_FITNESS_TRACKER, null, values);
     }
 }

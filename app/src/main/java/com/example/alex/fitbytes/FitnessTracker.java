@@ -25,6 +25,7 @@ import java.util.List;
 public class FitnessTracker extends MainActivity {
     public static final String GOAL_DONE_MESSAGE = " (Done)";
     private ArrayAdapter<String> goalAdapter;
+    private List<Goal> goals;
     private DBHandler goalDB = new DBHandler(this);
     private Goal currentGoal;
 
@@ -40,8 +41,7 @@ public class FitnessTracker extends MainActivity {
         updateGoalAdapter();
         Button addButton = buildButton(findViewById(R.id.addGoal));
         displayGoalAdapter((ListView) findViewById(R.id.current_goals));
-        goalDB.removeDailyGoal(goalDB.getCurrentDate());
-        goalDB.removeWeeklyGoal(goalDB.getCurrentDate());
+        goalDB.removeGoals();
     }
     private Button buildButton(View view){
         Button button = (Button) view;
@@ -88,7 +88,7 @@ public class FitnessTracker extends MainActivity {
                                 String dateString = String.format("%s%s%s", calendar.get(Calendar.YEAR),
                                         (calendar.get(Calendar.MONTH)+1), calendar.get(Calendar.DATE));
                                 Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
-                                goalDB.addGoal(userGoal.getDescription(), userGoal.getDate(), userGoal.getDuration(), userGoal.getCompleted(), userGoal.getType());
+                                goalDB.addGoal(userGoal);
                                 updateGoalAdapter();
                                 dialog.dismiss();
                                 displayToast("Goal has been created");
@@ -121,11 +121,10 @@ public class FitnessTracker extends MainActivity {
         listView.setAdapter(goalAdapter);
     }
     private void getDefaultGoals(){
+        //DailyGoal daily = goalDB.getGoal(Goal.Type.DAILY);
         if(goalDB.getAllGoals().isEmpty()){
             Goal[] g = {new DailyGoal(), new WeeklyGoal()};
-            for(Goal goal : g){
-                goalDB.addGoal(goal.getDescription(), goal.getDate(), goal.getDuration(), goal.getCompleted(), goal.getType());
-            }
+            for(Goal goal : g) goalDB.addGoal(goal);
         }
     }
     @Override
