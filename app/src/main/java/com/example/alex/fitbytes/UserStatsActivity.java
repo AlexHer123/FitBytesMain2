@@ -8,7 +8,10 @@ import java.util.Map;
 
 public class UserStatsActivity extends AppCompatActivity {
 
-    int lifetimeClories, lifetimeCarbs, lifetimeSugar, lifetimeFat;
+    double lifetimeCalories, lifetimeCarbs, lifetimeSugar, lifetimeFat;
+
+    int totalMeals;
+
     private DBHandler mealDB = new DBHandler(this);
 
     List<MealPlanItem> allMeals;
@@ -21,6 +24,7 @@ public class UserStatsActivity extends AppCompatActivity {
 
         allMeals = mealDB.getAllMealPlans();
 
+        //TODO calculate total nutritional stats from recipes, and total number of meals
         if(allMeals.size()>0){
             for(MealPlanItem mealPlan: allMeals){
                 Map<Integer, String> currentRecipes = mealPlan.getRecipes();
