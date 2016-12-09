@@ -59,7 +59,6 @@ public class UserProfile extends MainActivity {
                 db.updateUser(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
 //                user = new UserItem(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
                 user = db.getUser();
-                Log.d("USER: ", user.getName());
                 fillOutInformation();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
