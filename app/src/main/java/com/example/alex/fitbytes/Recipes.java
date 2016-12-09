@@ -30,7 +30,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Recipes extends MainActivity implements SearchView.OnQueryTextListener
+public class Recipes extends RecipeHandler implements SearchView.OnQueryTextListener
 {
     //    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
     private List<String> recipes = new ArrayList<>();
@@ -67,6 +67,39 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
     }
 
+    @Override
+    protected void doRecipeSearch(JSONObject obj) {
+        try {
+            // Get the objects from obj in array form
+            JSONArray recipeArray = obj.getJSONArray("results");
+            // Set when no results are found
+            if (recipeArray.length() > 0){
+                noResults.setVisibility(View.INVISIBLE);
+            }
+            else{
+                noResults.setVisibility(View.VISIBLE);
+            }
+
+            // Get the id and name of recipes
+            recipeItems = new ArrayList<>();
+            for (int i = 0; i < recipeArray.length(); i++) {
+                JSONObject rec = recipeArray.optJSONObject(i);
+                int recID = rec.getInt("id");
+                String recName = rec.getString("title");
+                RecipeItem tempRI = new RecipeItem(recID, recName);
+                recipeItems.add(tempRI);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        createRecipeList();
+    }
+
+    @Override
+    protected void fillNutrientInfo(JSONObject obj) {
+        // DO LATER
+    }
+
     private class RecipeItem {
         private int recipeID;
         private String recipeName;
@@ -96,61 +129,61 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
 
     }
     // Not 100% sure how this class works. I just copied it from http://blog.mashape.com/using-unirest-java-for-your-android-projects/
-    private class CallMashapeAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
-
-        // Happens when you use CallMashape().execute(string)  --> call happens in button listener below
-        protected HttpResponse<JsonNode> doInBackground(String... msg) {
-
-            HttpResponse<JsonNode> request = null;
-            String search = msg[0].replaceAll("\\s", "+");
-
-            // Executes the search call
-            try {
-                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number=10&offset=0&query=" + search)
-                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
-                        .header("accept", "application/json")
-                        .asJson();
-            } catch (UnirestException e) {
-                e.printStackTrace();
-            }
-
-            return request;
-        }
-
-        protected void onProgressUpdate(Integer...integers) {
-        }
-
-        // Not sure when this happens.
-        // Prints the results of the search
-        protected void onPostExecute(HttpResponse<JsonNode> response) {
-            // Get response as object of objects
-            JSONObject obj = response.getBody().getObject();
-            try {
-                // Get the objects from obj in array form
-                JSONArray recipeArray = obj.getJSONArray("results");
-                // Set when no results are found
-                if (recipeArray.length() > 0){
-                    noResults.setVisibility(View.INVISIBLE);
-                }
-                else{
-                    noResults.setVisibility(View.VISIBLE);
-                }
-
-                // Get the id and name of recipes
-                recipeItems = new ArrayList<>();
-                for (int i = 0; i < recipeArray.length(); i++) {
-                    JSONObject rec = recipeArray.optJSONObject(i);
-                    int recID = rec.getInt("id");
-                    String recName = rec.getString("title");
-                    RecipeItem tempRI = new RecipeItem(recID, recName);
-                    recipeItems.add(tempRI);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            createRecipeList();
-        }
-    }
+//    private class CallMashapeAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
+//
+//        // Happens when you use CallMashape().execute(string)  --> call happens in button listener below
+//        protected HttpResponse<JsonNode> doInBackground(String... msg) {
+//
+//            HttpResponse<JsonNode> request = null;
+//            String search = msg[0].replaceAll("\\s", "+");
+//
+//            // Executes the search call
+//            try {
+//                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number=10&offset=0&query=" + search)
+//                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
+//                        .header("accept", "application/json")
+//                        .asJson();
+//            } catch (UnirestException e) {
+//                e.printStackTrace();
+//            }
+//
+//            return request;
+//        }
+//
+//        protected void onProgressUpdate(Integer...integers) {
+//        }
+//
+//        // Not sure when this happens.
+//        // Prints the results of the search
+//        protected void onPostExecute(HttpResponse<JsonNode> response) {
+//            // Get response as object of objects
+//            JSONObject obj = response.getBody().getObject();
+//            try {
+//                // Get the objects from obj in array form
+//                JSONArray recipeArray = obj.getJSONArray("results");
+//                // Set when no results are found
+//                if (recipeArray.length() > 0){
+//                    noResults.setVisibility(View.INVISIBLE);
+//                }
+//                else{
+//                    noResults.setVisibility(View.VISIBLE);
+//                }
+//
+//                // Get the id and name of recipes
+//                recipeItems = new ArrayList<>();
+//                for (int i = 0; i < recipeArray.length(); i++) {
+//                    JSONObject rec = recipeArray.optJSONObject(i);
+//                    int recID = rec.getInt("id");
+//                    String recName = rec.getString("title");
+//                    RecipeItem tempRI = new RecipeItem(recID, recName);
+//                    recipeItems.add(tempRI);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            createRecipeList();
+//        }
+//    }
 
     // Not 100% sure how this class works. I just copied it from http://blog.mashape.com/using-unirest-java-for-your-android-projects/
     private class CallMashapeNutrientInfoAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
@@ -280,7 +313,7 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
             // are searching for
             @Override
             public boolean onQueryTextSubmit(String query) {
-                new CallMashapeAsync().execute(query);
+                new CallMashapeGetRecipeAsync().execute(query);
                 return false;
             }
 
