@@ -34,6 +34,12 @@ public abstract class RecipeHandler extends MainActivity {
 
     protected class CallMashapeGetRecipeAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
 
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Please wait");
+            dialog.show();
+        }
+
         protected HttpResponse<JsonNode> doInBackground(String... msg) {
 
             HttpResponse<JsonNode> request = null;
@@ -54,33 +60,12 @@ public abstract class RecipeHandler extends MainActivity {
         protected void onProgressUpdate(Integer...integers) {}
 
         protected void onPostExecute(HttpResponse<JsonNode> response) {
+            if (dialog.isShowing()){
+                dialog.dismiss();
+            }
             // Get response as object of objects
             JSONObject obj = response.getBody().getObject();
             doRecipeSearch(obj);
-//            try {
-//                // Get the objects from obj in array form
-//                JSONArray recipeArray = obj.getJSONArray("results");
-//                // Set when no results are found
-//                if (recipeArray.length() > 0){
-//                    noResults.setVisibility(View.INVISIBLE);
-//                }
-//                else{
-//                    noResults.setVisibility(View.VISIBLE);
-//                }
-//
-//                // Get the id and name of recipes
-//                recipeItems = new ArrayList<>();
-//                for (int i = 0; i < recipeArray.length(); i++) {
-//                    JSONObject rec = recipeArray.optJSONObject(i);
-//                    int recID = rec.getInt("id");
-//                    String recName = rec.getString("title");
-//                    RecipeItem tempRI = new RecipeItem(recID, recName);
-//                    recipeItems.add(tempRI);
-//                }
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            createRecipeList();
         }
     }
 
