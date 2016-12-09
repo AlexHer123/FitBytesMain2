@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/pantryLaunchBarcode"
-            android:onClick="barcodeButtonOnClick" />
+            android:onClick="barcodeButtonOnClick (Pantry)" />
 
         <SearchView
             android:id="@+id/pantrySearch"

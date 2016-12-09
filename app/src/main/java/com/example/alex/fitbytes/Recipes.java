@@ -1,5 +1,6 @@
 package com.example.alex.fitbytes;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
@@ -35,30 +37,45 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
     private List<String> recipes = new ArrayList<>();
     private DBHandler db = new DBHandler(this);
     private SearchView recipeSearchView;
-    private String recipeToFind;
     private List<RecipeItem> recipeItems = new ArrayList<>();
+    private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
     private String selectedRecipeInstructions = "";
+    private TextView noResults;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipes);
+        noResults = (TextView)findViewById(R.id.textView_recipe_None);
+        noResults.setVisibility(View.INVISIBLE);
         recipeSearchView = (SearchView)findViewById(R.id.recipeSearchView);
-//        storeAllRecipes();
+        fromMP = getIntent().getBooleanExtra("fromMP", false);
         setupSearchView();
         createRecipeList();
 
+        Button cancelButton = (Button)findViewById(R.id.recPopCancel_button);
+        cancelButton.setOnClickListener(new AdapterView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Recipes.this, MealPlan.class);
+                setResult(Activity.RESULT_CANCELED, intent);
+                finish();
+            }
+        });
+        if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
     }
 
     private class RecipeItem {
         private int recipeID;
         private String recipeName;
 
-        public RecipeItem(){}
-
+        public RecipeItem(int id, String name){
+            recipeID = id;
+            recipeName = name;
+        }
         public void setID(int id){
             recipeID = id;
         }
@@ -67,12 +84,11 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
             recipeName = name;
         }
 
-        public String getName(){
-            return recipeName;
-        }
-
         public int getRecipeID(){
             return recipeID;
+        }
+        public String getName(){
+            return recipeName;
         }
 
         public void printRecipe() {
@@ -91,7 +107,6 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
 
             // Executes the search call
             try {
-                //Search request for 'Search Recipe' method of api
                 request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number=10&offset=0&query=" + search)
                         .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
                         .header("accept", "application/json")
@@ -109,31 +124,30 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         // Not sure when this happens.
         // Prints the results of the search
         protected void onPostExecute(HttpResponse<JsonNode> response) {
-            String answer = response.getBody().toString();
-            answer = answer.replaceAll(",", ":");
-            String[] brokenSearch = answer.split(":");
-            Boolean idFound = false;
-            Boolean titleFound = false;
-            recipeItems = new ArrayList<>();
-            RecipeItem temp = new RecipeItem();
-            for (String s : brokenSearch){
-                if (s.contains("id")){
-                    idFound = true;
+            // Get response as object of objects
+            JSONObject obj = response.getBody().getObject();
+            try {
+                // Get the objects from obj in array form
+                JSONArray recipeArray = obj.getJSONArray("results");
+                // Set when no results are found
+                if (recipeArray.length() > 0){
+                    noResults.setVisibility(View.INVISIBLE);
                 }
-                else if (s.contains("title")){
-                    titleFound = true;
+                else{
+                    noResults.setVisibility(View.VISIBLE);
                 }
-                else if (idFound == true){
-                    temp = new RecipeItem();
-                    temp.setID(Integer.parseInt(s));
-                    idFound = false;
+
+                // Get the id and name of recipes
+                recipeItems = new ArrayList<>();
+                for (int i = 0; i < recipeArray.length(); i++) {
+                    JSONObject rec = recipeArray.optJSONObject(i);
+                    int recID = rec.getInt("id");
+                    String recName = rec.getString("title");
+                    RecipeItem tempRI = new RecipeItem(recID, recName);
+                    recipeItems.add(tempRI);
                 }
-                else if (titleFound == true){
-                    s = s.replaceAll("\"", "");
-                    temp.setRecipeName(s);
-                    titleFound = false;
-                    recipeItems.add(temp);
-                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
             createRecipeList();
         }
@@ -204,17 +218,10 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         return false;
     }
 
-//    private void storeAllRecipes(){
-//        for (String r: recipes){
-//            String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
-//            boolean added = db.addRecipe(formatRecipe, r);
-//        }
-//    }
-
     private void createRecipeList()
     {
         List<String> allRecipes = new ArrayList<>();
-        for (RecipeItem r : recipeItems){
+        for (RecipeItem r : recipeItems) {
             allRecipes.add(r.getName());
         }
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
@@ -225,6 +232,7 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
         recipeDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final RecipeItem recItem = recipeItems.get(position);
                 final Dialog dialog = new Dialog(Recipes.this);
                 dialog.setTitle(parent.getItemAtPosition(position).toString());
                 dialog.setContentView(R.layout.activity_recipe_popup);
@@ -242,14 +250,28 @@ public class Recipes extends MainActivity implements SearchView.OnQueryTextListe
                 mealInstructText.setText("Instructions: "+selectedRecipeInstructions);
 
                 dialog.show();
+
+                Button recipeSelect = (Button)dialog.findViewById(R.id.recipeSelect_button);
+                recipeSelect.setOnClickListener(new AdapterView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Recipes.this, MealPlan.class);
+                        intent.putExtra("recipeID", recItem.getRecipeID());
+                        intent.putExtra("recipeName", recItem.getName());
+                        setResult(Activity.RESULT_OK, intent);
+                        finish();
+                    }
+                });
+                if (!fromMP) recipeSelect.setVisibility(View.INVISIBLE);
             }
+
+
         });
     }
 
     private void setupSearchView()
     {
-        recipeSearchView.setIconifiedByDefault(false);
-//        recipeSearchView.setOnQueryTextListener(this);
+        recipeSearchView.setIconifiedByDefault(true);
         recipeSearchView.setSubmitButtonEnabled(true);
         recipeSearchView.setQueryHint("Search Recipes");
 

@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Alex on 10/31/2016.
@@ -18,12 +19,25 @@ public class DBHandler extends SQLiteOpenHelper
 {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "fitbytes.db";
+
+    private static final String TABLE_USER = "user";
+    private static final String US_col_1_ID = "ID";
+    private static final String US_col_2_NAME = "Name";
+    private static final String US_col_3_HEIGHT = "Height";
+    private static final String US_col_4_WEIGHT = "Weight";
+    private static final String US_col_5_BMI = "BMI";
+
     private static final String TABLE_MEALPLAN = "mealPlan";
-    private static final String col_1_ID = "ID";
-    private static final String col_2_DATE = "Date";
-    private static final String col_3_RECIPE = "Recipe";
+    private static final String MP_col_1_ID = "ID";
+    private static final String MP_col_2_DATE = "Date";
+    private static final String MP_col_3_RECIPEID1 = "RecipeID1";
+    private static final String MP_col_4_RECIPENAME1 = "RecipeName1";
+    private static final String MP_col_5_RECIPEID2 = "RecipeID2";
+    private static final String MP_col_6_RECIPENAME2 = "RecipeName2";
+    private static final String MP_col_7_RECIPEID3 = "RecipeID3";
+    private static final String MP_col_8_RECIPENAME3 = "RecipeName3";
 
-
+    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
     private static final String GOAL_ID = "goal_id";
     private static final String GOAL_DESCRIPTION = "goal_description";
     private static final String GOAL_DATE = "goal_date";
@@ -33,8 +47,6 @@ public class DBHandler extends SQLiteOpenHelper
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
-
-    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
 
     private static final String TABLE_INGREDIENTS = "ingredient";
     private static final String TI_col_1_ID = "ID";
@@ -54,8 +66,12 @@ public class DBHandler extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        String CREATE_MEALPLAN_TABLE = "CREATE TABLE " + TABLE_MEALPLAN + "("
-            + col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + col_2_DATE + " INTEGER, " + col_3_RECIPE + " INTEGER" + ")";
+        String CREATE_USER_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s REAL)",
+                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI);
+        db.execSQL(CREATE_USER_TABLE);
+
+        String CREATE_MEALPLAN_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL)",
+                TABLE_MEALPLAN, MP_col_1_ID, MP_col_2_DATE, MP_col_3_RECIPEID1, MP_col_4_RECIPENAME1, MP_col_5_RECIPEID2, MP_col_6_RECIPENAME2, MP_col_7_RECIPEID3, MP_col_8_RECIPENAME3);
         db.execSQL(CREATE_MEALPLAN_TABLE);
 
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
@@ -74,45 +90,75 @@ public class DBHandler extends SQLiteOpenHelper
                         TABLE_FITNESS_TRACKER, GOAL_ID, GOAL_DESCRIPTION, GOAL_DATE, GOAL_DURATION, GOAL_COMPLETED, GOAL_TYPE);
         db.execSQL(CREATE_FITNESS_TRACKER_TABLE);
 
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
         onCreate(db);
     }
 
-    public boolean addGoal(String description, int date, int duration, boolean completed, Goal.Type type){
-        /*String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = %s",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date
+    public void createUser(){
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (!cursor.moveToFirst()) {
+            values.put(US_col_2_NAME, "User");
+            values.put(US_col_3_HEIGHT, 0);
+            values.put(US_col_4_WEIGHT, 0);
+            values.put(US_col_5_BMI, 0);
+            db.insert(TABLE_USER, null, values);
+        }
+    }
+
+    public UserItem getUser(){
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        UserItem user = new UserItem("User", 0, 0, 0);;
+        if (cursor.moveToFirst()) {
+            String name = cursor.getString(1);
+            int height = cursor.getInt(2);
+            int weight = cursor.getInt(3);
+            double BMI = cursor.getDouble(4);
+            user = new UserItem(name, height, weight, BMI);
+        }
+        return user;
+    }
+
+    public void updateUser(String name, int height, int weight, double BMI){
+
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            values.put(US_col_2_NAME, name);
+            values.put(US_col_3_HEIGHT, height);
+            values.put(US_col_4_WEIGHT, weight);
+            values.put(US_col_5_BMI, BMI);
+
+            int planID = cursor.getInt(0);
+            db.update(TABLE_USER, values, US_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+    }
+
+    /*public Goal getGoal(Goal.Type type){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_TYPE, type
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if(!cursor.moveToFirst()){
-            ContentValues values = new ContentValues();
-            values.put(GOAL_DATE, date);
-            values.put(GOAL_DESCRIPTION, description);
-            values.put(GOAL_DURATION, duration);
-            db.insert(TABLE_FITNESS_TRACKER, null, values);
-            return true;
+        cursor.moveToFirst();
+        if(cursor == null){
+
         }
-        return false;*/
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(GOAL_DESCRIPTION, description);
-        values.put(GOAL_DATE, date);
-        values.put(GOAL_DURATION, duration);
-        values.put(GOAL_COMPLETED, completed);
-        values.put(GOAL_TYPE, type.toString());
-        db.insert(TABLE_FITNESS_TRACKER, null, values);
-        return true;
-    }
+    }*/
     public Goal getGoal(String name){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -138,6 +184,7 @@ public class DBHandler extends SQLiteOpenHelper
         g.setCompleted(cursor.getInt(4) > 0);
         return g;
     }
+
     public void setGoalCompleted(String name){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
@@ -224,61 +271,12 @@ public class DBHandler extends SQLiteOpenHelper
         return list;
     }
 
-//    public void removeGoal(String description){
-//        String selectQuery = String.format(
-//                "SELECT * FROM %s WHERE %s = %s",
-//                TABLE_FITNESS_TRACKER,
-//                GOAL_DESCRIPTION,
-//                description
-//        );
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//        if (cursor.moveToFirst()) {
-//            int goalID = cursor.getInt(0);
-//            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-//        }
-//    }
-
-    public void removeGoal(int date){
+    public void removeGoals(){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s != %s and %s = %s",
+                "SELECT * FROM %s WHERE %s = %s",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
                 GOAL_DURATION,
-                1
-        );
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            int goalID = cursor.getInt(0);
-            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-        }
-    }
-    public void removeDailyGoal(int date){
-        String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s < %s and %s = %s",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
-                GOAL_DURATION,
-                1
-        );
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            int goalID = cursor.getInt(0);
-            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-        }
-    }
-    public void removeWeeklyGoal(int date){
-        String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s+7 = %s and %s = %s",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DATE,
-                date,
-                GOAL_DURATION,
-                7
+                getCurrentDate()
         );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -288,19 +286,40 @@ public class DBHandler extends SQLiteOpenHelper
         }
     }
 
-    // Adding new meal
-    public boolean addPlan(int date, int recipe)
-    {
+    public void removeGoal(Goal goal){
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DESCRIPTION, goal.getDescription()
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            int goalID = cursor.getInt(0);
+            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
+        }
+    }
+
+    public boolean addAllMeals(MealPlanItem mpi){
         // Search for duplicate date
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + mpi.getDate() + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // Only add if date does not exist
         if (!cursor.moveToFirst()){
             ContentValues values = new ContentValues();
-            values.put(col_2_DATE, date);
-            values.put(col_3_RECIPE, recipe);
+            List<Map.Entry<Integer, String>> entries = new ArrayList(mpi.getRecipes().entrySet());
+            int numMeals = entries.size();
+            values.put(MP_col_2_DATE, mpi.getDate());
+            switch (numMeals){
+                case 3: values.put(MP_col_7_RECIPEID3, entries.get(2).getKey());
+                        values.put(MP_col_8_RECIPENAME3, entries.get(2).getValue());
+                case 2: values.put(MP_col_5_RECIPEID2, entries.get(1).getKey());
+                        values.put(MP_col_6_RECIPENAME2, entries.get(1).getValue());
+                default: values.put(MP_col_3_RECIPEID1, entries.get(0).getKey());
+                         values.put(MP_col_4_RECIPENAME1, entries.get(0).getValue());
+            }
             // Inserting Row
             db.insert(TABLE_MEALPLAN, null, values);
             return true;
@@ -308,26 +327,12 @@ public class DBHandler extends SQLiteOpenHelper
         return false;
     }
 
-    // Get the recipe for a meal plan
-    public int getMealRecipe(int date)
+    public List<MealPlanItem> getAllMealPlans()
     {
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst())
-            return cursor.getInt(2);
-        return -1;
-    }
-
-
-
-    // Getting All Meal Plans
-    public List<String> getAllPlans()
-    {
-        List<String> planList = new ArrayList<String>();
+        List<MealPlanItem> planList = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " ORDER BY " + col_2_DATE + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " ORDER BY " + MP_col_2_DATE + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -335,22 +340,97 @@ public class DBHandler extends SQLiteOpenHelper
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                planList.add(cursor.getInt(1) + " " + cursor.getInt(2));
+                MealPlanItem mpi = new MealPlanItem();
+                mpi.setMpDate(cursor.getInt(1));
+                for (int i = 2; i < 8; i+=2){
+
+                    if(cursor.getInt(i) != 0){
+                        mpi.addRecipe(cursor.getInt(i), cursor.getString(i+1));
+                    }
+                }
+                planList.add(mpi);
             } while (cursor.moveToNext());
         }
 
         return planList;
     }
 
-    public void removePlan(int date)
+    public MealPlanItem getMealPlan(int date)
     {
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + col_2_DATE + " = " + date + "";
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        MealPlanItem mpi = null;
+        // Check if meal exists
+        if (cursor.moveToFirst()) {
+            do {
+                mpi = new MealPlanItem();
+                mpi.setMpDate(cursor.getInt(1));
+                for (int i = 2; i < 8; i+=2){
+
+                    if(cursor.getInt(i) != 0){
+                        mpi.addRecipe(cursor.getInt(i), cursor.getString(i+1));
+                    }
+                }
+            } while (cursor.moveToNext());
+        }
+        return mpi;
+    }
+
+    public void removeMealPlan(int date)
+    {
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
             int planID = cursor.getInt(0);
-            db.delete(TABLE_MEALPLAN, col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+            db.delete(TABLE_MEALPLAN, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
         }
+    }
+
+    public boolean updateMealPlan(int oldDate, int newDate, MealPlanItem mpi){
+        // Check if the new date is already in the database
+        if (oldDate != newDate) {
+            String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + newDate + "";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (cursor.moveToFirst()) {
+                return false;
+            }
+        }
+
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + oldDate + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            List<Map.Entry<Integer, String>> entries = new ArrayList(mpi.getRecipes().entrySet());
+            int numMeals = entries.size();
+            values.put(MP_col_2_DATE, newDate);
+            if (numMeals > 0){
+                values.put(MP_col_3_RECIPEID1, entries.get(0).getKey());
+                values.put(MP_col_4_RECIPENAME1, entries.get(0).getValue());
+                values.put(MP_col_5_RECIPEID2, 0);
+                values.put(MP_col_6_RECIPENAME2, "NULL");
+                values.put(MP_col_7_RECIPEID3, 0);
+                values.put(MP_col_8_RECIPENAME3, "NULL");
+            }
+            if (numMeals > 1){
+                values.put(MP_col_5_RECIPEID2, entries.get(1).getKey());
+                values.put(MP_col_6_RECIPENAME2, entries.get(1).getValue());
+            }
+            if (numMeals > 2){
+                values.put(MP_col_7_RECIPEID3, entries.get(2).getKey());
+                values.put(MP_col_8_RECIPENAME3, entries.get(2).getValue());
+            }
+
+            int planID = cursor.getInt(0);
+            db.update(TABLE_MEALPLAN, values, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+
+        return true;
     }
 
     public void addCurrentDate(int date)
@@ -371,20 +451,7 @@ public class DBHandler extends SQLiteOpenHelper
         // Inserting Row
         db.insert(TABLE_DATE, null, values);
     }
-    public void removeGoal(Goal g){
-        String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = '%s'",
-                TABLE_FITNESS_TRACKER,
-                GOAL_DESCRIPTION,
-                g.getDescription()
-        );
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        if (cursor.moveToFirst()) {
-            int goalID = cursor.getInt(0);
-            db.delete(TABLE_FITNESS_TRACKER, GOAL_ID + " = ?", new String[]{String.valueOf(goalID)});
-        }
-    }
+
     public int getCurrentDate()
     {
         int date = -1;
@@ -444,9 +511,7 @@ public class DBHandler extends SQLiteOpenHelper
                 recipeList.add(cursor.getString(2));
             } while (cursor.moveToNext());
         }
-
         return recipeList;
-
     }
 
     public boolean addIngredient(IngredientItem item)
@@ -493,9 +558,18 @@ public class DBHandler extends SQLiteOpenHelper
     }
 
     public void removeOldStuff(int oldDate){
-        removePlan(oldDate);
-        removeWeeklyGoal(oldDate);
-        removeGoal(oldDate);
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " < " + oldDate + "";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int planID = cursor.getInt(0);
+                db.delete(TABLE_MEALPLAN, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+            }while(cursor.moveToNext());
+        }
+//        removePlan(oldDate);
+//        removeWeeklyGoal(oldDate);
+//        removeGoal(oldDate);
     }
 
 
@@ -524,5 +598,16 @@ public class DBHandler extends SQLiteOpenHelper
                 GOAL_DESCRIPTION,
                 current.getDescription()));
 
+    }
+
+    public void addGoal(Goal goal) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(GOAL_DESCRIPTION, goal.getDescription());
+        values.put(GOAL_DATE, goal.getDate());
+        values.put(GOAL_DURATION, goal.getDuration());
+        values.put(GOAL_COMPLETED, goal.getCompleted());
+        values.put(GOAL_TYPE, goal.getType().toString());
+        db.insert(TABLE_FITNESS_TRACKER, null, values);
     }
 }

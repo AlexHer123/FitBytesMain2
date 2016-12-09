@@ -1,77 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:minWidth="50pt"
     android:minHeight="50pt"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:layout_height="500dp"
+    android:layout_width="350dp">
 
 
-    <TextView
-        android:id="@+id/mp_recipe_name"
-        android:text="Recipe"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="26sp"
-        android:layout_weight="0.03" />
-
-    <TextView
-        android:text="Calorie: "
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recipe_calorie_text"
+        android:layout_height="match_parent"
         android:layout_weight="0.03"
-        android:textSize="18sp" />
+        android:orientation="vertical">
 
-    <TextView
-        android:text="Ingredients"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recipe_ingredient_text"
-        android:textSize="18sp"
-        android:layout_weight="0.03" />
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="320dp">
-
-        <TableRow
+        <TextView
+            android:id="@+id/mp_recipe_name"
+            android:text="Recipe"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="26sp"
             android:layout_weight="0.03" />
 
-        <TableRow
+        <TextView
+            android:text="Calorie: "
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_calorie_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/mp_recipe_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
-        <TableRow
+        <TextView
+            android:text="Ingredients"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_ingredient_text"
+            android:textSize="18sp"
+            android:layout_weight="0.03"
+            android:layout_below="@+id/recipe_calorie_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp" />
 
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </TableLayout>
+        <Button
+            android:text="Select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipeSelect_button"
+            android:layout_weight="0.03"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+    </LinearLayout>
 
     <!--<TableRow-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content">-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content">-->
 
-        <!--<Button-->
-            <!--android:text="Edit"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/recipe_button_edit"-->
-            <!--android:layout_weight="1" />-->
+    <!--<Button-->
+    <!--android:text="Edit"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/recipe_button_edit"-->
+    <!--android:layout_weight="1" />-->
 
-        <!--<Button-->
-            <!--android:text="Delete"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/recipe_button_delete"-->
-            <!--android:layout_weight="1" />-->
+    <!--<Button-->
+    <!--android:text="Delete"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/recipe_button_delete"-->
+    <!--android:layout_weight="1" />-->
 
     <!--</TableRow>-->
 
-</LinearLayout>
+</ScrollView>

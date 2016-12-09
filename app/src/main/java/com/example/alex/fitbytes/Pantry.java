@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.SearchView;
 import android.text.TextUtils;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import static com.example.alex.fitbytes.IngredientItem.Measurement.*;
 
@@ -101,7 +103,26 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
 
 
     public void barcodeButtonOnClick(View view){
-        Intent intent = new Intent(this, BarcodeScanner.class);
-        startActivity(intent);
+        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+        intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+        startActivityForResult(intent, 0);
+
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                // Handle successful scan
+                // TODO look up ingredient by upc and add it to pantry
+                Toast.makeText( getApplicationContext(), "Barcode contents = " + contents + ". Barcode type = " + format, Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                // Handle cancel
+                Toast.makeText( getApplicationContext(), "result canceled", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+
 }
