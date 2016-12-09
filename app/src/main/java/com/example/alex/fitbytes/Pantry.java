@@ -115,6 +115,7 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 // Handle successful scan
+                // TODO look up ingredient by upc and add it to pantry
                 Toast.makeText( getApplicationContext(), "Barcode contents = " + contents + ". Barcode type = " + format, Toast.LENGTH_LONG).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Handle cancel
