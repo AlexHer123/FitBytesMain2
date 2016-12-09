@@ -3,6 +3,7 @@ package com.example.alex.fitbytes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,27 +17,35 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class UserPage extends MainActivity {
+public class UserProfile extends MainActivity {
 
     private DBHandler db = new DBHandler(this);
     private MealPlanItem mpItem;
     private TextView noMeals;
-
+    private int currentDate;
+    private UserItem user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_page);
+        setContentView(R.layout.activity_user_profile);
+        user = db.getUser();
+        currentDate = db.getCurrentDate();
         noMeals = (TextView)findViewById(R.id.textView_mp_meals);
-        mpItem = db.getMealPlan(db.getCurrentDate());
+        mpItem = db.getMealPlan(currentDate);
+        if (mpItem == null) {
+            mpItem = new MealPlanItem();
+        }
+        fillOutInformation();
         TextView dateView = (TextView)findViewById(R.id.textView_user_summary);
-        dateView.setText(convertDate(mpItem.getDate()) + " Summary");
+        dateView.setText("Summary for: " + convertDate(currentDate));
         updateRecipeSpinner();
 
         Button updateButton = (Button)findViewById(R.id.button_user_update);
         updateButton.setOnClickListener(new AdapterView.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(UserPage.this, UserProfileActivity.class);
+                Intent intent = new Intent(UserProfile.this, UserInfo.class);
+                intent.putExtra("user", user);
                 startActivityForResult(intent, 1);
             }
         });
@@ -48,12 +57,30 @@ public class UserPage extends MainActivity {
         if (requestCode == 1) {
             // Set the BMI values
             if (resultCode == Activity.RESULT_OK) {
-
+                db.updateUser(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
+//                user = new UserItem(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
+                user = db.getUser();
+                Log.d("USER: ", user.getName());
+                fillOutInformation();
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
             }
         }
+    }
+
+    private void fillOutInformation(){
+        TextView username = (TextView)findViewById(R.id.textView_userPage_Hello);
+        TextView height = (TextView)findViewById(R.id.textView_user_height);
+        TextView weight = (TextView)findViewById(R.id.textView_user_weight);
+        TextView BMI = (TextView)findViewById(R.id.textView_user_bmi);
+
+        username.setText("Hello " + user.getName() + ",");
+        int h = user.getHeight();
+        String hi = (h/12) + " ft. " + (h%12) + " in.";
+        height.setText("Height: " + hi);
+        weight.setText("Weight: " + user.getWeight());
+        BMI.setText("BMI: " + user.getBMI());
     }
 
     private void updateRecipeSpinner(){

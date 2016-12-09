@@ -20,6 +20,13 @@ public class DBHandler extends SQLiteOpenHelper
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "fitbytes.db";
 
+    private static final String TABLE_USER = "user";
+    private static final String US_col_1_ID = "ID";
+    private static final String US_col_2_NAME = "Name";
+    private static final String US_col_3_HEIGHT = "Height";
+    private static final String US_col_4_WEIGHT = "Weight";
+    private static final String US_col_5_BMI = "BMI";
+
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String MP_col_1_ID = "ID";
     private static final String MP_col_2_DATE = "Date";
@@ -30,7 +37,7 @@ public class DBHandler extends SQLiteOpenHelper
     private static final String MP_col_7_RECIPEID3 = "RecipeID3";
     private static final String MP_col_8_RECIPENAME3 = "RecipeName3";
 
-
+    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
     private static final String GOAL_ID = "goal_id";
     private static final String GOAL_DESCRIPTION = "goal_description";
     private static final String GOAL_DATE = "goal_date";
@@ -40,8 +47,6 @@ public class DBHandler extends SQLiteOpenHelper
 
     private static final String TABLE_DATE = "currentDate";
     private static final String TD_col_1_DATE = "Date";
-
-    private static final String TABLE_FITNESS_TRACKER = "fitnessTracker";
 
     private static final String TABLE_INGREDIENTS = "ingredient";
     private static final String TI_col_1_ID = "ID";
@@ -61,6 +66,10 @@ public class DBHandler extends SQLiteOpenHelper
     @Override
     public void onCreate(SQLiteDatabase db)
     {
+        String CREATE_USER_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s REAL)",
+                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI);
+        db.execSQL(CREATE_USER_TABLE);
+
         String CREATE_MEALPLAN_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL)",
                 TABLE_MEALPLAN, MP_col_1_ID, MP_col_2_DATE, MP_col_3_RECIPEID1, MP_col_4_RECIPENAME1, MP_col_5_RECIPEID2, MP_col_6_RECIPENAME2, MP_col_7_RECIPEID3, MP_col_8_RECIPENAME3);
         db.execSQL(CREATE_MEALPLAN_TABLE);
@@ -89,6 +98,56 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
         onCreate(db);
     }
+
+    public void createUser(){
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (!cursor.moveToFirst()) {
+            values.put(US_col_2_NAME, "User");
+            values.put(US_col_3_HEIGHT, 0);
+            values.put(US_col_4_WEIGHT, 0);
+            values.put(US_col_5_BMI, 0);
+            db.insert(TABLE_USER, null, values);
+        }
+    }
+
+    public UserItem getUser(){
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        UserItem user = new UserItem("User", 0, 0, 0);;
+        if (cursor.moveToFirst()) {
+            String name = cursor.getString(1);
+            int height = cursor.getInt(2);
+            int weight = cursor.getInt(3);
+            double BMI = cursor.getDouble(4);
+            user = new UserItem(name, height, weight, BMI);
+        }
+        return user;
+    }
+
+    public void updateUser(String name, int height, int weight, double BMI){
+
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            values.put(US_col_2_NAME, name);
+            values.put(US_col_3_HEIGHT, height);
+            values.put(US_col_4_WEIGHT, weight);
+            values.put(US_col_5_BMI, BMI);
+
+            int planID = cursor.getInt(0);
+            db.update(TABLE_USER, values, US_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+    }
+
     /*public Goal getGoal(Goal.Type type){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_TYPE, type
@@ -347,7 +406,6 @@ public class DBHandler extends SQLiteOpenHelper
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            int x = 0;
             List<Map.Entry<Integer, String>> entries = new ArrayList(mpi.getRecipes().entrySet());
             int numMeals = entries.size();
             values.put(MP_col_2_DATE, newDate);
@@ -500,7 +558,7 @@ public class DBHandler extends SQLiteOpenHelper
     }
 
     public void removeOldStuff(int oldDate){
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " <= " + oldDate + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " < " + oldDate + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

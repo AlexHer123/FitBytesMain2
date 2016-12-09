@@ -1,93 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:id="@+id/activity_user_page"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.alex.fitbytes.UserProfile">
 
-    <TextView
-        android:text="Weight(lbs)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="69dp"
-        android:id="@+id/userProfileWeight"
-        android:textSize="30sp"
-        android:layout_below="@+id/userProfileHeight"
-        android:layout_alignLeft="@+id/userProfileHeight"
-        android:layout_alignStart="@+id/userProfileHeight" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/relativeLayout_user_layout"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:text="BMI"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="71dp"
-        android:id="@+id/userProfileBMI"
-        android:textSize="30sp"
-        android:layout_below="@+id/userProfileWeight"
-        android:layout_alignLeft="@+id/userProfileWeight"
-        android:layout_alignStart="@+id/userProfileWeight" />
+        <TextView
+            android:text="Hello User,"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/textView_userPage_Hello"
+            android:textSize="36sp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_above="@+id/userProfileWeight"
-        android:layout_toRightOf="@+id/userProfileWeight"
-        android:layout_marginLeft="14dp"
-        android:layout_marginStart="14dp"
-        android:id="@+id/userProfileUserHeight"
-        android:editable="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <TextView
+            android:text="Summary for: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_user_summary"
+            android:textSize="36sp"
+            android:layout_below="@+id/textView_user_bmi"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="17dp" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:layout_alignTop="@+id/userProfileWeight"
-        android:layout_alignLeft="@+id/userProfileUserHeight"
-        android:layout_alignStart="@+id/userProfileUserHeight"
-        android:id="@+id/userProfileUserWeight"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <TextView
+            android:text="Meals Planned:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_user_mealTitle"
+            android:textSize="26sp"
+            android:layout_below="@+id/textView_user_summary"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userProfileUserBMI"
-        android:textSize="30sp"
-        android:layout_alignBaseline="@+id/userProfileBMI"
-        android:layout_alignBottom="@+id/userProfileBMI"
-        android:layout_alignLeft="@+id/userProfileUserWeight"
-        android:layout_alignStart="@+id/userProfileUserWeight"
-        android:layout_marginLeft="42dp"
-        android:layout_marginStart="42dp" />
+        <include
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/summary_meals"
+            android:id="@+id/listView_user_meals"
+            android:layout_below="@+id/textView_user_summary"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="17dp" />
 
-    <TextView
-        android:text="Height(in)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:id="@+id/userProfileHeight"
-        android:textSize="30sp"
-        android:layout_marginTop="11dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        <Button
+            android:text="Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/textView_userPage_Hello"
+            android:layout_alignParentEnd="true"
+            android:id="@+id/button_user_update" />
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userProfileIsBMIhealthy"
-        android:textSize="30sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="78dp"
-        android:layout_alignLeft="@+id/userProfileBMI"
-        android:layout_alignStart="@+id/userProfileBMI" />
+        <TextView
+            android:text="Height: 0 ft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:id="@+id/textView_user_height"
+            android:textSize="26sp"
+            android:layout_below="@+id/textView_userPage_Hello"
+            android:layout_alignParentStart="true" />
 
-</RelativeLayout>
+        <TextView
+            android:text="Weight: 0 lbs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_user_weight"
+            android:textSize="26sp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/textView_user_height"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="BMI: 0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_user_bmi"
+            android:textSize="26sp"
+            android:layout_marginTop="13dp"
+            android:layout_below="@+id/textView_user_weight"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+</ScrollView>

@@ -99,9 +99,8 @@ public class Pantry extends MainActivity implements SearchView.OnQueryTextListen
         return false;
     };
 
-
+/// ADD CODE HERE
     public void barcodeButtonOnClick(View view){
-        Intent intent = new Intent(this, BarcodeScanner.class);
-        startActivity(intent);
+
     }
 }

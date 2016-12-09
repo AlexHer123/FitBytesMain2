@@ -13,7 +13,7 @@
         android:listSelector="@android:color/holo_blue_light"/>
 
     <TextView
-        android:text="No recipes selected."
+        android:text="None."
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView_mp_meals"

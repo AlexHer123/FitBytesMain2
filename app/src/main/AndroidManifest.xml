@@ -32,7 +32,7 @@
         <activity
             android:name=".UpcomingPlans"
             android:screenOrientation="portrait"/>
-        <activity android:name=".UserProfileActivity"
+        <activity android:name=".UserInfo"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserStatsActivity"
@@ -41,7 +41,7 @@
             android:name=".CalendarPicker"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".UserPage"
+            android:name=".UserProfile"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

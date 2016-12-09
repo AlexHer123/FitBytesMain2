@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="User Information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:id="@+id/textView_uInfo_title"
+        android:textSize="36sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="Name: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_uInfo_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="40dp"
+        android:id="@+id/textView_uInfo_name"
+        android:textSize="26sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_uInfo_name"
+        android:layout_marginEnd="18dp"
+        android:layout_alignBaseline="@+id/textView_uInfo_name"
+        android:layout_alignBottom="@+id/textView_uInfo_name"
+        android:layout_marginStart="13dp"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView_uInfo_name" />
+
+    <TextView
+        android:text="Height: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText_uInfo_name"
+        android:layout_alignStart="@+id/textView_uInfo_name"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView_uInfo_height"
+        android:textSize="26sp" />
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_uInfo_inch"
+        android:layout_alignBottom="@+id/textView_uInfo_feet"
+        android:layout_toEndOf="@+id/textView_uInfo_feet"
+        android:layout_marginStart="21dp"
+        android:textSize="26sp" />
+
+    <TextView
+        android:text="Weight: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_uInfo_height"
+        android:layout_alignStart="@+id/textView_uInfo_height"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView_uInfo_weight"
+        android:textSize="26sp" />
+
+    <TextView
+        android:text="lbs."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_uInfo_pounds"
+        android:textSize="26sp"
+        android:layout_alignBottom="@+id/editText_uInfo_weight"
+        android:layout_alignEnd="@+id/editText_uInfo_inch" />
+
+    <TextView
+        android:text="in."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_uInfo_inch"
+        android:textSize="26sp"
+        android:layout_alignBottom="@+id/editText_uInfo_inch"
+        android:layout_alignEnd="@+id/textView_uInfo_title"
+        android:layout_marginEnd="14dp" />
+
+    <TextView
+        android:text="ft."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_uInfo_feet"
+        android:textSize="26sp"
+        android:layout_alignBottom="@+id/editText_uInfo_feet"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="BMI:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:id="@+id/textView_uInfo_BMI"
+        android:textSize="26sp"
+        android:layout_below="@+id/textView_uInfo_weight"
+        android:layout_alignStart="@+id/textView_uInfo_weight" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_uInfo_BMImessage"
+        android:layout_below="@+id/textView_uInfo_BMI"
+        android:layout_alignStart="@+id/textView_uInfo_BMI"
+        android:textSize="14sp" />
+
+    <Button
+        android:text="Done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/button_uInfo_done" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_uInfo_BMIvalue"
+        android:textSize="26sp"
+        android:layout_alignBaseline="@+id/textView_uInfo_BMI"
+        android:layout_alignBottom="@+id/textView_uInfo_BMI"
+        android:layout_alignStart="@+id/editText_uInfo_weight" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_uInfo_weight"
+        android:textSize="26sp"
+        android:layout_alignBaseline="@+id/textView_uInfo_weight"
+        android:layout_alignBottom="@+id/textView_uInfo_weight"
+        android:layout_toEndOf="@+id/textView_uInfo_weight" />
+
+    <EditText
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText_uInfo_feet"
+        android:textSize="26sp"
+        android:layout_above="@+id/editText_uInfo_weight"
+        android:layout_alignStart="@+id/editText_uInfo_name" />
+
+</RelativeLayout>

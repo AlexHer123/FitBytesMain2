@@ -30,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
-//        db.removeOldStuff(db.getCurrentDate());
+        db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
-        storeAllRecipes();
+        db.createUser();
+//        storeAllRecipes();
     }
 
     private void storeAllRecipes(){
@@ -41,39 +42,6 @@ public class MainActivity extends AppCompatActivity {
             boolean added = db.addRecipe(formatRecipe, r);
         }
     }
-
-// THE UNDO MENU PROCESS
-//    Uncomment button stuff
-//    Uncomment xml in content_main
-//    Change all main classes to extend AppCompatActivity
-//    Remove overrides of onOptionsItemSelected in each class
-//    Can leave menu stuff, but don't click on it in the app
-
-//    public void mealPlanButtonOnClick(View view){
-//        Intent intent = new Intent(this, MealPlan.class);
-////        Intent intent = new Intent(this, UpcomingPlans.class); // DO THIS IN SPRINT 2
-//        startActivity(intent);
-//    }
-//
-//    public void fitnessTrackerButtonOnClick(View view) {
-//        Intent intent = new Intent(this, FitnessTracker.class);
-//        startActivity(intent);
-//    }
-//
-//    public void ingredientButtonOnClick(View view) {
-//        Intent intent = new Intent(this, Ingredients.class);
-//        startActivity(intent);
-//    }
-//
-//    public void recipeButtonOnClick(View view){
-//        Intent intent = new Intent(this, Recipes.class);
-//        startActivity(intent);
-//    }
-//
-//    public void userProfileButtonOnClick(View view){
-//        Intent intent = new Intent(this, UserProfileActivity.class);
-//        startActivity(intent);
-//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -91,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_userProfile) {
-            Intent intent = new Intent(this, UserPage.class);
+            Intent intent = new Intent(this, UserProfile.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
