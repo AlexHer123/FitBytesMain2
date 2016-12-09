@@ -29,8 +29,8 @@ public class UserPage extends MainActivity {
         noMeals = (TextView)findViewById(R.id.textView_mp_meals);
         mpItem = db.getMealPlan(db.getCurrentDate());
         TextView dateView = (TextView)findViewById(R.id.textView_user_summary);
-        dateView.setText(convertDate(mpItem.getDate()) + " Summary");
-        updateRecipeSpinner();
+       // dateView.setText(convertDate(mpItem.getDate()) + " Summary");
+       // updateRecipeSpinner();
 
         Button updateButton = (Button)findViewById(R.id.button_user_update);
         updateButton.setOnClickListener(new AdapterView.OnClickListener(){

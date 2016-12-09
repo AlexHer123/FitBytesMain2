@@ -5,8 +5,9 @@ android {
     buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "com.example.alex.fitbytes"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 24
+        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
