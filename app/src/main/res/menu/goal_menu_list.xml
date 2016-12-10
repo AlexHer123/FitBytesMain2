@@ -3,6 +3,10 @@
     android:name="goal_menu_list">
         <item android:title="Edit"
             android:id="@+id/edit">Edit</item>
+        <item android:title="Details"
+            android:id="@+id/details">Delete</item>
+        <item android:title="Mark Compelete"
+            android:id="@+id/mark_complete">Edit</item>
         <item android:title="Delete"
             android:id="@+id/delete">Delete</item>
 </menu>
