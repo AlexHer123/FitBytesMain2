@@ -59,11 +59,31 @@
         </TableRow>
         <TableRow>
             <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="No Description Found"
-            android:ems="10"
-            android:id="@+id/goal_completion_goal_description"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="No Description Found"
+                android:ems="10"
+                android:id="@+id/goal_completion_goal_description"
+                android:textSize="16sp"
+                android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="4sp"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="Date"
+                android:ems="10"
+                android:id="@+id/goal_completion_goal_date_date"
+                android:textSize="16sp"
+                android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="No Date Found"
+                android:ems="10"
+                android:id="@+id/goal_completion_goal_date"
                 android:textSize="16sp"
                 android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="4sp"/>
         </TableRow>

@@ -10,30 +10,35 @@ import java.util.Calendar;
 public class WeeklyGoal extends Goal {
     private final int WEEKLY_DURATION = 7;
     public WeeklyGoal(){
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DATE);
+        cal.set(year, month, day);
+
         Category c = new Exercise();
         setCategory(c);
-        setDuration(WEEKLY_DURATION);
-        setDate(getUpdatedDate());
+        setDate(cal);
+        setDueDate(getUpdatedDate());
         setType(Type.WEEKLY);
     }
-    public WeeklyGoal(String description, int date, int duration){
+    public WeeklyGoal(String description, int date, int dueDate){
         Category c = new Exercise(description);
         setCategory(c);
         setDate(date);
-        setDuration(duration);
+        setDueDate(dueDate);
         setType(Type.WEEKLY);
     }
-    @Override
-    public String getDescription() {
-        if(super.getDescription().contains("Weekly: "))
-            return super.getDescription();
-        else return "Weekly: " + super.getDescription();
+    public String toString(){
+        return "Weekly: " + getDescription() + (getCompleted()? " (Done)" : "");
     }
     private int getUpdatedDate(){
         Calendar c = Calendar.getInstance();
+        int i = c.get(Calendar.WEEK_OF_MONTH);
+        c.set(Calendar.WEEK_OF_MONTH, ++i);
         c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        String dateString = String.format("%s%s%s", c.get(Calendar.YEAR),
-                (c.get(Calendar.MONTH)+1), c.get(Calendar.DATE));
+        String dateString = String.format("%04d%02d%02d", c.get(Calendar.YEAR),
+                (c.get(Calendar.MONTH)), c.get(Calendar.DATE));
         return Integer.parseInt(dateString);
     }
 }

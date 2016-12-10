@@ -8,20 +8,17 @@ public class UserGoal extends Goal {
     public UserGoal(){
         Category c = new CustomCategory();
         setCategory(c);
-        setDuration(0);
+        setDueDate(getDate());
         setType(Type.USER);
     }
     public UserGoal(String description, int date, int duration){
         Category c = new CustomCategory(description);
         setCategory(c);
-        setDuration(duration);
+        setDueDate(duration);
         setDate(date);
         setType(Type.USER);
     }
     public String getDescription() {
-        /*if(super.getDescription().contains("User: "))
-            return super.getDescription();
-        else return "User: " + super.getDescription();*/
         return super.getDescription();
     }
 }

@@ -185,23 +185,14 @@ public class DBHandler extends SQLiteOpenHelper
         return g;
     }
 
-    public void setGoalCompleted(String name){
+    public void setGoalCompleted(Goal goal, boolean completed){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
                 TABLE_FITNESS_TRACKER,
                 GOAL_COMPLETED,
-                1,
+                completed? 1 : 0,
                 GOAL_DESCRIPTION,
-                name));
-    }
-    public void setGoalIncompleted(String name){
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
-                TABLE_FITNESS_TRACKER,
-                GOAL_COMPLETED,
-                0,
-                GOAL_DESCRIPTION,
-                name));
+                goal.getDescription()));
     }
 
     public List<Goal> getAllGoals(){
@@ -588,9 +579,9 @@ public class DBHandler extends SQLiteOpenHelper
         db.execSQL(String.format("UPDATE %s SET %s = %s WHERE %s = '%s'",
                 TABLE_FITNESS_TRACKER,
                 GOAL_DURATION,
-                updated.getDuration(),
+                updated.getDueDate(),
                 GOAL_DURATION,
-                current.getDuration()));
+                current.getDueDate()));
         db.execSQL(String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s'",
                 TABLE_FITNESS_TRACKER,
                 GOAL_DESCRIPTION,
@@ -605,7 +596,7 @@ public class DBHandler extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(GOAL_DESCRIPTION, goal.getDescription());
         values.put(GOAL_DATE, goal.getDate());
-        values.put(GOAL_DURATION, goal.getDuration());
+        values.put(GOAL_DURATION, goal.getDueDate());
         values.put(GOAL_COMPLETED, goal.getCompleted());
         values.put(GOAL_TYPE, goal.getType().toString());
         db.insert(TABLE_FITNESS_TRACKER, null, values);
