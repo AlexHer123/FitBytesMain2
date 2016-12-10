@@ -3,6 +3,7 @@ package com.example.alex.fitbytes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -84,15 +85,20 @@ public class UserProfile extends MainActivity {
     private void updateRecipeSpinner(){
         // Set up selected meals list view
         ListView selectedMeals = (ListView)findViewById(R.id.listView_mp_meals);
-//        Map<Integer, String> recipes = mpItem.getRecipes();
         List<String> recipeNames = new ArrayList<>(mpItem.getRecipes().values());
+        for(int i = 0; i < recipeNames.size(); i++){
+            recipeNames.set(i, recipeNames.get(i)+" \nClick for more info \u2192");
+        }
         ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recipeNames);
         selectedMeals.setAdapter(myarrayAdapter);
 
         selectedMeals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                removeRecipeName = (String)parent.getItemAtPosition(position);
+                Intent intent = new Intent(UserProfile.this, RecipeInfo.class);
+                Log.d("IN USER: ", parent.getItemAtPosition(position).toString());
+                intent.putExtra("recipeID", mpItem.getRecipeID(parent.getItemAtPosition(position).toString()));
+                startActivity(intent);
             }
         });
 
