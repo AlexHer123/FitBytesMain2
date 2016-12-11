@@ -69,7 +69,6 @@
 
         <!-- <activity android:name=".BarcodeScanner" /> -->
         <!-- <activity android:name=".RecipeHandler" /> -->
-        <activity android:name=".RecipeInfo" />
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
