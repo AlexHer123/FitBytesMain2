@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -207,6 +205,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
     }*/
+
     public Goal getGoal(String name) {
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -311,6 +310,78 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return list;
+    }
+
+    public List<Goal> getActiveGoals(int currentDate) {
+        List<Goal> list = new ArrayList<>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectWeekly = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_TYPE,
+                Goal.Type.WEEKLY.toString()
+
+        );
+
+        Cursor cursor = db.rawQuery(selectWeekly, null);
+        if (cursor.moveToFirst()) {
+            Goal g = getGoalFromCursor(cursor);
+            list.add(g);
+        }
+
+        String selectDaily = String.format(
+                "SELECT * FROM %s WHERE %s = '%s'",
+                TABLE_FITNESS_TRACKER,
+                GOAL_TYPE,
+                Goal.Type.DAILY.toString()
+        );
+
+        cursor = db.rawQuery(selectDaily, null);
+        if (cursor.moveToFirst()) {
+            Goal g = getGoalFromCursor(cursor);
+            list.add(g);
+        }
+
+        String selectUser = String.format(
+                "SELECT * FROM %s WHERE %s = '%s' ORDER BY %s ASC",
+                TABLE_FITNESS_TRACKER,
+                GOAL_TYPE,
+                Goal.Type.USER.toString(),
+                GOAL_DURATION
+        );
+
+        cursor = db.rawQuery(selectUser, null);
+        if (cursor.moveToFirst()) {
+            int count = 0;
+            do {
+                Goal g = getGoalFromCursor(cursor);
+                list.add(g);
+                count++;
+            } while (cursor.moveToNext() && count < 3);
+        }
+
+        return list;
+    }
+
+    private Goal getGoalFromCursor(Cursor cursor) {
+        Goal g = null;
+        String description = cursor.getString(1);
+        int date = cursor.getInt(2);
+        int duration = cursor.getInt(3);
+        boolean completed = cursor.getInt(4) > 0;
+        switch (cursor.getString(5)) {
+            case "DAILY":
+                g = new DailyGoal(description, date, duration);
+                break;
+            case "WEEKLY":
+                g = new WeeklyGoal(description, date, duration);
+                break;
+            case "USER":
+                g = new UserGoal(description, date, duration);
+        }
+        g.setCompleted(completed);
+        return g;
     }
 
     public void removeGoals() {
@@ -631,7 +702,6 @@ public class DBHandler extends SQLiteOpenHelper {
 //        removeWeeklyGoal(oldDate);
 //        removeGoal(oldDate);
     }
-
 
     protected void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();
