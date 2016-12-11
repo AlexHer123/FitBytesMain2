@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,11 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Pantry extends MainActivity {
@@ -51,15 +47,7 @@ public class Pantry extends MainActivity {
             }
         });
 
-        Button deleteButton = (Button)findViewById(R.id.button_pantry_delete);
-        deleteButton.setOnClickListener(new AdapterView.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                db.removeIngredient(ingredientName);
-                updateIngredientList();
-            }
-        });
-
+        ingredientsListView.setTextFilterEnabled(true);
         updateIngredientList();
     }
 
@@ -83,7 +71,15 @@ public class Pantry extends MainActivity {
                 final String[] rowQuantity = rowItem[1].split(" ");
                 final String name = rowItem[0];
                 final String quantity = rowQuantity[0];
-                final String measurement = rowQuantity[1];
+                final String measurement;
+                if(rowQuantity.length==1)
+                {
+                    measurement = "";
+                }
+                else
+                {
+                    measurement = rowQuantity[1];
+                }
                 TextView title = (TextView)dialog.findViewById(R.id.textView_pPop_title);
                 title.setText(name);
                 final EditText quantityText = (EditText)dialog.findViewById(R.id.editText_pPop_quantity);
@@ -92,7 +88,17 @@ public class Pantry extends MainActivity {
                 final TextView measureText = (TextView)dialog.findViewById(R.id.textView_pPop_measure);
                 measureText.setText(measurement);
 
-                Button doneButton = (Button)dialog.findViewById(R.id.button_pPop_add);
+                Button deleteButton = (Button) dialog.findViewById(R.id.button_pPop_delete);
+                deleteButton.setOnClickListener(new AdapterView.OnClickListener(){
+                    @Override
+                    public void onClick(View v) {
+                        db.removeIngredient(ingredientName);
+                        updateIngredientList();
+                        dialog.dismiss();
+                    }
+                });
+
+                Button doneButton = (Button) dialog.findViewById(R.id.button_pPop_add);
                 doneButton.setText("Done");
                 doneButton.setOnClickListener(new AdapterView.OnClickListener(){
                     @Override

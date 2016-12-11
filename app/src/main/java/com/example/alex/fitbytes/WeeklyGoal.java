@@ -1,6 +1,7 @@
 package com.example.alex.fitbytes;
 
 import java.util.Calendar;
+import java.util.Random;
 
 
 /**
@@ -16,15 +17,30 @@ public class WeeklyGoal extends Goal {
         int day = cal.get(Calendar.DATE);
         cal.set(year, month, day);
 
-        Category c = new Exercise();
+        Random r = new Random();
+        boolean choice = r.nextBoolean();
+        Category c = choice? new Exercise() : new Diet();
         setCategory(c);
         setDate(cal);
         setDueDate(getUpdatedDate());
         setType(Type.WEEKLY);
     }
     public WeeklyGoal(String description, int date, int dueDate){
-        Category c = new Exercise(description);
-        setCategory(c);
+        Category category = null;
+        /*for(String s : Exercise.DEFAULT_OPTIONS){
+            if(s.toLowerCase().contains(description.toLowerCase())){
+                category = new Exercise(description);
+                break;
+            }
+        }
+        for(String s : Diet.DEFAULT_OPTIONS){
+            if(category != null) break;
+            if(s.toLowerCase().contains(description.toLowerCase()) && category == null){
+                category = new Diet(description);
+                break;
+            }
+        }*/
+        setCategory(new Exercise(description));
         setDate(date);
         setDueDate(dueDate);
         setType(Type.WEEKLY);

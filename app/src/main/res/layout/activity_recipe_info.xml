@@ -169,7 +169,7 @@
             android:layout_marginTop="10dp" />
 
         <TextView
-            android:text="About this recipe"
+            android:text="Directions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recipe_directionstitle_text"
@@ -187,7 +187,7 @@
             android:layout_marginBottom="20dp" />
 
         <TextView
-            android:text="Description"
+            android:text="About this recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recipe_descriptionTitle_text"

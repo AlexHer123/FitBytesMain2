@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +23,13 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String US_col_3_HEIGHT = "Height";
     private static final String US_col_4_WEIGHT = "Weight";
     private static final String US_col_5_BMI = "BMI";
+    private static final String US_col_6_CALORIES = "Calories";
+    private static final String US_col_7_FAT = "Fat";
+    private static final String US_col_8_CARBS = "Carbs";
+    private static final String US_col_9_SUGAR = "Sugar";
+    private static final String US_col_10_CHOLESTEROL = "Cholesterol";
+    private static final String US_col_11_SODIUM = "Sodium";
+    private static final String US_col_12_PROTEIN = "Protein";
 
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String MP_col_1_ID = "ID";
@@ -65,7 +70,8 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s REAL)",
-                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI);
+                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI, US_col_6_CALORIES, US_col_7_FAT, US_col_8_CARBS, US_col_9_SUGAR, US_col_10_CHOLESTEROL, US_col_11_SODIUM, US_col_12_PROTEIN
+        );
         db.execSQL(CREATE_USER_TABLE);
 
         String CREATE_MEALPLAN_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s INTEGER, %s INTEGER, %s TEXT, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL, %s INTEGER DEFAULT 0, %s TEXT DEFAULT NULL)",
@@ -107,6 +113,14 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(US_col_3_HEIGHT, 0);
             values.put(US_col_4_WEIGHT, 0);
             values.put(US_col_5_BMI, 0);
+            values.put(US_col_6_CALORIES, 0);
+            values.put(US_col_7_FAT, 0);
+            values.put(US_col_8_CARBS, 0);
+            values.put(US_col_9_SUGAR, 0);
+            values.put(US_col_10_CHOLESTEROL, 0);
+            values.put(US_col_11_SODIUM, 0);
+            values.put(US_col_12_PROTEIN, 0);
+
             db.insert(TABLE_USER, null, values);
         }
     }
@@ -116,14 +130,24 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        UserItem user = new UserItem("User", 0, 0, 0);
+        UserItem user = new UserItem("User", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         ;
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
             int height = cursor.getInt(2);
             int weight = cursor.getInt(3);
             double BMI = cursor.getDouble(4);
-            user = new UserItem(name, height, weight, BMI);
+
+            int cals = cursor.getInt(6);
+            int fat = cursor.getInt(7);
+            int carbs = cursor.getInt(8);
+            int sugar = cursor.getInt(9);
+            int chol = cursor.getInt(10);
+            int sodium = cursor.getInt(11);
+            int protein = cursor.getInt(12);
+
+
+            user = new UserItem(name, height, weight, BMI, cals, fat, carbs, sugar, chol, sodium, protein);
         }
         return user;
     }
@@ -146,6 +170,26 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void updateUserNutrients(int cal, int fat, int carbs, int sugar, int chol, int sodium, int protein){
+        String selectQuery = "SELECT * FROM " + TABLE_USER;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            values.put(US_col_6_CALORIES, cal);
+            values.put(US_col_7_FAT, fat);
+            values.put(US_col_8_CARBS, carbs);
+            values.put(US_col_9_SUGAR, sugar);
+            values.put(US_col_10_CHOLESTEROL, chol);
+            values.put(US_col_11_SODIUM, sodium);
+            values.put(US_col_12_PROTEIN, protein);
+
+            int planID = cursor.getInt(0);
+            db.update(TABLE_USER, values, US_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
+        }
+    }
+
     /*public Goal getGoal(Goal.Type type){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_TYPE, type
@@ -157,6 +201,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
     }*/
+
     public Goal getGoal(String name) {
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -180,6 +225,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 g = new UserGoal(description, date, duration);
         }
         g.setCompleted(cursor.getInt(4) > 0);
+        g.setID(cursor.getInt(0));
         return g;
     }
 
@@ -189,8 +235,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 TABLE_FITNESS_TRACKER,
                 GOAL_COMPLETED,
                 completed ? 1 : 0,
-                GOAL_DESCRIPTION,
-                goal.getDescription()));
+                GOAL_ID,
+                goal.getID()));
     }
 
     public List<Goal> getAllGoals() {
@@ -220,6 +266,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
+                g.setID(cursor.getInt(0));
                 list.add(g);
             } while (cursor.moveToNext());
         }
@@ -255,6 +302,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
+                g.setID(cursor.getInt(0));
                 list.add(g);
             } while (cursor.moveToNext());
         }
@@ -651,7 +699,6 @@ public class DBHandler extends SQLiteOpenHelper {
 //        removeWeeklyGoal(oldDate);
 //        removeGoal(oldDate);
     }
-
 
     protected void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();

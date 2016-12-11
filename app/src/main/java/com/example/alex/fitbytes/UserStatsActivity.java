@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class UserStatsActivity extends AppCompatActivity {
 
+    // TODO change names
     double lifetimeCalories, lifetimeCarbs, lifetimeSugar, lifetimeFat;
 
     int totalMeals;

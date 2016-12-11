@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -111,9 +112,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             ImageView recipeImage = (ImageView) dialog.findViewById(R.id.imageView);
             Picasso.with(Recipes.this).load(imageURL).resize(800, 800).centerInside().into(recipeImage);
 
-            TextView recipeName = (TextView) dialog.findViewById(R.id.mp_recipe_name);
-            recipeName.setText(selectedRecipeName);
-
             TextView servingsText = (TextView) dialog.findViewById(R.id.recipe_servings_text);
             servingsText.setText("Servings: " + selectedRecipeServings);
 
@@ -204,11 +202,11 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                 new CallMashapeSummaryAsync().execute(selectedRecipeID+"");
                 new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
 
-
                 final RecipeItem recItem = recipeItems.get(position);
                 dialog = new Dialog(Recipes.this);
-                dialog.setTitle(parent.getItemAtPosition(position).toString());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.activity_recipe_popup);
+
                 TextView mealText = (TextView) dialog.findViewById(R.id.mp_recipe_name);
                 mealText.setText(recipeItems.get(position).getName());
 

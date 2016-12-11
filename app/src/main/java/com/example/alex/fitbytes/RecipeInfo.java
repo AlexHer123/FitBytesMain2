@@ -1,6 +1,9 @@
 package com.example.alex.fitbytes;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -46,19 +49,21 @@ public class RecipeInfo extends RecipeHandler {
 
     private class ingItem {
         private int ingID;
-        private String ingName;
+        private String fullString;
+        private String name;
 
-        public ingItem(int id, String name) {
+        public ingItem(int id, String fullname, String n) {
             ingID = id;
-            ingName = name;
+            fullString = fullname;
+            name = n;
         }
 
         public int getIngredientID() {
             return ingID;
         }
-
-        public String getName() {
-            return ingName;
+        public String getName() { return name; }
+        public String getFullName() {
+            return fullString;
         }
     }
 
@@ -94,8 +99,9 @@ public class RecipeInfo extends RecipeHandler {
             /*Goes through JSON array to get each ingredient's name, value, and measurement which is contained in the originalString of each ingredient JSON object*/
             for(int i=0;i<ingredients.length();i++)
             {
-                String ingredientName = ingredients.getJSONObject(i).getString("originalString");
-                ingItem item = new ingItem(ingredients.getJSONObject(i).getInt("id"),ingredientName);
+                String ingredientFullString = ingredients.getJSONObject(i).getString("originalString");
+                String ingredientName = ingredients.getJSONObject(i).getString("name");
+                ingItem item = new ingItem(ingredients.getJSONObject(i).getInt("id"),ingredientFullString,ingredientName);
                 ingItems.add(item);
             }
 
@@ -103,13 +109,29 @@ public class RecipeInfo extends RecipeHandler {
 
             for(ingItem i: ingItems)
             {
-                ingredientNames.add(i.getName());
+                ingredientNames.add(i.getFullName());
             }
 
             ListView ingredientsList = (ListView) findViewById(R.id.ingredientList);
-            List<String> test = new ArrayList<>();
-            test.add(""+ingredientNames.size());
-            ArrayAdapter<String> ingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames);
+            ArrayAdapter<String> ingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames)
+            {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent){
+                    // Get the current item from ListView
+                    View view = super.getView(position,convertView,parent);
+                    if(position %2 == 1)
+                    {
+                        // Set a background color for ListView regular row/item
+                        view.setBackgroundColor(Color.parseColor("#3F51B5"));
+                    }
+                    else
+                    {
+                        // Set the background color for alternate row/item
+                        view.setBackgroundColor(Color.parseColor("#303F9F"));
+                    }
+                    return view;
+                }
+            };
             ingredientsList.setAdapter(ingAdapter);
 
             /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/

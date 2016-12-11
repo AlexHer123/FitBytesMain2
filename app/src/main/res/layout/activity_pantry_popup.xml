@@ -59,10 +59,20 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/button_pPop_delete"
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="150dp" />
+
+    <Button
+        android:id="@+id/button_pPop_add"
         android:text="Done"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:id="@+id/button_pPop_add"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="150dp" />
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="94dp"
+        android:layout_alignParentEnd="true" />
+
 </RelativeLayout>

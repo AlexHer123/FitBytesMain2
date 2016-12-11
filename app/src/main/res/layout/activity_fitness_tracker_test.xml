@@ -62,6 +62,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+                    <ListView
+                        android:id="@+id/expired_goals"
+                        android:textSize="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="@style/Widget.AppCompat.ListView.Menu"
+                        android:dividerHeight="1dp">
+                    </ListView>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
@@ -85,7 +93,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:layout_marginStart="280dp"
-        app:backgroundTint="@android:color/holo_green_dark"
+        app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"
         app:srcCompat="@android:drawable/ic_menu_add" />
 
