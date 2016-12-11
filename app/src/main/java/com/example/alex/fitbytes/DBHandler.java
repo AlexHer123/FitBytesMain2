@@ -32,6 +32,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String US_col_10_CHOLESTEROL = "Cholesterol";
     private static final String US_col_11_SODIUM = "Sodium";
     private static final String US_col_12_PROTEIN = "Protein";
+    private static final String US_col_13_TOTALMEALS = "TotalMeals";
 
     private static final String TABLE_MEALPLAN = "mealPlan";
     private static final String MP_col_1_ID = "ID";
@@ -72,7 +73,7 @@ public class DBHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_USER_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s REAL)",
-                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI, US_col_6_CALORIES, US_col_7_FAT, US_col_8_CARBS, US_col_9_SUGAR, US_col_10_CHOLESTEROL, US_col_11_SODIUM, US_col_12_PROTEIN
+                TABLE_USER, US_col_1_ID, US_col_2_NAME, US_col_3_HEIGHT, US_col_4_WEIGHT, US_col_5_BMI, US_col_6_CALORIES, US_col_7_FAT, US_col_8_CARBS, US_col_9_SUGAR, US_col_10_CHOLESTEROL, US_col_11_SODIUM, US_col_12_PROTEIN, US_col_13_TOTALMEALS
         );
         db.execSQL(CREATE_USER_TABLE);
 
@@ -122,6 +123,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(US_col_10_CHOLESTEROL, 0);
             values.put(US_col_11_SODIUM, 0);
             values.put(US_col_12_PROTEIN, 0);
+            values.put(US_col_13_TOTALMEALS, 0);
 
             db.insert(TABLE_USER, null, values);
         }
@@ -132,7 +134,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        UserItem user = new UserItem("User", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        UserItem user = new UserItem("User", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         ;
         if (cursor.moveToFirst()) {
             String name = cursor.getString(1);
@@ -147,9 +149,10 @@ public class DBHandler extends SQLiteOpenHelper {
             int chol = cursor.getInt(10);
             int sodium = cursor.getInt(11);
             int protein = cursor.getInt(12);
+            int totalMeals = cursor.getInt(13);
 
 
-            user = new UserItem(name, height, weight, BMI, cals, fat, carbs, sugar, chol, sodium, protein);
+            user = new UserItem(name, height, weight, BMI, cals, fat, carbs, sugar, chol, sodium, protein, totalMeals);
         }
         return user;
     }
@@ -172,7 +175,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public void updateUserNutrients(int cal, int fat, int carbs, int sugar, int chol, int sodium, int protein){
+    public void updateUserNutrients(int cal, int fat, int carbs, int sugar, int chol, int sodium, int protein, int totalMeals){
         String selectQuery = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -186,6 +189,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(US_col_10_CHOLESTEROL, chol);
             values.put(US_col_11_SODIUM, sodium);
             values.put(US_col_12_PROTEIN, protein);
+            values.put(US_col_13_TOTALMEALS, totalMeals);
 
             int planID = cursor.getInt(0);
             db.update(TABLE_USER, values, US_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
@@ -226,7 +230,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 g = new UserGoal(description, date, duration);
         }
         g.setCompleted(cursor.getInt(4) > 0);
-        g.setID(cursor.getInt(0));
         return g;
     }
 

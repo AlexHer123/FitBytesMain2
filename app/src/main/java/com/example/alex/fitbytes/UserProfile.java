@@ -49,6 +49,15 @@ public class UserProfile extends MainActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
+        Button userStats = (Button)findViewById(R.id.mealStats);
+        userStats.setOnClickListener(new AdapterView.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), UserStatsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

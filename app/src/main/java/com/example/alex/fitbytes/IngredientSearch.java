@@ -54,6 +54,17 @@ public class IngredientSearch extends PantryHandler
             finish();
         }
     });
+
+        Button barcodeButton = (Button) findViewById(R.id.pantryLaunchBarcode);
+        barcodeButton.setOnClickListener(new AdapterView.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+                startActivityForResult(intent, 0);
+            }
+        });
     }
 
     @Override
@@ -160,13 +171,6 @@ public class IngredientSearch extends PantryHandler
         });
     }
 
-
-    public void barcodeButtonOnClick(View view){
-        Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-        intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-        startActivityForResult(intent, 0);
-
-    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {

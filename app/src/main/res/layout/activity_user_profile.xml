@@ -90,5 +90,13 @@
             android:layout_below="@+id/textView_user_weight"
             android:layout_alignParentStart="true" />
 
+        <Button
+            android:text="View Meal Stats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/textView_user_height"
+            android:layout_alignStart="@+id/button_user_update"
+            android:id="@+id/mealStats" />
+
     </RelativeLayout>
 </ScrollView>

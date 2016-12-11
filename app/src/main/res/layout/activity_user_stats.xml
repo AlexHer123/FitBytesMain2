@@ -17,8 +17,8 @@
         android:id="@+id/userStatsCarbsPerMeal"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_alignBaseline="@+id/userStatsCarbsPerDay"
-        android:layout_alignBottom="@+id/userStatsCarbsPerDay"
+        android:layout_alignBaseline="@+id/userStatsCarbsTotal"
+        android:layout_alignBottom="@+id/userStatsCarbsTotal"
         android:layout_alignLeft="@+id/userStatsPerMeal"
         android:layout_alignStart="@+id/userStatsPerMeal"
         android:layout_alignRight="@+id/userStatsPerMeal"
@@ -29,12 +29,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/userStatsCalories"
-        android:id="@+id/userStatsCalPerDay"
+        android:id="@+id/userStatsCalTotal"
         android:textSize="24sp"
-        android:layout_alignRight="@+id/userStatsPerDay"
-        android:layout_alignEnd="@+id/userStatsPerDay"
-        android:layout_alignLeft="@+id/userStatsPerDay"
-        android:layout_alignStart="@+id/userStatsPerDay"
+        android:layout_alignRight="@+id/userStatsTotal"
+        android:layout_alignEnd="@+id/userStatsTotal"
+        android:layout_alignLeft="@+id/userStatsTotal"
+        android:layout_alignStart="@+id/userStatsTotal"
         android:gravity="center" />
 
     <TextView
@@ -76,7 +76,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/userStatsCalories"
         android:textSize="24sp"
-        android:layout_below="@+id/userStatsPerDay"
+        android:layout_below="@+id/userStatsTotal"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="25dp" />
@@ -94,10 +94,10 @@
         android:layout_marginEnd="35dp" />
 
     <TextView
-        android:text="Per Day"
+        android:text="Lifetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/userStatsPerDay"
+        android:id="@+id/userStatsTotal"
         android:textSize="24sp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/userStatsCalories"
@@ -109,43 +109,43 @@
         android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/userStatsCarbsPerDay"
+        android:id="@+id/userStatsCarbsTotal"
         android:textSize="24sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsCarbs"
         android:layout_alignBottom="@+id/userStatsCarbs"
-        android:layout_alignLeft="@+id/userStatsCalPerDay"
-        android:layout_alignStart="@+id/userStatsCalPerDay"
-        android:layout_alignRight="@+id/userStatsCalPerDay"
-        android:layout_alignEnd="@+id/userStatsCalPerDay" />
+        android:layout_alignLeft="@+id/userStatsCalTotal"
+        android:layout_alignStart="@+id/userStatsCalTotal"
+        android:layout_alignRight="@+id/userStatsCalTotal"
+        android:layout_alignEnd="@+id/userStatsCalTotal" />
 
     <TextView
         android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/userStatsSugarPerDay"
+        android:id="@+id/userStatsSugarTotal"
         android:textSize="24sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsSugar"
         android:layout_alignBottom="@+id/userStatsSugar"
-        android:layout_alignLeft="@+id/userStatsCarbsPerDay"
-        android:layout_alignStart="@+id/userStatsCarbsPerDay"
-        android:layout_alignRight="@+id/userStatsCarbsPerDay"
-        android:layout_alignEnd="@+id/userStatsCarbsPerDay" />
+        android:layout_alignLeft="@+id/userStatsCarbsTotal"
+        android:layout_alignStart="@+id/userStatsCarbsTotal"
+        android:layout_alignRight="@+id/userStatsCarbsTotal"
+        android:layout_alignEnd="@+id/userStatsCarbsTotal" />
 
     <TextView
         android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/userStatsFatPerDay"
+        android:id="@+id/userStatsFatTotal"
         android:textSize="24sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsFat"
         android:layout_alignBottom="@+id/userStatsFat"
-        android:layout_alignLeft="@+id/userStatsSugarPerDay"
-        android:layout_alignStart="@+id/userStatsSugarPerDay"
-        android:layout_alignRight="@+id/userStatsSugarPerDay"
-        android:layout_alignEnd="@+id/userStatsSugarPerDay" />
+        android:layout_alignLeft="@+id/userStatsSugarTotal"
+        android:layout_alignStart="@+id/userStatsSugarTotal"
+        android:layout_alignRight="@+id/userStatsSugarTotal"
+        android:layout_alignEnd="@+id/userStatsSugarTotal" />
 
     <TextView
         android:text="0"
@@ -154,8 +154,8 @@
         android:id="@+id/userStatCalPerMeal"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_alignBaseline="@+id/userStatsCalPerDay"
-        android:layout_alignBottom="@+id/userStatsCalPerDay"
+        android:layout_alignBaseline="@+id/userStatsCalTotal"
+        android:layout_alignBottom="@+id/userStatsCalTotal"
         android:layout_alignLeft="@+id/userStatsPerMeal"
         android:layout_alignStart="@+id/userStatsPerMeal"
         android:layout_alignRight="@+id/userStatsPerMeal"
@@ -168,8 +168,8 @@
         android:id="@+id/userStatsSugarPerMeal"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_alignBaseline="@+id/userStatsSugarPerDay"
-        android:layout_alignBottom="@+id/userStatsSugarPerDay"
+        android:layout_alignBaseline="@+id/userStatsSugarTotal"
+        android:layout_alignBottom="@+id/userStatsSugarTotal"
         android:layout_alignLeft="@+id/userStatsFatPerMeal"
         android:layout_alignStart="@+id/userStatsFatPerMeal"
         android:layout_alignRight="@+id/userStatsFatPerMeal"
@@ -182,12 +182,22 @@
         android:id="@+id/userStatsFatPerMeal"
         android:textSize="24sp"
         android:gravity="center"
-        android:layout_alignBaseline="@+id/userStatsFatPerDay"
-        android:layout_alignBottom="@+id/userStatsFatPerDay"
+        android:layout_alignBaseline="@+id/userStatsFatTotal"
+        android:layout_alignBottom="@+id/userStatsFatTotal"
         android:layout_alignLeft="@+id/userStatsCarbsPerMeal"
         android:layout_alignStart="@+id/userStatsCarbsPerMeal"
         android:layout_alignRight="@+id/userStatsCarbsPerMeal"
         android:layout_alignEnd="@+id/userStatsCarbsPerMeal" />
+
+    <TextView
+        android:text="Cholesterol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="17dp"
+        android:id="@+id/userStatisticsChol"
+        android:textSize="18sp"
+        android:layout_below="@+id/userStatsFat"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

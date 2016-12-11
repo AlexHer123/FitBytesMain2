@@ -73,7 +73,6 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/pantryLaunchBarcode"
-                android:onClick="barcodeButtonOnClick (Pantry)"
                 android:textAllCaps="false"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true" />

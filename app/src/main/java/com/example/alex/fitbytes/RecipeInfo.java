@@ -1,13 +1,19 @@
 package com.example.alex.fitbytes;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +25,9 @@ public class RecipeInfo extends RecipeHandler {
 
     private List<ingItem> ingItems = new ArrayList<>();
 
+    private DBHandler userDB = new DBHandler(this);
+    private UserItem user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +35,36 @@ public class RecipeInfo extends RecipeHandler {
         selectedRecipeID = getIntent().getIntExtra("recipeID", 0);
         new CallMashapeNutrientInfoAsync().execute(selectedRecipeID+"");
         new CallMashapeSummaryAsync().execute(selectedRecipeID+"");
+
+        user = userDB.getUser();
+
+        Button mealDoneButton = (Button)findViewById(R.id.mealIsDone);
+        mealDoneButton.setOnClickListener(new AdapterView.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                        userDB.updateUserNutrients(user.getCals()+ selectedRecipeCalories, user.getFat() + selectedRecipeFat,
+                                    user.getCarbs() + selectedRecipeCarbs, user.getSugar() + selectedRecipeSugar,
+                                    user.getChol() + selectedRecipeChol, user.getSodium() + selectedRecipeSodium,
+                                    user.getProtein() + selectedRecipeProtein, user.getTotalMeals() + 1
+                        );
+                Toast.makeText( getApplicationContext(), "database updated maybe", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     @Override
     protected void doRecipeSearch(JSONObject obj) {
         // NOT NEEDED
+    }
+
+    protected void recipeDoneOnClick(){
+//        userDB.updateUserNutrients(user.getCals()+ selectedRecipeCalories, user.getFat() + selectedRecipeFat,
+//                                    user.getCarbs() + selectedRecipeCarbs, user.getSugar() + selectedRecipeSugar,
+//                                    user.getChol() + selectedRecipeChol, user.getSodium() + selectedRecipeSodium,
+//                                    user.getProtein() + selectedRecipeProtein
+//                                  );
     }
 
     /*Using this to pass in the description via a different JSON obj via Summarize Recipe*/

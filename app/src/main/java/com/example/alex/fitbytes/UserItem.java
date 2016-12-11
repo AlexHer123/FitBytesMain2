@@ -12,9 +12,9 @@ public class UserItem implements Serializable{
     private String name;
     private int height, weight;
     private double BMI;
-    private int cals, fat, carbs, sugar, chol, sodium, protein;
+    private int cals, fat, carbs, sugar, chol, sodium, protein, totalMeal;
 
-    public UserItem(String n, int h, int w, double b, int myCals, int myFat, int myCarbs, int mySugar, int myChol, int mySodium, int myProtein) {
+    public UserItem(String n, int h, int w, double b, int myCals, int myFat, int myCarbs, int mySugar, int myChol, int mySodium, int myProtein, int myMeals) {
         name = n;
         height = h;
         weight = w;
@@ -27,6 +27,7 @@ public class UserItem implements Serializable{
         chol = myChol;
         sodium = mySodium;
         protein = myProtein;
+        totalMeal = myMeals;
     }
 
     public String getName() {
@@ -58,4 +59,6 @@ public class UserItem implements Serializable{
     public int getProtein() { return protein; }
 
     public int getSodium() { return sodium; }
+
+    public int getTotalMeals() {return totalMeal;}
 }
