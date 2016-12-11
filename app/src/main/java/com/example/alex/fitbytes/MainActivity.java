@@ -12,8 +12,6 @@ import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    Integer num = 0;
-    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
     private DBHandler db = new DBHandler(this);
 
     @Override
@@ -33,14 +31,7 @@ public class MainActivity extends AppCompatActivity {
         db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
         db.createUser();
-//        storeAllRecipes();
-    }
-
-    private void storeAllRecipes(){
-        for (String r: recipes){
-            String formatRecipe = r.toLowerCase().replaceAll("\\s", "");
-            boolean added = db.addRecipe(formatRecipe, r);
-        }
+        getDefaultGoals();
     }
 
     @Override
@@ -92,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            //db.resetDatabase();
             return true;
         }
         if (id == R.id.action_clear_database) {
@@ -100,5 +90,12 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void getDefaultGoals(){
+        if(db.getAllGoals().isEmpty()){
+            Goal[] g = {new DailyGoal(), new WeeklyGoal()};
+            for(Goal goal : g) db.addGoal(goal);
+        }
     }
 }

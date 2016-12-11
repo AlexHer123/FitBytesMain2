@@ -57,7 +57,7 @@ public class FitnessTracker extends MainActivity {
         goalsListView = (ListView) findViewById(R.id.current_goals);
         goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
         goalsListViewExpired = (ListView) findViewById(R.id.expired_goals);
-        getDefaultGoals();
+//        getDefaultGoals();
 
         updateGoalAdapters();
         //Button addButton = buildButton(findViewById(R.id.addGoal));

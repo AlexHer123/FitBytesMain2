@@ -21,7 +21,6 @@ public class UserProfile extends MainActivity {
 
     private DBHandler db = new DBHandler(this);
     private MealPlanItem mpItem;
-    private TextView noMeals;
     private int currentDate;
     private UserItem user;
     @Override
@@ -30,7 +29,6 @@ public class UserProfile extends MainActivity {
         setContentView(R.layout.activity_user_profile);
         user = db.getUser();
         currentDate = db.getCurrentDate();
-        noMeals = (TextView)findViewById(R.id.textView_mp_meals);
         mpItem = db.getMealPlan(currentDate);
         if (mpItem == null) {
             mpItem = new MealPlanItem();
@@ -58,7 +56,6 @@ public class UserProfile extends MainActivity {
             }
         });
 
-//        TextView moreGoals = (TextView)findViewById(R.id.textView_user_moreGoals);
         Button moreGoals = (Button)findViewById((R.id.button_user_goals));
         moreGoals.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,17 +130,6 @@ public class UserProfile extends MainActivity {
                 }
             }
         });
-
-        checkForMeals();
-    }
-
-    private void checkForMeals() {
-        if (mpItem.getRecipes().size() == 0) {
-            noMeals.setVisibility(View.VISIBLE);
-        }
-        else{
-            noMeals.setVisibility(View.INVISIBLE);
-        }
     }
 
     private String convertDate(int mealDate){
