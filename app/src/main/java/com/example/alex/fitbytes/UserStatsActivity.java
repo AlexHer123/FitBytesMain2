@@ -41,7 +41,7 @@ public class UserStatsActivity extends AppCompatActivity {
         TextView lifeTimeCal = (TextView)findViewById(R.id.userStatsCalTotal);
      //   lifeTimeCal.setText("" + lifeTimeCal);
         Toast.makeText( getApplicationContext(), "" + lifeTimeCal, Toast.LENGTH_LONG).show();
-    }
+}
 
     /**
      *
