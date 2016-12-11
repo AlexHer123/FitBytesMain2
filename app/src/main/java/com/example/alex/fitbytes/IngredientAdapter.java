@@ -15,13 +15,13 @@ import java.util.ArrayList;
  * Created by Austin on 11/5/2016.
  */
 
-public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements Filterable
+public class IngredientAdapter extends ArrayAdapter<PantryItem> implements Filterable
 {
     public Context context;
-    public ArrayList<IngredientItem> ingredients;
-    public ArrayList<IngredientItem> orig;
+    public ArrayList<PantryItem> ingredients;
+    public ArrayList<PantryItem> orig;
 
-    public IngredientAdapter(Context context, ArrayList<IngredientItem> ingredients)
+    public IngredientAdapter(Context context, ArrayList<PantryItem> ingredients)
     {
         super(context,0,ingredients);
         this.context = context;
@@ -39,7 +39,7 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
     public View getView(int position, View convertView, ViewGroup parent)
     {
         //Get the data item for this position
-        IngredientItem it = getItem(position);
+        PantryItem it = getItem(position);
         IngredientHolder holder;
 
         //Check if an existing view is being reused, otherwise inflate a new view from custom row layout
@@ -111,14 +111,14 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
             protected FilterResults performFiltering(CharSequence constraint)
             {
                 final FilterResults oReturn = new FilterResults();
-                final ArrayList<IngredientItem> results = new ArrayList<>();
+                final ArrayList<PantryItem> results = new ArrayList<>();
                 if (orig == null)
                     orig = ingredients;
                 if (constraint != null)
                 {
                     if (orig != null && orig.size() > 0)
                     {
-                        for (final IngredientItem g : orig)
+                        for (final PantryItem g : orig)
                         {
                             if (g.getName().toLowerCase().contains(constraint.toString()))
                                 results.add(g);
@@ -133,7 +133,7 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results)
             {
-                ingredients = (ArrayList<IngredientItem>) results.values;
+                ingredients = (ArrayList<PantryItem>) results.values;
                 notifyDataSetChanged();
             }
         };
@@ -157,7 +157,7 @@ public class IngredientAdapter extends ArrayAdapter<IngredientItem> implements F
     }
 
     @Override
-    public IngredientItem getItem(int position)
+    public PantryItem getItem(int position)
     {
         return ingredients.get(position);
     }

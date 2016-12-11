@@ -9,27 +9,26 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
+import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONArray;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Recipes extends RecipeHandler implements SearchView.OnQueryTextListener {
     //    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
-    private List<String> recipes = new ArrayList<>();
+    //private List<String> recipes = new ArrayList<>();
     private DBHandler db = new DBHandler(this);
     private SearchView recipeSearchView;
     private List<RecipeItem> recipeItems = new ArrayList<>();
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
-    private String selectedRecipeDirections = "";
     private TextView noResults;
     private Dialog dialog;
 
@@ -54,6 +53,18 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             }
         });
         if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
+    }
+
+    /*Using this to pass in the description via a different JSON obj via Summarize Recipe*/
+    @Override
+    protected void fillRecipeInfo(JSONObject obj)
+    {
+        try {
+            selectedRecipeDescription = stripHtmlTags(obj.getString("summary"));
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -94,20 +105,41 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             selectedRecipeReadyTime = (int) obj.getDouble("readyInMinutes");
             selectedRecipeServings = (int) obj.getDouble("servings");
 
+            String imageURL = obj.getString("image");
+
+            /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/
+            ImageView recipeImage = (ImageView) dialog.findViewById(R.id.imageView);
+            Picasso.with(Recipes.this).load(imageURL).resize(800, 800).centerInside().into(recipeImage);
+
             TextView recipeName = (TextView) dialog.findViewById(R.id.mp_recipe_name);
             recipeName.setText(selectedRecipeName);
 
             TextView servingsText = (TextView) dialog.findViewById(R.id.recipe_servings_text);
-            servingsText.setText("Servings: "+selectedRecipeServings);
+            servingsText.setText("Servings: " + selectedRecipeServings);
 
             TextView readyInText = (TextView) dialog.findViewById(R.id.recipe_ready_text);
-            readyInText.setText("Ready in (min): "+selectedRecipeReadyTime);
+            int hours = selectedRecipeReadyTime / 60;
+            int minutes = selectedRecipeReadyTime % 60;
+            if (hours <= 0)
+            {
+                readyInText.setText("Ready in: "+minutes+" min");
+            }
+            else
+            {
+                readyInText.setText("Ready in: "+hours+" hour(s) "+minutes+" min");
+            }
 
             TextView mealCalText = (TextView) dialog.findViewById(R.id.recipe_calorie_text);
             mealCalText.setText("Calories: " + selectedRecipeCalories);
 
-            TextView directionsText = (TextView) dialog.findViewById(R.id.recipe_description_text);
-            directionsText.setText("Description: TODO ");
+            TextView descriptionText = (TextView) dialog.findViewById(R.id.recipe_description_text);
+            if(selectedRecipeDescription.isEmpty())
+            {
+                descriptionText.setText("No Description Found");
+            }
+            else {
+                descriptionText.setText(selectedRecipeDescription);
+            }
 
             dialog.show();
 
@@ -115,7 +147,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             e.printStackTrace();
         }
     }
-
 
     private class RecipeItem {
         private int recipeID;
@@ -163,6 +194,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
         ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
         recipeDropdown.setAdapter(recipeAdapter);
+        recipeSearchView.clearFocus();
 
         // Listener for date dropdown
         recipeDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -170,6 +202,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedRecipeID = recipeItems.get(position).getRecipeID();
                 new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
+                new CallMashapeSummaryAsync().execute(selectedRecipeID+"");
 
                 final RecipeItem recItem = recipeItems.get(position);
                 dialog = new Dialog(Recipes.this);
@@ -197,7 +230,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     }
 
     private void setupSearchView() {
-        recipeSearchView.setIconifiedByDefault(true);
+        recipeSearchView.setIconifiedByDefault(false);
         recipeSearchView.setSubmitButtonEnabled(true);
         recipeSearchView.setQueryHint("Search Recipes");
 
