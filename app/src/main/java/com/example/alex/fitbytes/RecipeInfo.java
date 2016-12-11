@@ -1,7 +1,6 @@
 package com.example.alex.fitbytes;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
