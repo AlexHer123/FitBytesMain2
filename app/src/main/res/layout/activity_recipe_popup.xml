@@ -16,7 +16,8 @@
         android:orientation="vertical"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="15dp">
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/mp_recipe_name"
@@ -87,9 +88,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/recipeSelect_button"
             android:layout_weight="0.03"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="20dp"/>
 
     </LinearLayout>
 

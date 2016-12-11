@@ -209,8 +209,8 @@ public class FitnessTracker extends MainActivity {
     private void updateTabs(){
         displayToast("Hello");
         //currentGoalsTab.setIndicator();
-        //((TextView) host.getTabWidget().getChildTabViewAt(0).findViewById(R.id.tab1)).setText("String.format(\"%s (%s)\", IN_PROGRESS, goalAdapter.getCount())");
-        //completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
+//        ((TextView) host.getTabWidget().getChildTabViewAt(0).findViewById(R.id.tab1)).setText("String.format(\"%s (%s)\", IN_PROGRESS, goalAdapter.getCount())");
+        completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
     }
     private void updateGoalAdapters() {
         setGoalAdapters();

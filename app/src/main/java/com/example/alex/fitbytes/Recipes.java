@@ -201,8 +201,9 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 selectedRecipeID = recipeItems.get(position).getRecipeID();
-                new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
                 new CallMashapeSummaryAsync().execute(selectedRecipeID+"");
+                new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
+
 
                 final RecipeItem recItem = recipeItems.get(position);
                 dialog = new Dialog(Recipes.this);

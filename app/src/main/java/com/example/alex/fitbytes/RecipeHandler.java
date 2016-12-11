@@ -185,7 +185,7 @@ public abstract class RecipeHandler extends MainActivity {
             // Executes the search call
             try {
                 //Search request for 'Summarize Recipe' method of api
-                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/45662/summary")
+                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/"+selectedRecipeID+"/summary")
                         .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
                         .header("Accept", "application/json")
                         .asJson();

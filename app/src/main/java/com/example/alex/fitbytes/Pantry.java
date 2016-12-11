@@ -60,9 +60,7 @@ public class Pantry extends MainActivity {
             }
         });
 
-        ingredientsListView.setTextFilterEnabled(true);
         updateIngredientList();
-        setupSearchView();
     }
 
     private void updateIngredientList(){
@@ -107,10 +105,10 @@ public class Pantry extends MainActivity {
                     }
                 });
                 dialog.show();
-                Log.d("DSKJFSDKFJ", "DFKJDSFK");
             }
         });
-        pantrySearchView.clearFocus();
+        ingredientsListView.setTextFilterEnabled(true);
+        setupSearchView();
     }
 
     @Override
@@ -146,9 +144,7 @@ public class Pantry extends MainActivity {
         pantrySearchView.setSubmitButtonEnabled(true);
         pantrySearchView.setQueryHint("Search Pantry");
         pantrySearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-
             ArrayAdapter<String> ingredientAdapter = (ArrayAdapter<String>)ingredientsListView.getAdapter();
-
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -165,5 +161,6 @@ public class Pantry extends MainActivity {
                 return true;
             }
         });
+        pantrySearchView.clearFocus();
     }
 }

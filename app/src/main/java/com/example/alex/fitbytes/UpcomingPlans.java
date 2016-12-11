@@ -111,7 +111,7 @@ public class UpcomingPlans extends MainActivity {
                 dialog.setTitle("Meal Plan for " + rowDate);
                 dialog.setContentView(R.layout.activity_meal_popup);
                 TextView dateText = (TextView)dialog.findViewById(R.id.textView_mpPop_date);
-                dateText.setText("Meal Plan: " + rowDate);
+                dateText.setText(rowDate);
                 TextView mealText =  (TextView)dialog.findViewById(R.id.mp_meal_text);
                 mealText.setText("");
                 for (String n : recipeNames){

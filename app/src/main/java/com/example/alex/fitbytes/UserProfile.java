@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,6 +41,14 @@ public class UserProfile extends MainActivity {
         dateView.setText("Summary for: " + convertDate(currentDate));
         updateRecipeSpinner();
 
+        TextView goalList = (TextView)findViewById(R.id.textView_user_goalList);
+        goalList.setText("");
+        List<Goal> goals = db.getActiveGoals(db.getCurrentDate());
+        for (Goal g:goals){
+            goalList.append("- " + g.getType() + ": " + g.getDescription()+"\n");
+        }
+        goalList.append("- more...");
+
         Button updateButton = (Button)findViewById(R.id.button_user_update);
         updateButton.setOnClickListener(new AdapterView.OnClickListener(){
             @Override
@@ -47,6 +56,16 @@ public class UserProfile extends MainActivity {
                 Intent intent = new Intent(UserProfile.this, UserInfo.class);
                 intent.putExtra("user", user);
                 startActivityForResult(intent, 1);
+            }
+        });
+
+//        TextView moreGoals = (TextView)findViewById(R.id.textView_user_moreGoals);
+        Button moreGoals = (Button)findViewById((R.id.button_user_goals));
+        moreGoals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(UserProfile.this, FitnessTracker.class);
+                startActivity(intent);
             }
         });
     }
@@ -89,16 +108,21 @@ public class UserProfile extends MainActivity {
         for(int i = 0; i < recipeNames.size(); i++){
             recipeNames.set(i, recipeNames.get(i)+" \nClick for more info \u2192");
         }
+        while (recipeNames.size() < 3){
+            recipeNames.add("None");
+        }
         ArrayAdapter<String> myarrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recipeNames);
         selectedMeals.setAdapter(myarrayAdapter);
 
         selectedMeals.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                Intent intent = new Intent(UserProfile.this, RecipeInfo.class);
-                Log.d("IN USER: ", parent.getItemAtPosition(position).toString());
-                intent.putExtra("recipeID", mpItem.getRecipeID(parent.getItemAtPosition(position).toString()));
-                startActivity(intent);
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                if (!selectedItem.equals("None")) {
+                    Intent intent = new Intent(UserProfile.this, RecipeInfo.class);
+                    intent.putExtra("recipeID", mpItem.getRecipeID(selectedItem));
+                    startActivity(intent);
+                }
             }
         });
 
