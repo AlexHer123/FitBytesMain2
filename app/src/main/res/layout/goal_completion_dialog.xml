@@ -1,52 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <!--<TabHost
-        android:id="@+id/tab_host"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:weightSum="1">
-
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/details"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
-                <LinearLayout
-                    android:id="@+id/options"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                </LinearLayout>
-            </FrameLayout>
-        </LinearLayout>
-    </TabHost>-->
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
         <TableRow>
             <TextView
                 android:layout_width="wrap_content"
@@ -58,6 +18,7 @@
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
         </TableRow>
         <TableRow>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -71,8 +32,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Date"
-                android:ems="10"
+                android:text="Created On:"
+                android:ems="13"
                 android:id="@+id/goal_completion_goal_date_date"
                 android:textSize="16sp"
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
@@ -82,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="No Date Found"
-                android:ems="10"
+                android:ems="12"
                 android:id="@+id/goal_completion_goal_date"
                 android:textSize="16sp"
                 android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="4sp"/>
@@ -91,8 +52,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Due Date"
-                android:ems="10"
+                android:text="Goal is due at the end of:"
+                android:ems="12"
                 android:id="@+id/goal_completion_goal_deadline_deadline"
                 android:textSize="16sp"
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
@@ -112,15 +73,14 @@
                 android:text="Go Back"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/goal_go_back"
-                android:layout_weight="1" />
+                android:id="@+id/goal_go_back" />
+
             <Button
                 android:text="Mark As Complete"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/goal_mark_as_complete"
-                android:layout_weight="2" />
+                android:id="@+id/goal_mark_as_complete" />
         </TableRow>
     </TableLayout>
 
-</LinearLayout>
+</RelativeLayout>

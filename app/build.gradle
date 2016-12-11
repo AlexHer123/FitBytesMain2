@@ -7,10 +7,10 @@ android {
         applicationId "com.example.alex.fitbytes"
         minSdkVersion 21
         targetSdkVersion 24
-        multiDexEnabled true
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         // debug only for using with hardware android devices //

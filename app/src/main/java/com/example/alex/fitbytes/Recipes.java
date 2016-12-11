@@ -3,12 +3,7 @@ package com.example.alex.fitbytes;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,16 +11,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.mashape.unirest.http.*;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.GetRequest;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +29,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
-    private String selectedRecipeInstructions = "";
+    private String selectedRecipeDirections = "";
     private TextView noResults;
     private Dialog dialog;
 
@@ -98,14 +88,26 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         try {
             JSONArray nutrients = obj.getJSONObject("nutrition").getJSONArray("nutrients");
             JSONObject caloriesObj = nutrients.optJSONObject(0);
+
+            selectedRecipeName = obj.getString("title");
             selectedRecipeCalories = (int) caloriesObj.getDouble("amount");
-            selectedRecipeInstructions = obj.getString("instructions");
+            selectedRecipeReadyTime = (int) obj.getDouble("readyInMinutes");
+            selectedRecipeServings = (int) obj.getDouble("servings");
+
+            TextView recipeName = (TextView) dialog.findViewById(R.id.mp_recipe_name);
+            recipeName.setText(selectedRecipeName);
+
+            TextView servingsText = (TextView) dialog.findViewById(R.id.recipe_servings_text);
+            servingsText.setText("Servings: "+selectedRecipeServings);
+
+            TextView readyInText = (TextView) dialog.findViewById(R.id.recipe_ready_text);
+            readyInText.setText("Ready in (min): "+selectedRecipeReadyTime);
 
             TextView mealCalText = (TextView) dialog.findViewById(R.id.recipe_calorie_text);
             mealCalText.setText("Calories: " + selectedRecipeCalories);
-            TextView mealInstructText = (TextView) dialog.findViewById(R.id.recipe_ingredient_text);
-            selectedRecipeInstructions = selectedRecipeInstructions.replaceAll("\\s{2,}", "\n");
-            mealInstructText.setText("Instructions: " + selectedRecipeInstructions);
+
+            TextView directionsText = (TextView) dialog.findViewById(R.id.recipe_description_text);
+            directionsText.setText("Description: TODO ");
 
             dialog.show();
 

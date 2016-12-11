@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true">
@@ -12,14 +12,12 @@
         android:id="@+id/editText"
         android:hint="Enter your description..." />
 
-    <DatePicker
-        android:layout_height="wrap_content"
-        android:id="@+id/datePicker"
-        android:layout_width="match_parent" />
-
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/datePicker">
 
         <Button
             android:text="Go Back"
@@ -35,4 +33,11 @@
             android:id="@+id/goal_add_goal_finish"
             android:layout_weight="1" />
     </TableRow>
-</LinearLayout>
+
+    <DatePicker
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentStart="true" />
+</RelativeLayout>
