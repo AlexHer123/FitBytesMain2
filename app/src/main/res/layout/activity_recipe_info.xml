@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:minWidth="50pt"
     android:minHeight="50pt"
@@ -23,8 +24,44 @@
             android:text="Recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="26sp"
-            android:layout_weight="0.03" />
+            android:textSize="28sp"
+            android:layout_weight="0.03"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:text="Servings: "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_servings_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/mp_recipe_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Ready In (min.): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_ready_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_servings_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Nutrient Info "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_info_text"
+            android:layout_weight="0.03"
+            android:textSize="24sp"
+            android:layout_below="@+id/recipe_ready_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="20dp"
+            android:textStyle="normal|bold" />
 
         <TextView
             android:text="Calorie: "
@@ -33,7 +70,73 @@
             android:id="@+id/recipe_calorie_text"
             android:layout_weight="0.03"
             android:textSize="18sp"
-            android:layout_below="@+id/mp_recipe_name"
+            android:layout_below="@+id/recipe_info_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Fat(g): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_fat_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_calorie_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Carb(g): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_carb_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_fat_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Sugar(g): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_sugar_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_carb_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Cholesterol(mg): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_chol_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_sugar_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Sodium(mg): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_sodium_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_chol_text"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:text="Protein(g): "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_protein_text"
+            android:layout_weight="0.03"
+            android:textSize="18sp"
+            android:layout_below="@+id/recipe_sodium_text"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true" />
 
@@ -42,12 +145,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recipe_ingredient_text"
-            android:textSize="18sp"
+            android:textSize="24sp"
             android:layout_weight="0.03"
             android:layout_below="@+id/recipe_calorie_text"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="15dp" />
+            android:layout_marginTop="15dp"
+            android:textStyle="normal|bold" />
+
+        <TextView
+            android:text="Directions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/recipe_directions_text"
+            android:layout_weight="0.03"
+            android:textSize="24sp"
+            android:textStyle="normal|bold"
+            android:layout_marginTop="10dp" />
 
     </LinearLayout>
 

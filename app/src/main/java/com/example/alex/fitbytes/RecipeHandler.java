@@ -23,6 +23,14 @@ public abstract class RecipeHandler extends MainActivity {
     protected int selectedRecipeID;
     protected String selectedRecipeName;
     protected int selectedRecipeCalories = 0;
+    protected int selectedRecipeFat = 0;
+    protected int selectedRecipeCarbs = 0;
+    protected int selectedRecipeSugar = 0;
+    protected int selectedRecipeChol = 0;
+    protected int selectedRecipeSodium = 0;
+    protected int selectedRecipeProtein = 0;
+    protected int selectedRecipeReadyTime = 0;
+    protected int selectedRecipeServings = 0;
     protected String selectedRecipeInstructions = "";
     private ProgressDialog dialog;
 
