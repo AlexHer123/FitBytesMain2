@@ -43,13 +43,12 @@ public class RecipeInfo extends RecipeHandler {
 
             @Override
             public void onClick(View v) {
+              //  Toast.makeText( getApplicationContext(), "user.get: " + user.getCals() + ",selectRecipeCal" + selectedRecipeCalories, Toast.LENGTH_SHORT).show();
                         userDB.updateUserNutrients(user.getCals()+ selectedRecipeCalories, user.getFat() + selectedRecipeFat,
                                     user.getCarbs() + selectedRecipeCarbs, user.getSugar() + selectedRecipeSugar,
                                     user.getChol() + selectedRecipeChol, user.getSodium() + selectedRecipeSodium,
                                     user.getProtein() + selectedRecipeProtein, user.getTotalMeals() + 1
                         );
-                Toast.makeText( getApplicationContext(), "database updated maybe", Toast.LENGTH_LONG).show();
-
             }
         });
     }
@@ -57,14 +56,6 @@ public class RecipeInfo extends RecipeHandler {
     @Override
     protected void doRecipeSearch(JSONObject obj) {
         // NOT NEEDED
-    }
-
-    protected void recipeDoneOnClick(){
-//        userDB.updateUserNutrients(user.getCals()+ selectedRecipeCalories, user.getFat() + selectedRecipeFat,
-//                                    user.getCarbs() + selectedRecipeCarbs, user.getSugar() + selectedRecipeSugar,
-//                                    user.getChol() + selectedRecipeChol, user.getSodium() + selectedRecipeSodium,
-//                                    user.getProtein() + selectedRecipeProtein
-//                                  );
     }
 
     /*Using this to pass in the description via a different JSON obj via Summarize Recipe*/
