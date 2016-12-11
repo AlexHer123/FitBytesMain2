@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -203,6 +201,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
     }*/
+
     public Goal getGoal(String name) {
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -628,7 +627,6 @@ public class DBHandler extends SQLiteOpenHelper {
 //        removeWeeklyGoal(oldDate);
 //        removeGoal(oldDate);
     }
-
 
     protected void resetDatabase() {
         SQLiteDatabase db = this.getWritableDatabase();

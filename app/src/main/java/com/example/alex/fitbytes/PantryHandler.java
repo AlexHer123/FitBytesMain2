@@ -44,7 +44,6 @@ public abstract class PantryHandler extends MainActivity {
             HttpResponse<JsonNode> request = null;
             searchString = msg[0].replaceAll("\\s", "+");
 
-
             try {
                 request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/autocomplete?metaInformation=false&number="+ searchAmount +"&query="+searchString)
                         .header("X-Mashape-Key", mashapeKey)
@@ -53,7 +52,6 @@ public abstract class PantryHandler extends MainActivity {
             } catch (UnirestException e) {
                 e.printStackTrace();
             }
-
             return request;
         }
 
@@ -74,6 +72,5 @@ public abstract class PantryHandler extends MainActivity {
             doIngredientSearch(obj);
         }
     }
-
     protected abstract void doIngredientSearch(JSONArray obj);
 }
