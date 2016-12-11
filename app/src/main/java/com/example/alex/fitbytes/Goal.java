@@ -64,4 +64,7 @@ public abstract class Goal {
         String s = String.format("%4s/%2s/%2s", arr[0], arr[1], arr[2]);
         return s;
     }
+    public boolean isExpired(){
+        return dueDate > date;
+    }
 }

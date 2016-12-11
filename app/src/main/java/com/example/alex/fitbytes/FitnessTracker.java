@@ -1,7 +1,6 @@
 package com.example.alex.fitbytes;
 
 import android.app.Dialog;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.AdapterView;
@@ -20,22 +18,29 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class FitnessTracker extends MainActivity {
+    public static final String IN_PROGRESS = "In Progress";
+    public static final String COMPLETED = "Completed";
     private ArrayAdapter<Goal> goalAdapter;
+    private ArrayAdapter<Goal> goalAdapterCompleted;
+    private ArrayAdapter<Goal> goalAdapterExpired;
     private DBHandler goalDB = new DBHandler(this);
     private Goal currentGoal;
     private ListView goalsListView;
+    private ListView goalsListViewCompeleted;
+    private ListView goalsListViewExpired;
 
     NotificationCompat.Builder notification;
     private static final int uniqueID = 10101;
+    private TabHost host;
+    private TabHost.TabSpec currentGoalsTab;
+    private TabHost.TabSpec completedGoalsTab;
 
     private void displayToast(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
@@ -44,14 +49,29 @@ public class FitnessTracker extends MainActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fitness_tracker);
+        setContentView(R.layout.activity_fitness_tracker_test);
+
         goalsListView = (ListView) findViewById(R.id.current_goals);
+        goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
+        //goalsListViewExpired = (ListView) findViewById(R.id.current_goals);
         getDefaultGoals();
-        updateGoalAdapter();
+
+        updateGoalAdapters();
         //Button addButton = buildButton(findViewById(R.id.addGoal));
         FloatingActionButton floatingAddButton = buildFloatButton(findViewById(R.id.addGoalFloating));
-        displayAdapter((ListView) findViewById(R.id.current_goals));
+        displayAdapters();
         goalDB.removeGoals();
+
+        host =  (TabHost) findViewById(R.id.tab_host);
+        host.setup();
+        currentGoalsTab = host.newTabSpec(IN_PROGRESS);
+        currentGoalsTab.setContent(R.id.tab1);
+        currentGoalsTab.setIndicator(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
+        host.addTab(currentGoalsTab);
+        completedGoalsTab = host.newTabSpec(COMPLETED);
+        completedGoalsTab.setContent(R.id.tab2);
+        completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
+        host.addTab(completedGoalsTab);
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -123,7 +143,7 @@ public class FitnessTracker extends MainActivity {
                                         (calendar.get(Calendar.MONTH) ), calendar.get(Calendar.DATE));
                                 Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
                                 goalDB.addGoal(userGoal);
-                                updateGoalAdapter();
+                                updateGoalAdapters();
                                 dialog.dismiss();
                                 displayToast("Goal has been created");
                                 toNotify(v);
@@ -170,10 +190,12 @@ public class FitnessTracker extends MainActivity {
                                         (calendar.get(Calendar.MONTH) ), calendar.get(Calendar.DATE));
                                 Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
                                 goalDB.addGoal(userGoal);
-                                updateGoalAdapter();
+                                updateGoalAdapters();
+
                                 dialog.dismiss();
                                 displayToast("Goal has been created");
                                 toNotify(v);
+                                updateTabs();
                             }
                         });
                     }
@@ -184,23 +206,33 @@ public class FitnessTracker extends MainActivity {
         }
         return listener;
     }
-    private void updateGoalAdapter() {
-        setGoalAdapter();
-        updateGoalList();
+    private void updateTabs(){
+        displayToast("Hello");
+        //currentGoalsTab.setIndicator();
+        //((TextView) host.getTabWidget().getChildTabViewAt(0).findViewById(R.id.tab1)).setText("String.format(\"%s (%s)\", IN_PROGRESS, goalAdapter.getCount())");
+        //completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
     }
-    private void setGoalAdapter(){
+    private void updateGoalAdapters() {
+        setGoalAdapters();
+        updateGoalLists();
+        //updateTabs();
+    }
+    private void setGoalAdapters(){
         List<Goal> goalList = new ArrayList<>();
+        List<Goal> goalListCompleted = new ArrayList<>();
         for(Goal goal : goalDB.getAllGoals()){
             if(goal.getCompleted()) {
-                goalList.add(goal);
+                goalListCompleted.add(goal);
             } else {
                 goalList.add(goal);
             }
         }
+        goalAdapterCompleted = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalListCompleted);
         goalAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, goalList);
     }
-    private void displayAdapter(ListView listView) {
-        listView.setAdapter(goalAdapter);
+    private void displayAdapters() {
+        ((ListView) findViewById(R.id.current_goals)).setAdapter(goalAdapter);
+        ((ListView) findViewById(R.id.completed_goals)).setAdapter(goalAdapterCompleted);
     }
     private void getDefaultGoals(){
         if(goalDB.getAllGoals().isEmpty()){
@@ -211,12 +243,22 @@ public class FitnessTracker extends MainActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        return id == R.id.action_fitnessTracker || super.onOptionsItemSelected(item);
+        switch(item.getItemId()){
+            case R.id.activity_fitness_tracker:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
-    private void updateGoalList() {
+    private void updateGoalLists() {
         goalsListView = (ListView) findViewById(R.id.current_goals);
         attachGoalListener(goalsListView);
         goalsListView.setAdapter(goalAdapter);
+
+        goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
+        attachGoalListener(goalsListViewCompeleted);
+        goalsListViewCompeleted.setAdapter(goalAdapterCompleted);
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -260,7 +302,7 @@ public class FitnessTracker extends MainActivity {
                                 (calendar.get(Calendar.MONTH)), calendar.get(Calendar.DATE));
                         Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
                         goalDB.updateGoal(userGoal, currentGoal);
-                        updateGoalAdapter();
+                        updateGoalAdapters();
                         dialog.dismiss();
                         displayToast("Goal has been updated");
                     }
@@ -269,7 +311,8 @@ public class FitnessTracker extends MainActivity {
             case R.id.delete:
                 displayToast("Goal has been deleted");
                 goalDB.removeGoal(currentGoal);
-                updateGoalAdapter();
+                updateGoalAdapters();
+                updateTabs();
                 return true;
             case R.id.details:
                 dialog.setTitle("Details");
@@ -298,7 +341,8 @@ public class FitnessTracker extends MainActivity {
                                     currentGoal.setCompleted(true);
                                     dialog.dismiss();
                                     displayToast("Goal has been completed");
-                                    updateGoalAdapter();
+                                    updateGoalAdapters();
+                                    updateTabs();
                                 }
                             }
                     );
@@ -312,7 +356,8 @@ public class FitnessTracker extends MainActivity {
                                     currentGoal.setCompleted(false);
                                     dialog.dismiss();
                                     displayToast("Goal is now incomplete");
-                                    updateGoalAdapter();
+                                    updateGoalAdapters();
+                                    updateTabs();
                                 }
                             }
                     );
@@ -341,11 +386,16 @@ public class FitnessTracker extends MainActivity {
                         if(!currentGoal.getCompleted()){
                             goalDB.setGoalCompleted(currentGoal, true);
                             currentGoal.setCompleted(true);
+                            goalAdapterCompleted.add(currentGoal);
+                            goalAdapter.remove(currentGoal);
                         } else {
                             goalDB.setGoalCompleted(currentGoal, false);
                             currentGoal.setCompleted(false);
+                            goalAdapterCompleted.remove(currentGoal);
+                            goalAdapter.add(currentGoal);
                         }
-                        updateGoalAdapter();
+                        updateGoalAdapters();
+                        updateTabs();
 
                     }
                 }

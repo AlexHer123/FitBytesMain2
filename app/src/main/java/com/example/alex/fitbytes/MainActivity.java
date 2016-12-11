@@ -89,10 +89,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            //db.resetDatabase();
+            return true;
+        }
+        if (id == R.id.action_clear_database) {
             db.resetDatabase();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

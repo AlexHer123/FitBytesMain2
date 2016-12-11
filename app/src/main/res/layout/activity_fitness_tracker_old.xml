@@ -12,7 +12,6 @@
     tools:context="com.example.alex.fitbytes.FitnessTracker">
 
 
-
     <TextView
     android:text="Current Goals"
     android:layout_width="match_parent"
