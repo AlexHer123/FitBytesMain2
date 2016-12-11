@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -47,7 +48,8 @@ public class FitnessTracker extends MainActivity {
         goalsListView = (ListView) findViewById(R.id.current_goals);
         getDefaultGoals();
         updateGoalAdapter();
-        Button addButton = buildButton(findViewById(R.id.addGoal));
+        //Button addButton = buildButton(findViewById(R.id.addGoal));
+        FloatingActionButton floatingAddButton = buildFloatButton(findViewById(R.id.addGoalFloating));
         displayAdapter((ListView) findViewById(R.id.current_goals));
         goalDB.removeGoals();
 
@@ -70,6 +72,11 @@ public class FitnessTracker extends MainActivity {
         manager.notify(uniqueID, notification.build());
     }
 
+    private FloatingActionButton buildFloatButton(View view){
+        FloatingActionButton floatButton = (FloatingActionButton) view;
+        floatButton.setOnClickListener(buildOnClickListener(view));
+        return floatButton;
+    }
     private Button buildButton(View view){
         Button button = (Button) view;
         button.setOnClickListener(buildOnClickListener(view));
@@ -78,7 +85,54 @@ public class FitnessTracker extends MainActivity {
     private View.OnClickListener buildOnClickListener(View view){
         View.OnClickListener listener = null;
         switch(view.getId()){
-            case R.id.addGoal:
+            /*case R.id.addGoal:
+                listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+                        dialog.setTitle("Set your goal and deadline");
+                        dialog.setContentView(R.layout.goal_add_goal_dialog);
+                        dialog.show();
+                        final EditText editText = (EditText) dialog.findViewById(R.id.editText);
+                        final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
+                        datePicker.setMinDate(System.currentTimeMillis() - 1000);
+                        Button cancelButton = (Button) dialog.findViewById(R.id.goal_add_goal_cancel);
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        Button finishButton = (Button) dialog.findViewById(R.id.goal_add_goal_finish);
+                        finishButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                String goalDescription = editText.getText().toString().trim();
+                                if(goalDescription.isEmpty()){
+                                    displayToast("Goal has no description");
+                                    return;
+                                }
+                                Calendar calendar = Calendar.getInstance();
+                                String olddateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
+                                        (calendar.get(Calendar.MONTH)), calendar.get(Calendar.DATE));
+                                int day = datePicker.getDayOfMonth();
+                                int month = datePicker.getMonth();
+                                int year =  datePicker.getYear();
+                                calendar.set(year, month, day);
+                                String dateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
+                                        (calendar.get(Calendar.MONTH) ), calendar.get(Calendar.DATE));
+                                Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
+                                goalDB.addGoal(userGoal);
+                                updateGoalAdapter();
+                                dialog.dismiss();
+                                displayToast("Goal has been created");
+                                toNotify(v);
+                            }
+                        });
+                    }
+                };
+                break;*/
+            case R.id.addGoalFloating:
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -126,7 +180,7 @@ public class FitnessTracker extends MainActivity {
                 };
                 break;
             default:
-                displayToast("" + "view.getId() = " + view.getId() + " and R.id.addGoal = " + R.id.addGoal);
+                displayToast("" + "view.getId() = " + view.getId());
         }
         return listener;
     }
@@ -284,7 +338,6 @@ public class FitnessTracker extends MainActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
                         currentGoal = (Goal) parent.getItemAtPosition(position);
-
                         if(!currentGoal.getCompleted()){
                             goalDB.setGoalCompleted(currentGoal, true);
                             currentGoal.setCompleted(true);
