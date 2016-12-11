@@ -194,6 +194,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
         ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
         recipeDropdown.setAdapter(recipeAdapter);
+        recipeSearchView.clearFocus();
 
         // Listener for date dropdown
         recipeDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -229,7 +230,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     }
 
     private void setupSearchView() {
-        recipeSearchView.setIconifiedByDefault(true);
+        recipeSearchView.setIconifiedByDefault(false);
         recipeSearchView.setSubmitButtonEnabled(true);
         recipeSearchView.setQueryHint("Search Recipes");
 

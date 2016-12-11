@@ -48,7 +48,7 @@
     <EditText
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:ems="10"
         android:id="@+id/editText_uInfo_inch"
         android:layout_alignBottom="@+id/textView_uInfo_feet"
@@ -133,18 +133,18 @@
     <EditText
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/editText_uInfo_weight"
         android:textSize="26sp"
         android:layout_alignBaseline="@+id/textView_uInfo_weight"
         android:layout_alignBottom="@+id/textView_uInfo_weight"
-        android:layout_toEndOf="@+id/textView_uInfo_weight" />
+        android:layout_toEndOf="@+id/textView_uInfo_weight"
+        android:inputType="numberDecimal" />
 
     <EditText
         android:layout_width="50dp"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:ems="10"
         android:id="@+id/editText_uInfo_feet"
         android:textSize="26sp"

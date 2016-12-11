@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_ingredients"
+    android:id="@+id/activity_pantry"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,64 +10,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.alex.fitbytes.Pantry">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:text="Pantry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_pantry_title"
+        android:textSize="36sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <SearchView
+        android:id="@+id/pantrySearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="-5dp"
+        android:layout_below="@+id/textView_pantry_title"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:id="@+id/textView_pantry_None"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:text="No ingredients."
+        android:textSize="26sp"
+        android:layout_below="@+id/pantrySearch"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="15dp" />
+
+    <ListView
+        android:id="@+id/pantryList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:baselineAligned="false"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/pantrySearch"
+        android:layout_marginBottom="46dp"
+        android:choiceMode="singleChoice"
+        android:listSelector="@android:color/holo_blue_light"/>
 
-        <TextView
-            android:id="@+id/ingredientTitleID"
-            android:text="@string/pantryTitle"
-            android:layout_width="196dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="13dp"
-            android:textSize="36sp"
-            android:layout_centerHorizontal="true" />
+    <Button
+        android:text="Delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_pantry_delete"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
-        <Button
-            android:text="Add Ingredient To Pantry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/pantryLaunchBarcode"
-            android:onClick="barcodeButtonOnClick (Pantry)" />
+    <Button
+        android:text="Add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_pantry_add"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/button_pantry_delete" />
 
-        <SearchView
-            android:id="@+id/pantrySearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="-5dp"/>
 
-        <TextView
-            android:text="Ingredients"
-            android:layout_width="172dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView2"
-            android:layout_marginLeft="13dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="30sp"/>
-
-        <ListView
-            android:id="@+id/pantryList"
-            android:layout_width="match_parent"
-            android:layout_height="326dp" />
-
-        <Button
-            android:id="@+id/ingredientAddButtonID"
-            android:text="Add"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="275dp"
-            android:layout_marginStart="275dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginTop="15dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true" />
-    </LinearLayout>
 </RelativeLayout>

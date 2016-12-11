@@ -24,6 +24,7 @@ import java.util.ArrayList;
 public abstract class RecipeHandler extends MainActivity {
 
     private String mashapeKey = "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg";
+    private int searchAmount = 100;
     protected int selectedRecipeID;
     protected String selectedRecipeName;
     protected int selectedRecipeCalories = 0;
@@ -103,7 +104,7 @@ public abstract class RecipeHandler extends MainActivity {
             String search = msg[0].replaceAll("\\s", "+");
 
             try {
-                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number=10&offset=0&query=" + search)
+                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number="+searchAmount+"&offset=0&query=" + search)
                         .header("X-Mashape-Key", mashapeKey)
                         .header("accept", "application/json")
                         .asJson();

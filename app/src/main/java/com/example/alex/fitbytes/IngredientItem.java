@@ -1,67 +1,45 @@
 package com.example.alex.fitbytes;
 
+import java.io.Serializable;
+
 /**
- * Created by Austin on 11/5/2016.
+ * Created by Alex on 12/9/2016.
  */
 
-public class IngredientItem
-{
+public class IngredientItem implements Serializable{
     private String name;
-    private float amount;
-    private long ingredientID;
-    //private Category category;
-    private Measurement measurement;
+    private int quantity;
+    private String measurement;
 
-    //public enum Category {VEGETABLE, FRUIT, DAIRY, MEAT, GRAIN, SWEETS}
-
-    public enum Measurement {CUP, OZ, GRAM, LB, TBSP, TSP, FLOZ, NONE}
-
-    public IngredientItem(String name, float amount, String measurement/*, Category category*/)
-    {
-        this.name = name;
-        this.amount = amount;
-        this.measurement = Measurement.valueOf(measurement);
-        //this.category = category;
-        this.ingredientID = 0;
+    public IngredientItem(String n, int q, String m) {
+        name = n;
+        quantity = q;
+        measurement = m;
     }
 
-    public IngredientItem(String name, float amount, String measurement/*, Category category*/, int ingredientID)
-    {
-        this.name = name;
-        this.amount = amount;
-
-        this.measurement = Measurement.valueOf(measurement);
-        //this.category = category;
-        this.ingredientID = ingredientID;
-    }
-
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public float getAmount()
-    {
-        return amount;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    /*public Category getCategory()
-    {
-        return category;
-    }*/
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public Measurement getMeasurement()
-    {
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getMeasurement() {
         return measurement;
     }
 
-    public long getIngredientID()
-    {
-        return ingredientID;
+    public void setMeasurement(String measurement) {
+        this.measurement = measurement;
     }
 
-    public String toString()
-    {
-        return "Name: " + name + " Amount: " + amount + " Measurement: " + measurement /*+ " Category: " + category*/ + " ID: " + ingredientID;
-    }
+
 }
