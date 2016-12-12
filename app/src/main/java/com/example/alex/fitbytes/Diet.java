@@ -6,9 +6,9 @@ package com.example.alex.fitbytes;
 
 public class Diet extends Category {
     public static final String[] DEFAULT_OPTIONS = {
-            "meal",
-            "calories",
-            "weight"
+            "meal plan",
+            "calories"
+            //"weight"
     };
     public Diet(){
         this.setOption(getDefault());
@@ -21,14 +21,14 @@ public class Diet extends Category {
         String optionDescription;
         switch(option){
             case "meal":
-                optionDescription = String.format("Create a %s for today", option);
+                optionDescription = String.format("Create a %s", option);
                 break;
             case "calories":
                 optionDescription = String.format("Consume your target amount of %s", option);
                 break;
-            case "weight":
+            /*case "weight":
                 optionDescription = String.format("%s", option);
-                break;
+                break;*/
             default:
                 optionDescription = "Do " + (int)(Math.random()*30+10)+ " " + option;
                 break;
