@@ -5,6 +5,7 @@ package com.example.alex.fitbytes;
  */
 
 public class UserRecipeItem {
+    private int ID;
     private String name;
     private int serving;
     private int readyMin;
@@ -20,6 +21,7 @@ public class UserRecipeItem {
     private String aboutRecipe;
 
     public UserRecipeItem(String name) {
+        ID = -1;
         this.name = name;
         serving=0;
         readyMin = 0;
@@ -33,6 +35,14 @@ public class UserRecipeItem {
         ingredients = "";
         directions = "";
         aboutRecipe = "";
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public String getName() {
@@ -120,7 +130,13 @@ public class UserRecipeItem {
     }
 
     public void setDirections(String directions) {
-        this.directions = directions;
+        if (directions.equals("Enter directions")){
+            this.directions = "";
+        }
+        else{
+            this.directions = directions;
+        }
+
     }
 
     public String getIngredients() {
@@ -128,7 +144,12 @@ public class UserRecipeItem {
     }
 
     public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
+        if (ingredients.equals("Enter Ingredients")) {
+            this.ingredients = "";
+        }
+        else {
+            this.ingredients = ingredients;
+        }
     }
 
     public String getAboutRecipe() {
@@ -136,6 +157,11 @@ public class UserRecipeItem {
     }
 
     public void setAboutRecipe(String aboutRecipe) {
-        this.aboutRecipe = aboutRecipe;
+        if (aboutRecipe.equals("Enter recipe information")){
+            this.aboutRecipe = "";
+        }
+        else{
+            this.aboutRecipe = aboutRecipe;
+        }
     }
 }

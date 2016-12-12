@@ -71,12 +71,12 @@ public class IngredientSearch extends PantryHandler
     protected void doIngredientSearch(JSONArray ingredientArray) {
         try {
             // Set when no results are found
+
             if (ingredientArray.length() > 0) {
                 noResults.setVisibility(View.INVISIBLE);
             } else {
                 noResults.setVisibility(View.VISIBLE);
             }
-
             // Get the id and name of recipes
             ingredientItems = new ArrayList<>();
             for (int i = 0; i < ingredientArray.length(); i++) {
@@ -88,7 +88,9 @@ public class IngredientSearch extends PantryHandler
         } catch(JSONException e){
             e.printStackTrace();
         }
+
         updateIngredientList();
+
     }
 
     private void updateIngredientList(){

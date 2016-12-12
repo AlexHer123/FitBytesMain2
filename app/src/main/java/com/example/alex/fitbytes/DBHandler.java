@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +65,23 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TR_col_2_NAME = "newName";
     private static final String TR_col_3_ORIGINALNAME = "originalName";
 
+    private static final String TABLE_USER_RECIPE = "userRecipe";
+    private static final String UR_col_1_ID = "ID";
+    private static final String UR_col_2_NAME = "name";
+    private static final String UR_col_3_SERVING = "serving";
+    private static final String UR_col_4_READYTIME = "readyTime";
+    private static final String UR_col_5_CALORIE = "calorie";
+    private static final String UR_col_6_FAT = "fat";
+    private static final String UR_col_7_CARB = "carb";
+    private static final String UR_col_8_SUGAR = "sugar";
+    private static final String UR_col_9_CHOLE = "chole";
+    private static final String UR_col_10_SODIUM = "sodium";
+    private static final String UR_col_11_PROTEIN = "protein";
+    private static final String UR_col_12_INGREDIENT = "ingredient";
+    private static final String UR_col_13_DIRECTION = "direction";
+    private static final String UR_col_14_ABOUT = "about";
+
+
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -87,6 +103,11 @@ public class DBHandler extends SQLiteOpenHelper {
         String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPES + "("
                 + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_NAME + " TEXT, " + TR_col_3_ORIGINALNAME + " TEXT" + ")";
         db.execSQL(CREATE_RECIPE_TABLE);
+
+        String CREATE_USER_RECIPE_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s TEXT, %s TEXT, %S TEXT )",
+                TABLE_USER_RECIPE, UR_col_1_ID, UR_col_2_NAME, UR_col_3_SERVING, UR_col_4_READYTIME, UR_col_5_CALORIE, UR_col_6_FAT, UR_col_7_CARB, UR_col_8_SUGAR, UR_col_9_CHOLE, UR_col_10_SODIUM, UR_col_11_PROTEIN, UR_col_12_INGREDIENT, UR_col_13_DIRECTION, UR_col_14_ABOUT
+        );
+        db.execSQL(CREATE_USER_RECIPE_TABLE);
 
         String CREATE_INGREDIENTS_TABLE = "CREATE TABLE " + TABLE_INGREDIENTS + "("
                 + TI_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TI_col_2_NAME + " TEXT, " + TI_col_3_AMOUNT + " REAL, " + TI_col_4_MEASUREMENT + " TEXT" + ")";
@@ -164,7 +185,6 @@ public class DBHandler extends SQLiteOpenHelper {
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            Log.d("LDKSFJLSDKJF", name);
             values.put(US_col_2_NAME, name);
             values.put(US_col_3_HEIGHT, height);
             values.put(US_col_4_WEIGHT, weight);
@@ -175,7 +195,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public void updateUserNutrients(int cal, int fat, int carbs, int sugar, int chol, int sodium, int protein, int totalMeals){
+    public void updateUserNutrients(int cal, int fat, int carbs, int sugar, int chol, int sodium, int protein, int totalMeals) {
         String selectQuery = "SELECT * FROM " + TABLE_USER;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -627,6 +647,88 @@ public class DBHandler extends SQLiteOpenHelper {
         return recipeList;
     }
 
+    public void addUserRecipe(UserRecipeItem userRecipe) {
+        String selectQuery = "SELECT * FROM " + TABLE_USER_RECIPE;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ContentValues values = new ContentValues();
+
+
+        values.put(UR_col_2_NAME, userRecipe.getName());
+        values.put(UR_col_3_SERVING, userRecipe.getServing());
+        values.put(UR_col_4_READYTIME, userRecipe.getReadyMin());
+        values.put(UR_col_5_CALORIE, userRecipe.getCalorie());
+        values.put(UR_col_6_FAT, userRecipe.getFat());
+        values.put(UR_col_7_CARB, userRecipe.getCarbs());
+        values.put(UR_col_8_SUGAR, userRecipe.getSugar());
+        values.put(UR_col_9_CHOLE, userRecipe.getChol());
+        values.put(UR_col_10_SODIUM, userRecipe.getSodium());
+        values.put(UR_col_11_PROTEIN, userRecipe.getProtein());
+        values.put(UR_col_12_INGREDIENT, userRecipe.getIngredients());
+        values.put(UR_col_13_DIRECTION, userRecipe.getDirections());
+        values.put(UR_col_14_ABOUT, userRecipe.getAboutRecipe());
+        db.insert(TABLE_USER_RECIPE, null, values);
+    }
+
+    public UserRecipeItem getUserRecipe(int ID) {
+        String selectQuery = "SELECT * FROM " + TABLE_USER_RECIPE + " WHERE " + UR_col_1_ID + " = " + ID;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ContentValues values = new ContentValues();
+
+        UserRecipeItem temp = new UserRecipeItem("None");
+        if (cursor.moveToFirst()) {
+            temp.setServing(cursor.getInt(2));
+            temp.setReadyMin(cursor.getInt(3));
+            temp.setCalorie(cursor.getInt(4));
+            temp.setFat(cursor.getInt(5));
+            temp.setCarbs(cursor.getInt(6));
+            temp.setSugar(cursor.getInt(7));
+            temp.setChol(cursor.getInt(8));
+            temp.setSodium(cursor.getInt(9));
+            temp.setProtein(cursor.getInt(10));
+            temp.setIngredients(cursor.getString(11));
+            temp.setDirections(cursor.getString(12));
+            temp.setAboutRecipe(cursor.getString(13));
+        }
+
+        return temp;
+    }
+
+    public List<UserRecipeItem> getAllUserRecipe(String query) {
+        List<UserRecipeItem> recipeList = new ArrayList<>();
+        String selectQuery = "SELECT * FROM " + TABLE_USER_RECIPE;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ContentValues values = new ContentValues();
+
+        if (cursor.moveToFirst()) {
+            do {
+                String name = cursor.getString(1);
+                String ingredient = cursor.getString(11);
+                if (name.toLowerCase().contains(query.toLowerCase()) || ingredient.toLowerCase().contains(query.toLowerCase())) {
+                    UserRecipeItem temp = new UserRecipeItem(name);
+                    temp.setID(cursor.getInt(0));
+                    temp.setServing(cursor.getInt(2));
+                    temp.setReadyMin(cursor.getInt(3));
+                    temp.setCalorie(cursor.getInt(4));
+                    temp.setFat(cursor.getInt(5));
+                    temp.setCarbs(cursor.getInt(6));
+                    temp.setSugar(cursor.getInt(7));
+                    temp.setChol(cursor.getInt(8));
+                    temp.setSodium(cursor.getInt(9));
+                    temp.setProtein(cursor.getInt(10));
+                    temp.setIngredients(cursor.getString(11));
+                    temp.setDirections(cursor.getString(12));
+                    temp.setAboutRecipe(cursor.getString(13));
+                    recipeList.add(temp);
+                }
+            } while (cursor.moveToNext());
+        }
+
+        return recipeList;
+    }
+
     public boolean addIngredient(IngredientItem item) {
         // Search for duplicate ingredient
         String selectQuery = "SELECT * FROM " + TABLE_INGREDIENTS + " WHERE " + TI_col_2_NAME + " = '" + item.getName() + "'";
@@ -644,7 +746,7 @@ public class DBHandler extends SQLiteOpenHelper {
             return true;
         } else {
             int currentAmount = cursor.getInt(2);
-            item.setQuantity(item.getQuantity()+currentAmount);
+            item.setQuantity(item.getQuantity() + currentAmount);
             updatePantryIngredient(item);
             return true;
         }
@@ -667,7 +769,7 @@ public class DBHandler extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         ContentValues values = new ContentValues();
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             int currentAmount = cursor.getInt(2);
             values.put(TI_col_3_AMOUNT, item.getQuantity());
             int planID = cursor.getInt(0);

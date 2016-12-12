@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -27,15 +28,19 @@ import java.util.List;
 public class Recipes extends RecipeHandler implements SearchView.OnQueryTextListener {
     //    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
     //private List<String> recipes = new ArrayList<>();
+    private int USER_RECIPE_MODIFIER = 1000000;
+
     private DBHandler db = new DBHandler(this);
     private SearchView recipeSearchView;
     private List<RecipeItem> recipeItems = new ArrayList<>();
     private List<String> recipeList = new ArrayList<>();
+    private List<RecipeItem> uri = new ArrayList<>();
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
     private TextView noResults;
     private Dialog dialog;
+    private String queryString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +54,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         createRecipeList();
 
         Button cancelButton = (Button) findViewById(R.id.recPopCancel_button);
-        Button createButton = (Button) findViewById(R.id.create_button);
         cancelButton.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +62,16 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                 finish();
             }
         });
+
+        Button createButton = (Button) findViewById(R.id.create_button);
+        createButton.setOnClickListener(new AdapterView.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Recipes.this, UserRecipe.class);
+                startActivityForResult(intent, 1);
+            }
+        });
+
         if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
         else createButton.setVisibility(View.INVISIBLE);
     }
@@ -77,6 +91,13 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     @Override
     protected void doRecipeSearch(JSONObject obj) {
         try {
+
+            List<UserRecipeItem> uTemp = db.getAllUserRecipe(queryString);
+            recipeItems = new ArrayList<>();
+            for (UserRecipeItem u : uTemp){
+                recipeItems.add(new RecipeItem(u.getID()+USER_RECIPE_MODIFIER, u.getName(), 1));
+            }
+
             // Get the objects from obj in array form
             JSONArray recipeArray = obj.getJSONArray("results");
             // Set when no results are found
@@ -87,12 +108,12 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             }
 
             // Get the id and name of recipes
-            recipeItems = new ArrayList<>();
+
             for (int i = 0; i < recipeArray.length(); i++) {
                 JSONObject rec = recipeArray.optJSONObject(i);
                 int recID = rec.getInt("id");
                 String recName = rec.getString("title");
-                RecipeItem tempRI = new RecipeItem(recID, recName);
+                RecipeItem tempRI = new RecipeItem(recID, recName, 2);
                 recipeItems.add(tempRI);
             }
         } catch (JSONException e) {
@@ -107,58 +128,78 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             JSONArray nutrients = obj.getJSONObject("nutrition").getJSONArray("nutrients");
             JSONObject caloriesObj = nutrients.optJSONObject(0);
 
-            selectedRecipeName = obj.getString("title");
-            selectedRecipeCalories = (int) caloriesObj.getDouble("amount");
-            selectedRecipeReadyTime = (int) obj.getDouble("readyInMinutes");
-            selectedRecipeServings = (int) obj.getDouble("servings");
-
-            String imageURL = obj.getString("image");
-
-            /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/
-            ImageView recipeImage = (ImageView) dialog.findViewById(R.id.imageView);
-            Picasso.with(Recipes.this).load(imageURL).resize(800, 800).centerInside().into(recipeImage);
-
-            TextView servingsText = (TextView) dialog.findViewById(R.id.recipe_servings_text);
-            servingsText.setText("Servings: " + selectedRecipeServings);
-
-            TextView readyInText = (TextView) dialog.findViewById(R.id.recipe_ready_text);
-            int hours = selectedRecipeReadyTime / 60;
-            int minutes = selectedRecipeReadyTime % 60;
-            if (hours <= 0)
-            {
-                readyInText.setText("Ready in: "+minutes+" min");
-            }
-            else
-            {
-                readyInText.setText("Ready in: "+hours+" hour(s) "+minutes+" min");
-            }
-
-            TextView mealCalText = (TextView) dialog.findViewById(R.id.recipe_calorie_text);
-            mealCalText.setText("Calories: " + selectedRecipeCalories);
-
-            TextView descriptionText = (TextView) dialog.findViewById(R.id.recipe_description_text);
-            if(selectedRecipeDescription.isEmpty())
-            {
-                descriptionText.setText("No Description Found");
-            }
-            else {
-                descriptionText.setText(selectedRecipeDescription);
-            }
-
-            dialog.show();
+            String title = obj.getString("title");
+            int amount = (int) caloriesObj.getDouble("amount");
+            int readyInMinutes = (int) obj.getDouble("readyInMinutes");
+            int servings = (int) obj.getDouble("servings");
+            String image = obj.getString("image");
+            fillInfoHelper(title, amount, readyInMinutes, servings, image);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
+    private void fillInfoHelper(String title, int cal, int ready, int serve, String imageURL){
+        selectedRecipeName = title;
+        selectedRecipeCalories = cal;
+        selectedRecipeReadyTime = ready;
+        selectedRecipeServings = serve;
+
+        /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/
+        ImageView recipeImage = (ImageView) dialog.findViewById(R.id.imageView);
+        if (!imageURL.equals("None")) {
+            Picasso.with(Recipes.this).load(imageURL).resize(800, 800).centerInside().into(recipeImage);
+        }
+        else{
+
+        }
+        TextView servingsText = (TextView) dialog.findViewById(R.id.recipe_servings_text);
+        servingsText.setText("Servings: " + selectedRecipeServings);
+
+        TextView readyInText = (TextView) dialog.findViewById(R.id.recipe_ready_text);
+        int hours = selectedRecipeReadyTime / 60;
+        int minutes = selectedRecipeReadyTime % 60;
+        if (hours <= 0)
+        {
+            readyInText.setText("Ready in: "+minutes+" min");
+        }
+        else
+        {
+            readyInText.setText("Ready in: "+hours+" hour(s) "+minutes+" min");
+        }
+
+        TextView mealCalText = (TextView) dialog.findViewById(R.id.recipe_calorie_text);
+        mealCalText.setText("Calories: " + selectedRecipeCalories);
+
+        TextView descriptionText = (TextView) dialog.findViewById(R.id.recipe_description_text);
+        if(selectedRecipeDescription.isEmpty())
+        {
+            descriptionText.setText("No Description Found");
+        }
+        else {
+            descriptionText.setText(selectedRecipeDescription);
+        }
+
+        dialog.show();
+    }
     private class RecipeItem {
         private int recipeID;
         private String recipeName;
+        private int type; // 0 = Default, 1 = user, 2 = API
 
-        public RecipeItem(int id, String name) {
+        public int getType() {
+            return type;
+        }
+
+        public void setType(int type) {
+            this.type = type;
+        }
+
+        public RecipeItem(int id, String name, int t) {
             recipeID = id;
             recipeName = name;
+            type = t;
         }
 
         public int getRecipeID() {
@@ -193,25 +234,16 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private void createRecipeList() {
         /*For API recipe items*/
         final List<String> allRecipes = new ArrayList<>();
+        for (RecipeItem u : uri){
+            allRecipes.add(u.getName());
+        }
         for (RecipeItem r : recipeItems) {
             allRecipes.add(r.getName());
         }
-        final List<String> userRecipes = new ArrayList<>();
+//        final List<String> userRecipes = new ArrayList<>();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
-        recipeList.add("test");
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.toggleButton);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // The toggle is enabled aka API
-                    recipeList = allRecipes;
-                } else {
-                    // The toggle is disabled aka USER
-                    recipeList = userRecipes;
-                }
-            }
-        });
-        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recipeList);
+
+        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
         recipeDropdown.setAdapter(recipeAdapter);
         recipeSearchView.clearFocus();
 
@@ -219,14 +251,21 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         recipeDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedRecipeID = recipeItems.get(position).getRecipeID();
-                new CallMashapeSummaryAsync().execute(selectedRecipeID+"");
-                new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
-
                 final RecipeItem recItem = recipeItems.get(position);
+                selectedRecipeID = recItem.getRecipeID();
+
                 dialog = new Dialog(Recipes.this);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.activity_recipe_popup);
+                if (recItem.getType() == 1){
+                    UserRecipeItem uri = db.getUserRecipe(recItem.getRecipeID()-USER_RECIPE_MODIFIER);
+                    selectedRecipeDescription = uri.getAboutRecipe();
+                    fillInfoHelper(uri.getName(), uri.getCalorie(), uri.getReadyMin(), uri.getServing(), "https://thumbs.dreamstime.com/t/plate-question-mark-desk-red-white-fork-knife-over-57970677.jpg");
+                }
+                else if (recItem.getType() == 2) {
+                    new CallMashapeSummaryAsync().execute(selectedRecipeID + "");
+                    new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
+                }
 
                 TextView mealText = (TextView) dialog.findViewById(R.id.mp_recipe_name);
                 mealText.setText(recipeItems.get(position).getName());
@@ -260,7 +299,8 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             // are searching for
             @Override
             public boolean onQueryTextSubmit(String query) {
-                new CallMashapeGetRecipeAsync().execute(query);
+                queryString = query;
+                new CallMashapeGetRecipeAsync().execute(queryString);
                 return false;
             }
 
@@ -269,6 +309,20 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        // Handles return from User Recipe
+        if (requestCode == 1) {
+            // Set the selected date values
+            if (resultCode == Activity.RESULT_OK) {
+                // Nothing
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
 }
