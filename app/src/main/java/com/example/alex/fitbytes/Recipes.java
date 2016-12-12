@@ -34,7 +34,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private SearchView recipeSearchView;
     private List<RecipeItem> recipeItems = new ArrayList<>();
     private List<String> recipeList = new ArrayList<>();
-    private List<RecipeItem> uri = new ArrayList<>();
+//    private List<RecipeItem> uri = new ArrayList<>();
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
@@ -98,14 +98,13 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                 recipeItems.add(new RecipeItem(u.getID()+USER_RECIPE_MODIFIER, u.getName(), 1));
             }
 
+            List<RecipeItem> dTemp = db.getSelectedDefaultRecipes(queryString);
+            for (RecipeItem r: dTemp){
+                recipeItems.add(r);
+            }
+
             // Get the objects from obj in array form
             JSONArray recipeArray = obj.getJSONArray("results");
-            // Set when no results are found
-            if (recipeArray.length() > 0) {
-                noResults.setVisibility(View.INVISIBLE);
-            } else {
-                noResults.setVisibility(View.VISIBLE);
-            }
 
             // Get the id and name of recipes
 
@@ -183,33 +182,33 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
 
         dialog.show();
     }
-    private class RecipeItem {
-        private int recipeID;
-        private String recipeName;
-        private int type; // 0 = Default, 1 = user, 2 = API
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-
-        public RecipeItem(int id, String name, int t) {
-            recipeID = id;
-            recipeName = name;
-            type = t;
-        }
-
-        public int getRecipeID() {
-            return recipeID;
-        }
-
-        public String getName() {
-            return recipeName;
-        }
-    }
+//    private class RecipeItem {
+//        private int recipeID;
+//        private String recipeName;
+//        private int type; // 0 = Default, 1 = user, 2 = API
+//
+//        public int getType() {
+//            return type;
+//        }
+//
+//        public void setType(int type) {
+//            this.type = type;
+//        }
+//
+//        public RecipeItem(int id, String name, int t) {
+//            recipeID = id;
+//            recipeName = name;
+//            type = t;
+//        }
+//
+//        public int getRecipeID() {
+//            return recipeID;
+//        }
+//
+//        public String getName() {
+//            return recipeName;
+//        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -234,11 +233,17 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private void createRecipeList() {
         /*For API recipe items*/
         final List<String> allRecipes = new ArrayList<>();
-        for (RecipeItem u : uri){
-            allRecipes.add(u.getName());
-        }
+//        for (RecipeItem u : uri){
+//            allRecipes.add(u.getName());
+//        }
         for (RecipeItem r : recipeItems) {
             allRecipes.add(r.getName());
+        }
+
+        if (allRecipes.size() > 0) {
+            noResults.setVisibility(View.INVISIBLE);
+        } else {
+            noResults.setVisibility(View.VISIBLE);
         }
 //        final List<String> userRecipes = new ArrayList<>();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
@@ -262,7 +267,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                     selectedRecipeDescription = uri.getAboutRecipe();
                     fillInfoHelper(uri.getName(), uri.getCalorie(), uri.getReadyMin(), uri.getServing(), "https://thumbs.dreamstime.com/t/plate-question-mark-desk-red-white-fork-knife-over-57970677.jpg");
                 }
-                else if (recItem.getType() == 2) {
+                else {
                     new CallMashapeSummaryAsync().execute(selectedRecipeID + "");
                     new CallMashapeNutrientInfoAsync().execute(selectedRecipeID + "");
                 }

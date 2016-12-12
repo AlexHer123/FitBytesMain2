@@ -60,10 +60,10 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String TI_col_3_AMOUNT = "Amount";
     private static final String TI_col_4_MEASUREMENT = "Measurement";
 
-    private static final String TABLE_RECIPES = "recipe";
+    private static final String TABLE_DEFAULT_RECIPES = "defaultRecipe";
     private static final String TR_col_1_ID = "ID";
-    private static final String TR_col_2_NAME = "newName";
-    private static final String TR_col_3_ORIGINALNAME = "originalName";
+    private static final String TR_col_2_APIID = "apiID";
+    private static final String TR_col_3_NAME = "name";
 
     private static final String TABLE_USER_RECIPE = "userRecipe";
     private static final String UR_col_1_ID = "ID";
@@ -100,8 +100,8 @@ public class DBHandler extends SQLiteOpenHelper {
         String CREATE_CURRENT_DATE_TABLE = "CREATE TABLE " + TABLE_DATE + " (" + TD_col_1_DATE + " INTEGER PRIMARY KEY)";
         db.execSQL(CREATE_CURRENT_DATE_TABLE);
 
-        String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_RECIPES + "("
-                + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_NAME + " TEXT, " + TR_col_3_ORIGINALNAME + " TEXT" + ")";
+        String CREATE_RECIPE_TABLE = "CREATE TABLE " + TABLE_DEFAULT_RECIPES + "("
+                + TR_col_1_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TR_col_2_APIID + " INTEGER, " + TR_col_3_NAME + " TEXT" + ")";
         db.execSQL(CREATE_RECIPE_TABLE);
 
         String CREATE_USER_RECIPE_TABLE = String.format("CREATE TABLE %s(%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s INTEGER, %s TEXT, %s TEXT, %S TEXT )",
@@ -626,50 +626,66 @@ public class DBHandler extends SQLiteOpenHelper {
         return date;
     }
 
-    public boolean addRecipe(String formatName, String oldName) {
+    public boolean addDefaultRecipe(int id, String name) {
         // Search for duplicate recipe
-        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + formatName + "'";
+        String selectQuery = "SELECT * FROM " + TABLE_DEFAULT_RECIPES + " WHERE " + TR_col_2_APIID + " = " + id + "";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         // Only add if recipe does not exist
         if (!cursor.moveToFirst()) {
             ContentValues values = new ContentValues();
-            values.put(TR_col_2_NAME, formatName);
-            values.put(TR_col_3_ORIGINALNAME, oldName);
+            values.put(TR_col_2_APIID, id);
+            values.put(TR_col_3_NAME, name);
             // Inserting Row
-            db.insert(TABLE_RECIPES, null, values);
+            db.insert(TABLE_DEFAULT_RECIPES, null, values);
 
             return true;
         }
         return false;
     }
 
-    public String getRecipe(String name) {
-        // Search for recipe
-        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + name + "'";
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+//    public String getRecipe(String name) {
+//        // Search for recipe
+//        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + name + "'";
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        if (cursor.moveToFirst()) {
+//            return cursor.getString(1);
+//        }
+//        return "NONE";
+//    }
 
-        if (cursor.moveToFirst()) {
-            return cursor.getString(1);
-        }
-        return "NONE";
-    }
-
-    public List<String> getAllRecipes() {
-        List<String> recipeList = new ArrayList<String>();
-        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " ORDER BY " + TR_col_2_NAME + " ASC";
+    public List<RecipeItem> getDefaultRecipes() {
+        List<RecipeItem> recipeList = new ArrayList();
+        String selectQuery = "SELECT * FROM " + TABLE_DEFAULT_RECIPES + " ORDER BY " + TR_col_2_APIID + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
-                recipeList.add(cursor.getString(2));
+                recipeList.add(new RecipeItem(cursor.getInt(1),cursor.getString(2), 0));
             } while (cursor.moveToNext());
         }
         return recipeList;
     }
+    public List<RecipeItem> getSelectedDefaultRecipes(String query) {
+        List<RecipeItem> recipeList = new ArrayList();
+        String selectQuery = "SELECT * FROM " + TABLE_DEFAULT_RECIPES;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                if (cursor.getString(2).toLowerCase().contains(query.toLowerCase())) {
+                    recipeList.add(new RecipeItem(cursor.getInt(1), cursor.getString(2), 0));
+                }
+            } while (cursor.moveToNext());
+        }
+        return recipeList;
+    }
+
 
     public void addUserRecipe(UserRecipeItem userRecipe) {
         String selectQuery = "SELECT * FROM " + TABLE_USER_RECIPE;
@@ -836,7 +852,7 @@ public class DBHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MEALPLAN);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FITNESS_TRACKER);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_RECIPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DEFAULT_RECIPES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INGREDIENTS);
         onCreate(db);
     }

@@ -8,12 +8,14 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
             mNotificationManager.notify(notificationID_2, mBuilder.build());
         }
         ////////////////////////////////////////////////////////////////////////////////////
+
+        createDefaultRecipes();
     }
 
     @Override
@@ -148,6 +152,18 @@ public class MainActivity extends AppCompatActivity {
         if(db.getAllGoals().isEmpty()){
             Goal[] g = {new DailyGoal(), new WeeklyGoal()};
             for(Goal goal : g) db.addGoal(goal);
+        }
+    }
+
+    private void createDefaultRecipes(){
+        int[] ids = {295841,547664,269358,15249,482760,710058,558627,573573,749303,715328};
+        String[] names = {"Eggs Benedict","Baked Blueberry Coconut Oatmeal","Downtown Turkey Wrap","Kale Salad With Apricots, Avocado & Parmesan","Grilled Salmon with Lemon Garlic Sauce","Perfect Lasagna","Banana Nut Protein Bars","Very Berry Chocolate Protein Smoothie","Light Carrot Cake","The Best Apple Pie"};
+        for (int i = 0; i<10; i++){
+            db.addDefaultRecipe(ids[i], names[i]);
+        }
+
+        for (RecipeItem r : db.getDefaultRecipes()){
+            Log.d("IN MAIN: ", r.getRecipeID()+" "+r.getName());
         }
     }
 }
