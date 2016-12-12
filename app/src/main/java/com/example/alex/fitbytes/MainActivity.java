@@ -62,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////
 
         ////////////////////////////////////////////////////////////////////////////////
-        if (!db.hasExpiredGoals()) {
+        if (db.hasExpiredGoals()) {
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
             mBuilder.setSmallIcon(R.mipmap.bread_notif);
             mBuilder.setContentTitle("FitBytes");
-            mBuilder.setContentText("Some goal(s) hasn't been completed and expired.");
+            mBuilder.setContentText("Some goal(s) has expired.");
 
             Intent resultIntent = new Intent(this, FitnessTracker.class);
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
