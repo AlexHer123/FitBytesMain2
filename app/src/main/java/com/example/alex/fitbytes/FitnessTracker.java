@@ -11,6 +11,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.view.View;
@@ -24,6 +25,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.R.attr.width;
+import static com.example.alex.fitbytes.R.attr.height;
 
 public class FitnessTracker extends MainActivity {
     public static final String IN_PROGRESS = "In Progress";
@@ -44,6 +48,7 @@ public class FitnessTracker extends MainActivity {
     private TabHost.TabSpec currentGoalsTab;
     private TabHost.TabSpec completedGoalsTab;
     private TabHost.TabSpec expiredGoalsTab;
+    private WindowManager.LayoutParams lp;
 
     private void displayToast(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
@@ -67,6 +72,11 @@ public class FitnessTracker extends MainActivity {
 
         host =  (TabHost) findViewById(R.id.tab_host);
         host.setup();
+
+        lp = new WindowManager.LayoutParams();
+
+
+
         currentGoalsTab = host.newTabSpec(IN_PROGRESS);
         currentGoalsTab.setContent(R.id.tab1);
         currentGoalsTab.setIndicator(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
@@ -82,6 +92,7 @@ public class FitnessTracker extends MainActivity {
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
+
     }
 
     private void toNotify(View view){
@@ -116,7 +127,12 @@ public class FitnessTracker extends MainActivity {
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+                        final Dialog dialog = new Dialog(FitnessTracker.this);
+                        lp.copyFrom(dialog.getWindow().getAttributes());
+                        lp.width = width;
+                        lp.height = height;
+                        dialog.getWindow().setAttributes(lp);
+
                         dialog.setTitle("Set your goal and deadline");
                         dialog.setContentView(R.layout.goal_add_goal_dialog);
                         dialog.show();
@@ -167,7 +183,6 @@ public class FitnessTracker extends MainActivity {
         return listener;
     }
     private void updateTabs(){
-        displayToast("Hello");
         TabHost tabHost = host;
         TextView tv = (TextView) tabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
         tv.setText(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
@@ -237,7 +252,11 @@ public class FitnessTracker extends MainActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final int position = info.position;
         currentGoal = goalAdapter.getItem(position);
-        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_Material_Light_DialogWhenLarge);
+        final Dialog dialog = new Dialog(FitnessTracker.this);
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = width;
+        lp.height = height;
+        dialog.getWindow().setAttributes(lp);
         switch(item.getItemId()) {
             case R.id.edit:
                 dialog.setTitle("Edit your goal and deadline");
@@ -381,7 +400,11 @@ public class FitnessTracker extends MainActivity {
                         }*/
                         if(goalsListView == goalsListViewExpired) return;
                         currentGoal = (Goal) parent.getItemAtPosition(position);
-                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+                        final Dialog dialog = new Dialog(FitnessTracker.this);
+                        lp.copyFrom(dialog.getWindow().getAttributes());
+                        lp.width = width;
+                        lp.height = height;
+                        dialog.getWindow().setAttributes(lp);
                         dialog.setTitle("Details");
                         dialog.setContentView(R.layout.goal_completion_dialog);
                         dialog.show();
