@@ -22,7 +22,7 @@
         <activity
             android:name=".FitnessTracker"
             android:label="Goal Tracker"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".IngredientSearch"
             android:screenOrientation="portrait"
@@ -74,6 +74,7 @@
             android:label="@string/title_activity_settings" />
         <!-- <activity android:name=".BarcodeScanner" /> -->
         <!-- <activity android:name=".RecipeHandler" /> -->
+        <activity android:name=".UserRecipe"></activity>
     </application>
 
 </manifest>

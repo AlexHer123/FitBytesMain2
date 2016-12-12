@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_recipe) {
             Intent intent = new Intent(this, Recipes.class);
+//            Intent intent = new Intent(this, UserRecipe.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;

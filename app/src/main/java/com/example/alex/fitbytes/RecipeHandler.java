@@ -104,14 +104,13 @@ public abstract class RecipeHandler extends MainActivity {
             String search = msg[0].replaceAll("\\s", "+");
 
             try {
-                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/search?number="+searchAmount+"&offset=0&query=" + search)
+                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?addRecipeInformation=true&limitLicense=false&number=100&offset=0&query="+search+"&ranking=1")
                         .header("X-Mashape-Key", mashapeKey)
-                        .header("accept", "application/json")
+                        .header("Accept", "application/json")
                         .asJson();
             } catch (UnirestException e) {
                 e.printStackTrace();
             }
-
             return request;
         }
 
