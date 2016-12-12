@@ -38,6 +38,19 @@ public abstract class RecipeHandler extends MainActivity {
     protected int selectedRecipeServings = 0;
     protected String selectedRecipeInstructions = "";
     protected String selectedRecipeDescription = "";
+
+    protected String advQuery = "&query=";
+    protected String advCalMax = "&maxCalories=";
+    protected String advCalMin = "&minCalories=";
+    protected String advCarbMax = "&maxCarbs=";
+    protected String advCarbMin = "&minCarbs=";
+    protected String advFatMax = "&maxFat=";
+    protected String advFatMin = "&minFat=";
+    protected String advProtMax = "&maxProtein=";
+    protected String advProtMin = "&minProtein=";
+
+    protected String totalNutrientAPIString = "";
+
     private ProgressDialog dialog;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -125,6 +138,61 @@ public abstract class RecipeHandler extends MainActivity {
             JSONObject obj = response.getBody().getObject();
             doRecipeSearch(obj);
         }
+    }
+
+    protected class CallMashapeGetAdvRecipeAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
+
+        @Override
+        protected void onPreExecute() {
+            dialog.setMessage("Please wait");
+            dialog.show();
+        }
+
+        protected HttpResponse<JsonNode> doInBackground(String... msg) {
+
+            HttpResponse<JsonNode> request = null;
+            String search = msg[0].replaceAll("\\s", "+");
+            String result = buildAdvQueryString(search);
+            try {
+                request = Unirest.get(result)
+                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
+                        .header("Accept", "application/json")
+                        .asJson();
+            } catch (UnirestException e) {
+                e.printStackTrace();
+            }
+            return request;
+        }
+
+        protected void onProgressUpdate(Integer... integers) {
+        }
+
+        protected void onPostExecute(HttpResponse<JsonNode> response) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+            /*Safely reset variables so next call doesn't result in nohting being returned*/
+            advQuery = "&query=";
+            advCalMax = "&maxCalories=";
+            advCalMin = "&minCalories=";
+            advCarbMax = "&maxCarbs=";
+            advCarbMin = "&minCarbs=";
+            advFatMax = "&maxFat=";
+            advFatMin = "&minFat=";
+            advProtMax = "&maxProtein=";
+            advProtMin = "&minProtein=";
+            // Get response as object of objects
+            JSONObject obj = response.getBody().getObject();
+            doRecipeSearch(obj);
+        }
+    }
+
+    private String buildAdvQueryString(String search)
+    {
+                      //"https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?addRecipeInformation=true&limitLicense=false&maxCalories=1500&maxCarbs=100&maxFat=100&maxProtein=100&minCalories=150&minCarbs=5&minFat=5&minProtein=5&number=100&offset=0&query=burger&ranking=1"
+                      //"https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?addRecipeInformation=true&limitLicense=false" + nutrientInput + "&number=100&offset=0&query=" + search + "&ranking=1"
+        String result = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/searchComplex?addRecipeInformation=true&limitLicense=false" + advCalMax + advCarbMax + advFatMax + advProtMax + advCalMin + advCarbMin + advFatMin + advProtMin + "&number=100&offset=0&query=" + search + "&ranking=1";
+        return result;
     }
 
     protected class CallMashapeNutrientInfoAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {

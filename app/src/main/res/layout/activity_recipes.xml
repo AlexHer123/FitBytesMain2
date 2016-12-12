@@ -32,7 +32,9 @@
         android:layout_alignStart="@+id/recipeTitleID"
         android:layout_marginLeft="-30dp"
         android:layout_marginTop="10dp"
-        android:layout_toStartOf="@+id/toggleButton" />
+        android:layout_toStartOf="@+id/recPopCancel_button" >
+
+    </SearchView>
 
     <ListView
         android:layout_width="match_parent"
@@ -55,27 +57,6 @@
         android:layout_alignLeft="@+id/recipeTitleID"
         android:layout_alignStart="@+id/recipeTitleID" />
 
-    <ToggleButton
-        android:text="API"
-        android:layout_height="40dp"
-        android:id="@+id/toggleButton"
-        android:textSize="12sp"
-        android:layout_width="50dp"
-        android:textOff="USER"
-        android:textOn="API"
-        android:layout_alignTop="@+id/recipeSearchView"
-        android:layout_toStartOf="@+id/advanced_search_button" />
-
-    <Button
-        android:text="Adv."
-        android:id="@+id/advanced_search_button"
-        android:elevation="0dp"
-        android:layout_height="40dp"
-        android:layout_width="50dp"
-        android:textAllCaps="false"
-        android:layout_alignTop="@+id/toggleButton"
-        android:layout_alignParentEnd="true" />
-
     <Button
         android:text="Create"
         android:layout_width="wrap_content"
@@ -93,5 +74,17 @@
         android:id="@+id/recPopCancel_button"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Adv."
+        android:id="@+id/advanced_search_button"
+        android:elevation="0dp"
+        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:textAllCaps="false"
+        android:layout_weight="1"
+        android:layout_marginStart="19dp"
+        android:layout_alignTop="@+id/recipeSearchView"
+        android:layout_toEndOf="@+id/recipeSearchView" />
 
 </RelativeLayout>
