@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             ((MenuItem) findViewById(R.id.action_settings)).setTitle("Turn Notifications Off");
         }*/
-        if (date != oldDate && notificationCanBeDisplayed){
+        /*if (date != oldDate && notificationCanBeDisplayed){
             // Put notifications here
             if (db.hasMealToday() || db.hasExpiredGoals()) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
@@ -76,46 +76,12 @@ public class MainActivity extends AppCompatActivity {
 //            for (Goal g : list){
 //                Log.d("DLKFJL", g.toString());
 //            }
-        }
-        db.removeOldStuff(db.getCurrentDate());
+
+        }*/
+        /*db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
         db.createUser();
-        getDefaultGoals();
-
-           //Todo for testing only remove adds to database
-           Goal testGoal = new UserGoal("This is a goal", 20161009, 20161010);
-           testGoal.forceExpired();
-           db.addGoal(testGoal);
-
-            String notificationString = "";
-
-            if (db.hasMealToday(date)) {
-                notificationString = "You have a meal today!";
-            } else {
-                notificationString = "No meal plan for today.";
-            }
-
-            List<Goal> list = db.getExpiredGoal(oldDate);
-
-            // THIS FOR LOOP JUST PRINTS OUT THE GOAL
-            for (Goal g : list) {
-                notificationString += "\n You missed:" + g.toString();
-            }
-
-
-            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            Intent intent = new Intent(this, UserProfile.class);
-            PendingIntent pIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-
-            Notification n = new Notification.Builder(this)
-                    .setContentTitle("FitBytes")
-                    .setStyle(new Notification.BigTextStyle().bigText(notificationString))
-                    .setSmallIcon(R.mipmap.bread_notif)
-                    .setContentIntent(pIntent)
-                    .setAutoCancel(true).build();
-
-            notificationManager.notify(0, n);
-        }
+        getDefaultGoals();*/
 
         ///////////////////////////////////////////////////////////////////////////////
 
