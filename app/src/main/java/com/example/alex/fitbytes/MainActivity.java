@@ -173,16 +173,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDefaultGoals(){
-//        int tempDate = db.getCurrentDate()-100;
+        int tempDate = db.getCurrentDate()-100;
 //        Goal daily = db.getDailyGoal(tempDate);
 //        if (daily == null){
             db.addGoal(new DailyGoal());
 //        }
 
-//        Goal weekly = db.getWeeklyGoal(tempDate);
-//        if (weekly == null){
-//            db.addGoal(new WeeklyGoal());
-//        }
+        Goal weekly = db.getWeeklyGoal(tempDate);
+        if (weekly == null){
+            db.addGoal(new WeeklyGoal());
+        }
     }
 
     private void createDefaultRecipes(){

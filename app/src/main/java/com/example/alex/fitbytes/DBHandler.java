@@ -354,10 +354,8 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public Goal getWeeklyGoal(int dur){
         String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = %s AND %s = '%s'",
+                "SELECT * FROM %s WHERE %s = '%s'",
                 TABLE_FITNESS_TRACKER,
-                GOAL_DURATION,
-                dur,
                 GOAL_TYPE,
                 "WEEKLY"
         );
