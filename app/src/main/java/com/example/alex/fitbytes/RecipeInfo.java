@@ -62,7 +62,7 @@ public class RecipeInfo extends RecipeHandler {
 
             @Override
             public void onClick(View v) {
-              //  Toast.makeText( getApplicationContext(), "user.get: " + user.getCals() + ",selectRecipeCal" + selectedRecipeCalories, Toast.LENGTH_SHORT).show();
+                Toast.makeText( getApplicationContext(), "Meal nutrition has been added to your stats ", Toast.LENGTH_LONG).show();
                         userDB.updateUserNutrients(user.getCals()+ selectedRecipeCalories, user.getFat() + selectedRecipeFat,
                                     user.getCarbs() + selectedRecipeCarbs, user.getSugar() + selectedRecipeSugar,
                                     user.getChol() + selectedRecipeChol, user.getSodium() + selectedRecipeSodium,
