@@ -45,13 +45,14 @@
         android:layout_below="@+id/pantrySearch"
         android:layout_marginBottom="46dp"
         android:choiceMode="singleChoice"
-        android:listSelector="@android:color/holo_blue_light"/>
+        android:listSelector="?android:attr/colorAccent"/>
 
     <Button
         android:text="Add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/button_pantry_add"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

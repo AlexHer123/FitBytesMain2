@@ -10,10 +10,13 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -27,6 +30,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private DBHandler db = new DBHandler(this);
     private SearchView recipeSearchView;
     private List<RecipeItem> recipeItems = new ArrayList<>();
+    private List<String> recipeList = new ArrayList<>();
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
@@ -45,6 +49,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         createRecipeList();
 
         Button cancelButton = (Button) findViewById(R.id.recPopCancel_button);
+        Button createButton = (Button) findViewById(R.id.create_button);
         cancelButton.setOnClickListener(new AdapterView.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,6 +59,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
             }
         });
         if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
+        else createButton.setVisibility(View.INVISIBLE);
     }
 
     /*Using this to pass in the description via a different JSON obj via Summarize Recipe*/
@@ -185,12 +191,27 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     }
 
     private void createRecipeList() {
-        List<String> allRecipes = new ArrayList<>();
+        /*For API recipe items*/
+        final List<String> allRecipes = new ArrayList<>();
         for (RecipeItem r : recipeItems) {
             allRecipes.add(r.getName());
         }
+        final List<String> userRecipes = new ArrayList<>();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
-        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);
+        recipeList.add("test");
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.toggleButton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // The toggle is enabled aka API
+                    recipeList = allRecipes;
+                } else {
+                    // The toggle is disabled aka USER
+                    recipeList = userRecipes;
+                }
+            }
+        });
+        ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, recipeList);
         recipeDropdown.setAdapter(recipeAdapter);
         recipeSearchView.clearFocus();
 
@@ -230,7 +251,7 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
 
     private void setupSearchView() {
         recipeSearchView.setIconifiedByDefault(false);
-        recipeSearchView.setSubmitButtonEnabled(true);
+        recipeSearchView.setSubmitButtonEnabled(false);
         recipeSearchView.setQueryHint("Search Recipes");
 
         recipeSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
