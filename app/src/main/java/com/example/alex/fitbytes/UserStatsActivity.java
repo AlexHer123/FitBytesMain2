@@ -38,9 +38,31 @@ public class UserStatsActivity extends AppCompatActivity {
     }
 
     public void fillInfo(){
-        TextView lifeTimeCal = (TextView)findViewById(R.id.userStatsCalTotal);
-     //   lifeTimeCal.setText("" + lifeTimeCal);
-        Toast.makeText( getApplicationContext(), "" + lifeTimeCal, Toast.LENGTH_LONG).show();
+        TextView lifeTimeCalText = (TextView)findViewById(R.id.userStatsCalTotal);
+        lifeTimeCalText.setText("" + lifetimeCalories);
+
+        TextView lifeFatText = (TextView)findViewById(R.id.userStatsFatTotal);
+        lifeFatText.setText("" + lifetimeFat);
+
+        TextView lifeCarbsText = (TextView)findViewById(R.id.userStatsCarbsTotal);
+        lifeCarbsText.setText("" + lifetimeCarbs);
+
+        TextView lifeSugarText = (TextView)findViewById(R.id.userStatsSugarTotal);
+        lifeSugarText.setText("" + lifetimeSugar);
+
+        //// TODO: add text feilds to layout
+//        TextView lifeCholText = (TextView)findViewById(R.id.userStatsCholTotal);
+//        lifeCholText.setText("" + lifeCholText);
+//
+//        TextView lifeSodiumText = (TextView)findViewById(R.id.userStatsSodiumTotal);
+//        lifeSodiumText.setText("" + lifetimeSodium);
+//
+//        TextView lifeProteinText = (TextView)findViewById(R.id.userStatsProteinTotal);
+//        lifeProteinText.setText("" + lifetimeProtein);
+
+
+        TextView mealCal = (TextView)findViewById(R.id.userStatCalPerMeal);
+        mealCal.setText("" + perMeal(lifetimeCalories));
 }
 
     /**
