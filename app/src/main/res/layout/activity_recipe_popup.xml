@@ -62,7 +62,7 @@
             android:layout_marginLeft="-20dp" />
 
         <TextView
-            android:text="Description"
+            android:text="About this recipe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/recipe_descriptiontitle_text"

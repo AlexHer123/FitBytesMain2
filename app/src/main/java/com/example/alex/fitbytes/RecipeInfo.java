@@ -1,6 +1,9 @@
 package com.example.alex.fitbytes;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -107,9 +110,25 @@ public class RecipeInfo extends RecipeHandler {
             }
 
             ListView ingredientsList = (ListView) findViewById(R.id.ingredientList);
-            List<String> test = new ArrayList<>();
-            test.add(""+ingredientNames.size());
-            ArrayAdapter<String> ingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames);
+            ArrayAdapter<String> ingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames)
+            {
+                @Override
+                public View getView(int position, View convertView, ViewGroup parent){
+                    // Get the current item from ListView
+                    View view = super.getView(position,convertView,parent);
+                    if(position %2 == 1)
+                    {
+                        // Set a background color for ListView regular row/item
+                        view.setBackgroundColor(Color.parseColor("#3F51B5"));
+                    }
+                    else
+                    {
+                        // Set the background color for alternate row/item
+                        view.setBackgroundColor(Color.parseColor("#303F9F"));
+                    }
+                    return view;
+                }
+            };
             ingredientsList.setAdapter(ingAdapter);
 
             /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/
