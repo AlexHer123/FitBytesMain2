@@ -21,4 +21,5 @@ public class UserGoal extends Goal {
     public String getDescription() {
         return super.getDescription();
     }
+
 }

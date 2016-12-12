@@ -561,11 +561,10 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public boolean hasMealToday() {
+    public boolean hasMealToday(int date) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int today = getCurrentDate();
 
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + today + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
