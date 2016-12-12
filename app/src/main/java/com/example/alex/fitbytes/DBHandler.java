@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -262,6 +263,42 @@ public class DBHandler extends SQLiteOpenHelper {
                 completed ? 1 : 0,
                 GOAL_ID,
                 goal.getID()));
+    }
+
+    public List<Goal> getExpiredGoal(int oldDate) {
+        List<Goal> list = new ArrayList<>();
+        String selectQuery = String.format(
+                "SELECT * FROM %s WHERE %s <= " + (oldDate-100) + " AND %s = 0",
+                TABLE_FITNESS_TRACKER,
+                GOAL_DURATION,
+                GOAL_COMPLETED
+        );
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                String description = cursor.getString(1);
+                int date = cursor.getInt(2);
+                int duration = cursor.getInt(3);
+                boolean completed = cursor.getInt(4) > 0;
+                Goal g = null;
+                switch (cursor.getString(5)) {
+                    case "DAILY":
+                        g = new DailyGoal(description, date, duration);
+                        break;
+                    case "WEEKLY":
+                        g = new WeeklyGoal(description, date, duration);
+                        break;
+                    case "USER":
+                        g = new UserGoal(description, date, duration);
+                }
+                g.setCompleted(completed);
+                g.setID(cursor.getInt(0));
+                list.add(g);
+            } while (cursor.moveToNext());
+        }
+        return list;
     }
 
     public List<Goal> getAllGoals() {
@@ -524,25 +561,26 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public boolean hasMealToday(){
+    public boolean hasMealToday() {
         SQLiteDatabase db = this.getWritableDatabase();
         int today = getCurrentDate();
 
         String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + today + "";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.moveToFirst())
+        if (cursor.moveToFirst())
             return false;
         else return true;
     }
-    public boolean hasExpiredGoals(){
+
+    public boolean hasExpiredGoals() {
         SQLiteDatabase db = this.getWritableDatabase();
         int today = getCurrentDate();
 
         String selectQuery = String.format("SELECT * FROM %s WHERE %s %s %s AND %s %s %s", TABLE_FITNESS_TRACKER, GOAL_DURATION, "<", today, GOAL_COMPLETED, "=", 0);
 
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor.moveToFirst())
+        if (cursor.moveToFirst())
             return false;
         else return true;
     }
@@ -665,11 +703,12 @@ public class DBHandler extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                recipeList.add(new RecipeItem(cursor.getInt(1),cursor.getString(2), 0));
+                recipeList.add(new RecipeItem(cursor.getInt(1), cursor.getString(2), 0));
             } while (cursor.moveToNext());
         }
         return recipeList;
     }
+
     public List<RecipeItem> getSelectedDefaultRecipes(String query) {
         List<RecipeItem> recipeList = new ArrayList();
         String selectQuery = "SELECT * FROM " + TABLE_DEFAULT_RECIPES;
@@ -842,9 +881,6 @@ public class DBHandler extends SQLiteOpenHelper {
                 db.delete(TABLE_MEALPLAN, MP_col_1_ID + " = ?", new String[]{String.valueOf(planID)});
             } while (cursor.moveToNext());
         }
-//        removePlan(oldDate);
-//        removeWeeklyGoal(oldDate);
-//        removeGoal(oldDate);
     }
 
     protected void resetDatabase() {

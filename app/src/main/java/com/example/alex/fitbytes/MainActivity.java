@@ -35,6 +35,16 @@ public class MainActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
+        int oldDate = db.getCurrentDate();
+        if (date != oldDate){
+            // Put notifications here
+            List<Goal> list = db.getExpiredGoal(oldDate);
+
+            // THIS FOR LOOP JUST PRINTS OUT THE GOAL
+//            for (Goal g : list){
+//                Log.d("DLKFJL", g.toString());
+//            }
+        }
         db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
         db.createUser();
@@ -160,10 +170,6 @@ public class MainActivity extends AppCompatActivity {
         String[] names = {"Eggs Benedict","Baked Blueberry Coconut Oatmeal","Downtown Turkey Wrap","Kale Salad With Apricots, Avocado & Parmesan","Grilled Salmon with Lemon Garlic Sauce","Perfect Lasagna","Banana Nut Protein Bars","Very Berry Chocolate Protein Smoothie","Light Carrot Cake","The Best Apple Pie"};
         for (int i = 0; i<10; i++){
             db.addDefaultRecipe(ids[i], names[i]);
-        }
-
-        for (RecipeItem r : db.getDefaultRecipes()){
-            Log.d("IN MAIN: ", r.getRecipeID()+" "+r.getName());
         }
     }
 }
