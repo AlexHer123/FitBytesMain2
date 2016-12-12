@@ -13,6 +13,7 @@ public abstract class Goal {
     private Category category;
     protected enum Type{ DAILY, WEEKLY, USER }
     private Type type;
+    private int id;
 
     public boolean getCompleted(){
         return completed;
@@ -65,6 +66,12 @@ public abstract class Goal {
         return s;
     }
     public boolean isExpired(){
-        return dueDate > date;
+        return dueDate < date;
+    }
+    public void setID(int id){
+        this.id = id;
+    }
+    public int getID(){
+        return id;
     }
 }

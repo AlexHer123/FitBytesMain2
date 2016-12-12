@@ -1,6 +1,7 @@
 package com.example.alex.fitbytes;
 
 import java.util.Calendar;
+import java.util.Random;
 
 /**
  * Created by Ger on 11/27/2016.
@@ -15,14 +16,18 @@ public class DailyGoal extends Goal {
         int day = cal.get(Calendar.DATE);
         cal.set(year, month, day);
 
-        Category c = new Exercise();
+        Random r = new Random();
+        boolean choice = r.nextBoolean();
+        Category c = choice? new Exercise() : new Diet();
         setCategory(c);
         setDate(cal);
         setDueDate(getUpdatedDate());
         setType(Type.DAILY);
     }
     public DailyGoal(String description, int date, int dueDate){
-        Category c = new Exercise(description);
+        Random r = new Random();
+        boolean choice = r.nextBoolean();
+        Category c = choice? new Exercise(description) : new Diet(description);
         setCategory(c);
         setDate(date);
         setDueDate(dueDate);

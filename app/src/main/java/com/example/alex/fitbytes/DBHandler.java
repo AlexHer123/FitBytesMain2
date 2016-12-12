@@ -180,6 +180,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 g = new UserGoal(description, date, duration);
         }
         g.setCompleted(cursor.getInt(4) > 0);
+        g.setID(cursor.getInt(0));
         return g;
     }
 
@@ -189,8 +190,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 TABLE_FITNESS_TRACKER,
                 GOAL_COMPLETED,
                 completed ? 1 : 0,
-                GOAL_DESCRIPTION,
-                goal.getDescription()));
+                GOAL_ID,
+                goal.getID()));
     }
 
     public List<Goal> getAllGoals() {
@@ -220,6 +221,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
+                g.setID(cursor.getInt(0));
                 list.add(g);
             } while (cursor.moveToNext());
         }
@@ -255,6 +257,7 @@ public class DBHandler extends SQLiteOpenHelper {
                         g = new UserGoal(description, date, duration);
                 }
                 g.setCompleted(completed);
+                g.setID(cursor.getInt(0));
                 list.add(g);
             } while (cursor.moveToNext());
         }
