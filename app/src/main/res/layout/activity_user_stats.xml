@@ -14,8 +14,30 @@
         android:text="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/userStatsSodiumTotal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/userStatsCholTotal"
+        android:layout_alignEnd="@+id/userStatsCholTotal"
+        android:layout_toEndOf="@+id/userStatisticsChol" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/userStatisticsChol"
+        android:id="@+id/userStatsCholTotal"
+        android:textSize="20sp"
+        android:layout_alignStart="@+id/userStatsFatTotal"
+        android:gravity="center"
+        android:layout_alignEnd="@+id/userStatsFatTotal" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/userStatsCarbsPerMeal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsCarbsTotal"
         android:layout_alignBottom="@+id/userStatsCarbsTotal"
@@ -30,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/userStatsCalories"
         android:id="@+id/userStatsCalTotal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:layout_alignRight="@+id/userStatsTotal"
         android:layout_alignEnd="@+id/userStatsTotal"
         android:layout_alignLeft="@+id/userStatsTotal"
@@ -38,44 +60,11 @@
         android:gravity="center" />
 
     <TextView
-        android:text="Carbs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userStatsCarbs"
-        android:textSize="24sp"
-        android:layout_marginTop="26dp"
-        android:layout_below="@+id/userStatsCalories"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Fat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userStatsFat"
-        android:textSize="24sp"
-        android:layout_marginTop="32dp"
-        android:layout_below="@+id/userStatsSugar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:text="Sugar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/userStatsSugar"
-        android:textSize="24sp"
-        android:layout_marginTop="28dp"
-        android:layout_below="@+id/userStatsCarbs"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
         android:text="Calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsCalories"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:layout_below="@+id/userStatsTotal"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -86,7 +75,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsPerMeal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
@@ -98,7 +87,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsTotal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/userStatsCalories"
         android:layout_toEndOf="@+id/userStatsCalories"
@@ -110,7 +99,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsCarbsTotal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsCarbs"
         android:layout_alignBottom="@+id/userStatsCarbs"
@@ -124,7 +113,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsSugarTotal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsSugar"
         android:layout_alignBottom="@+id/userStatsSugar"
@@ -138,7 +127,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsFatTotal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsFat"
         android:layout_alignBottom="@+id/userStatsFat"
@@ -152,7 +141,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatCalPerMeal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsCalTotal"
         android:layout_alignBottom="@+id/userStatsCalTotal"
@@ -166,7 +155,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsSugarPerMeal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsSugarTotal"
         android:layout_alignBottom="@+id/userStatsSugarTotal"
@@ -180,7 +169,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/userStatsFatPerMeal"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:gravity="center"
         android:layout_alignBaseline="@+id/userStatsFatTotal"
         android:layout_alignBottom="@+id/userStatsFatTotal"
@@ -190,14 +179,105 @@
         android:layout_alignEnd="@+id/userStatsCarbsPerMeal" />
 
     <TextView
+        android:text="Carbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsCarbs"
+        android:textSize="20sp"
+        android:layout_below="@+id/userStatsCalories"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Fat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsFat"
+        android:textSize="20sp"
+        android:layout_below="@+id/userStatsSugar"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Sugar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsSugar"
+        android:textSize="20sp"
+        android:layout_below="@+id/userStatsCarbs"
+        android:layout_alignParentStart="true" />
+
+    <TextView
         android:text="Cholesterol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="17dp"
         android:id="@+id/userStatisticsChol"
-        android:textSize="18sp"
-        android:layout_below="@+id/userStatsFat"
+        android:textSize="20sp"
+        android:layout_below="@+id/userStatsFatTotal"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsCholPerMeal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/userStatsFatPerMeal"
+        android:layout_alignStart="@+id/userStatsFatPerMeal"
+        android:layout_alignEnd="@+id/userStatsFatPerMeal" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsSodiumPerMeal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/userStatsCholPerMeal"
+        android:layout_alignStart="@+id/userStatsCholPerMeal"
+        android:layout_alignEnd="@+id/userStatsCholPerMeal" />
+
+    <TextView
+        android:text="Sodium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsSodium"
+        android:textSize="20sp"
+        android:gravity="left|center"
+        android:layout_below="@+id/userStatsCholTotal"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Protein"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsProtein"
+        android:textSize="20sp"
+        android:gravity="left|center"
+        android:layout_below="@+id/userStatsSodium"
+        android:layout_alignEnd="@+id/userStatsCalories"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsProteinTotal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/userStatsSodiumTotal"
+        android:layout_alignStart="@+id/userStatsSodiumTotal"
+        android:layout_alignEnd="@+id/userStatsSodiumTotal" />
+
+    <TextView
+        android:text="0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/userStatsProteinPerMeal"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_below="@+id/userStatsSodiumPerMeal"
+        android:layout_alignEnd="@+id/userStatsSodiumPerMeal"
+        android:layout_alignStart="@+id/userStatsSodiumPerMeal" />
 
 
 </RelativeLayout>

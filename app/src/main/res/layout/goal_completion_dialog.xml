@@ -6,13 +6,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:id="@+id/tableLayout">
         <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="Description"
-                android:ems="10"
+                android:text="Description:"
+
                 android:id="@+id/goal_completion_goal_description_description"
                 android:textSize="16sp"
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="No Description Found"
-                android:ems="10"
+
                 android:id="@+id/goal_completion_goal_description"
                 android:textSize="16sp"
                 android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="4sp"/>
@@ -33,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Created On:"
-                android:ems="13"
+
                 android:id="@+id/goal_completion_goal_date_date"
                 android:textSize="16sp"
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
@@ -43,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="No Date Found"
-                android:ems="12"
+
                 android:id="@+id/goal_completion_goal_date"
                 android:textSize="16sp"
                 android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="4sp"/>
@@ -53,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Goal is due at the end of:"
-                android:ems="12"
+
                 android:id="@+id/goal_completion_goal_deadline_deadline"
                 android:textSize="16sp"
                 android:paddingLeft="16sp" android:paddingTop="16sp" android:paddingBottom="4sp"/>
@@ -63,24 +64,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="No Deadline"
-                android:ems="10"
+
                 android:id="@+id/goal_completion_goal_deadline"
                 android:textSize="16sp"
                 android:paddingLeft="40sp" android:paddingTop="4sp" android:paddingBottom="16sp"/>
         </TableRow>
         <TableRow>
-            <Button
-                android:text="Go Back"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/goal_go_back" />
 
-            <Button
-                android:text="Mark As Complete"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/goal_mark_as_complete" />
+
+
         </TableRow>
     </TableLayout>
 
+    <Button
+        android:text="Go Back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/goal_go_back"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

@@ -1,7 +1,12 @@
 package com.example.alex.fitbytes;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,6 +37,52 @@ public class MainActivity extends AppCompatActivity {
         db.addCurrentDate(date);
         db.createUser();
         getDefaultGoals();
+
+        ////////////////////////////////////////////////////////////////////////////////
+        if (db.hasMealToday()) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+            mBuilder.setSmallIcon(R.mipmap.bread_notif);
+            mBuilder.setContentTitle("FitBytes");
+            mBuilder.setContentText("You have a meal today!");
+
+            Intent resultIntent = new Intent(this, MainActivity.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(MainActivity.class);
+
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // notificationID allows you to update the notification later on.
+            int notificationID = 001;
+            mNotificationManager.notify(notificationID, mBuilder.build());
+        }
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        ////////////////////////////////////////////////////////////////////////////////
+        if (db.hasExpiredGoals()) {
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+            mBuilder.setSmallIcon(R.mipmap.bread_notif);
+            mBuilder.setContentTitle("FitBytes");
+            mBuilder.setContentText("Some goal(s) has expired.");
+
+            Intent resultIntent = new Intent(this, FitnessTracker.class);
+            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+            stackBuilder.addParentStack(FitnessTracker.class);
+
+            stackBuilder.addNextIntent(resultIntent);
+            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            mBuilder.setContentIntent(resultPendingIntent);
+
+            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            // notificationID allows you to update the notification later on.
+            int notificationID_2 = 002;
+            mNotificationManager.notify(notificationID_2, mBuilder.build());
+        }
+        ////////////////////////////////////////////////////////////////////////////////////
     }
 
     @Override

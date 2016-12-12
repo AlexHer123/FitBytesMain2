@@ -1,9 +1,11 @@
 package com.example.alex.fitbytes;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -69,8 +71,10 @@ public abstract class PantryHandler extends MainActivity {
 //                    Log.d("ELEMENT " + i, obj.get(i).toString());
 //                }
 //            }catch (JSONException e){e.printStackTrace();}
+
             doIngredientSearch(obj);
         }
     }
     protected abstract void doIngredientSearch(JSONArray obj);
+    protected abstract void upcIngredientInfo(JSONObject obj);
 }

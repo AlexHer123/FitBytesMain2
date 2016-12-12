@@ -5,8 +5,8 @@
             android:id="@+id/details">Delete</item>
         <item android:title="Edit"
             android:id="@+id/edit">Edit</item>
-        <item android:title="Delete"
+        <item android:title="Remove"
             android:id="@+id/delete">Delete</item>
-        <item android:title="Mark Compelete"
+        <item android:title="Mark Complete"
             android:id="@+id/mark_complete">Edit</item>
 </menu>

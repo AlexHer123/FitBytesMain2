@@ -27,7 +27,6 @@ import java.util.List;
 public class FitnessTracker extends MainActivity {
     public static final String IN_PROGRESS = "In Progress";
     public static final String COMPLETED = "Completed";
-    public static final String LATE = "LATE";
     public static final String EXPIRED = "Expired";
     private ArrayAdapter<Goal> goalAdapter;
     private ArrayAdapter<Goal> goalAdapterCompleted;
@@ -112,53 +111,6 @@ public class FitnessTracker extends MainActivity {
     private View.OnClickListener buildOnClickListener(View view){
         View.OnClickListener listener = null;
         switch(view.getId()){
-            /*case R.id.addGoal:
-                listener = new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
-                        dialog.setTitle("Set your goal and deadline");
-                        dialog.setContentView(R.layout.goal_add_goal_dialog);
-                        dialog.show();
-                        final EditText editText = (EditText) dialog.findViewById(R.id.editText);
-                        final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
-                        datePicker.setMinDate(System.currentTimeMillis() - 1000);
-                        Button cancelButton = (Button) dialog.findViewById(R.id.goal_add_goal_cancel);
-                        cancelButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                dialog.dismiss();
-                            }
-                        });
-                        Button finishButton = (Button) dialog.findViewById(R.id.goal_add_goal_finish);
-                        finishButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                String goalDescription = editText.getText().toString().trim();
-                                if(goalDescription.isEmpty()){
-                                    displayToast("Goal has no description");
-                                    return;
-                                }
-                                Calendar calendar = Calendar.getInstance();
-                                String olddateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
-                                        (calendar.get(Calendar.MONTH)), calendar.get(Calendar.DATE));
-                                int day = datePicker.getDayOfMonth();
-                                int month = datePicker.getMonth();
-                                int year =  datePicker.getYear();
-                                calendar.set(year, month, day);
-                                String dateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
-                                        (calendar.get(Calendar.MONTH) ), calendar.get(Calendar.DATE));
-                                Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
-                                goalDB.addGoal(userGoal);
-                                updateGoalAdapters();
-                                dialog.dismiss();
-                                displayToast("Goal has been created");
-                                toNotify(v);
-                            }
-                        });
-                    }
-                };
-                break;*/
             case R.id.addGoalFloating:
                 listener = new View.OnClickListener() {
                     @Override
@@ -201,7 +153,7 @@ public class FitnessTracker extends MainActivity {
 
                                 dialog.dismiss();
                                 displayToast("Goal has been created");
-                                toNotify(v);
+                                //toNotify(v);
                                 updateTabs();
                             }
                         });
@@ -215,14 +167,17 @@ public class FitnessTracker extends MainActivity {
     }
     private void updateTabs(){
         displayToast("Hello");
-        //currentGoalsTab.setIndicator();
-//        ((TextView) host.getTabWidget().getChildTabViewAt(0).findViewById(R.id.tab1)).setText("String.format(\"%s (%s)\", IN_PROGRESS, goalAdapter.getCount())");
-        completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
+        TabHost tabHost = host;
+        TextView tv = (TextView) tabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
+        tv.setText(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
+        tv = (TextView) tabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
+        tv.setText(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
+        tv = (TextView) tabHost.getTabWidget().getChildAt(2).findViewById(android.R.id.title);
+        tv.setText(String.format("%s (%s)", EXPIRED, goalAdapterExpired.getCount()));
     }
     private void updateGoalAdapters() {
         setGoalAdapters();
         updateGoalLists();
-        //updateTabs();
     }
     private void setGoalAdapters(){
         List<Goal> goalList = new ArrayList<>();
@@ -246,12 +201,12 @@ public class FitnessTracker extends MainActivity {
         ((ListView) findViewById(R.id.completed_goals)).setAdapter(goalAdapterCompleted);
         ((ListView) findViewById(R.id.expired_goals)).setAdapter(goalAdapterExpired);
     }
-    private void getDefaultGoals(){
+    /*private void getDefaultGoals(){
         if(goalDB.getAllGoals().isEmpty()){
             Goal[] g = {new DailyGoal(), new WeeklyGoal()};
             for(Goal goal : g) goalDB.addGoal(goal);
         }
-    }
+    }*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -271,13 +226,17 @@ public class FitnessTracker extends MainActivity {
         goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
         attachGoalListener(goalsListViewCompeleted);
         goalsListViewCompeleted.setAdapter(goalAdapterCompleted);
+
+        goalsListViewExpired = (ListView) findViewById(R.id.expired_goals);
+        attachGoalListener(goalsListViewExpired);
+        goalsListViewExpired.setAdapter(goalAdapterExpired);
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final int position = info.position;
-        currentGoal = (Goal) goalAdapter.getItem(position);
-        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+        currentGoal = goalAdapter.getItem(position);
+        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_Material_Light_DialogWhenLarge);
         switch(item.getItemId()) {
             case R.id.edit:
                 dialog.setTitle("Edit your goal and deadline");
@@ -295,6 +254,7 @@ public class FitnessTracker extends MainActivity {
                     }
                 });
                 Button finishButton = (Button) dialog.findViewById(R.id.goal_add_goal_finish);
+                finishButton.setText("Finish");
                 finishButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -304,17 +264,18 @@ public class FitnessTracker extends MainActivity {
                             return;
                         }
                         Calendar calendar = Calendar.getInstance();
-                        String olddateString = String.format("%04s%02s%02s", calendar.get(Calendar.YEAR),
+                        String olddateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
                                 (calendar.get(Calendar.MONTH)), calendar.get(Calendar.DATE));
                         int day = datePicker.getDayOfMonth();
                         int month = datePicker.getMonth();
                         int year =  datePicker.getYear();
                         calendar.set(year, month, day);
-                        String dateString = String.format("%04s%02s%02s", calendar.get(Calendar.YEAR),
+                        String dateString = String.format("%04d%02d%02d", calendar.get(Calendar.YEAR),
                                 (calendar.get(Calendar.MONTH)), calendar.get(Calendar.DATE));
                         Goal userGoal = new UserGoal(goalDescription, Integer.parseInt(olddateString), Integer.parseInt(dateString));
                         goalDB.updateGoal(userGoal, currentGoal);
                         updateGoalAdapters();
+                        updateTabs();
                         dialog.dismiss();
                         displayToast("Goal has been updated");
                     }
@@ -336,7 +297,7 @@ public class FitnessTracker extends MainActivity {
                 currentGoalDescription.setText(currentGoal.getDescription());
                 currentGoalDate.setText(currentGoal.getDateAsString(currentGoal.getDate()));
                 currentGoalDeadline.setText(currentGoal.getDateAsString(currentGoal.getDueDate()));
-                Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                //Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
                 cancelButton = (Button) dialog.findViewById(R.id.goal_go_back);
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -344,7 +305,7 @@ public class FitnessTracker extends MainActivity {
                         dialog.dismiss();
                     }
                 });
-                if(!currentGoal.getCompleted()){
+                /*if(!currentGoal.getCompleted()){
                     completionButton.setOnClickListener(
                             new AdapterView.OnClickListener() {
                                 @Override
@@ -373,19 +334,29 @@ public class FitnessTracker extends MainActivity {
                                 }
                             }
                     );
-                }
+                }*/
                 return true;
             default:
                 return super.onContextItemSelected(item);
         }
     }
-    private void attachGoalListener(ListView goalsListView){
+    private void attachGoalListener(final ListView goalsListView){
         goalsListView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
-                if (view.getId() == R.id.current_goals) {
-                    MenuInflater inflater = getMenuInflater();
-                    inflater.inflate(R.menu.goal_menu_list, menu);
+                switch(view.getId()){
+                    case R.id.current_goals:
+                        MenuInflater inflater = getMenuInflater();
+                        inflater.inflate(R.menu.goal_menu_list, menu);
+                        break;
+                    case R.id.completed_goals:
+                        inflater = getMenuInflater();
+                        inflater.inflate(R.menu.goal_menu_list_2, menu);
+                        break;
+                    case R.id.expired_goals:
+                        inflater = getMenuInflater();
+                        inflater.inflate(R.menu.goal_menu_list_3, menu);
+                        break;
                 }
             }
 
@@ -394,6 +365,7 @@ public class FitnessTracker extends MainActivity {
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
+                        if(goalsListView == goalsListViewExpired) return;
                         currentGoal = (Goal) parent.getItemAtPosition(position);
                         if(!currentGoal.getCompleted()){
                             goalDB.setGoalCompleted(currentGoal, true);
@@ -408,7 +380,6 @@ public class FitnessTracker extends MainActivity {
                         }
                         updateGoalAdapters();
                         updateTabs();
-
                     }
                 }
         );

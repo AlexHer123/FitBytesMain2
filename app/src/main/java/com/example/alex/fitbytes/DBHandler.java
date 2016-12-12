@@ -524,6 +524,30 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public boolean hasMealToday(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int today = getCurrentDate();
+
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + today + "";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst())
+            return false;
+        else return true;
+    }
+    public boolean hasExpiredGoals(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int today = getCurrentDate();
+
+        String selectQuery = String.format("SELECT * FROM %s WHERE %s %s %s AND %s %s %s", TABLE_FITNESS_TRACKER, GOAL_DURATION, "<", today, GOAL_COMPLETED, "=", 0);
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst())
+            return false;
+        else return true;
+    }
+
+
     public boolean updateMealPlan(int oldDate, int newDate, MealPlanItem mpi) {
         // Check if the new date is already in the database
         if (oldDate != newDate) {
