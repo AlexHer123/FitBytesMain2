@@ -150,7 +150,7 @@ public class DBHandler extends SQLiteOpenHelper {
             int sodium = cursor.getInt(10);
             int protein = cursor.getInt(11);
             int totalMeals = cursor.getInt(12);
-            
+
             user = new UserItem(name, height, weight, BMI, cals, fat, carbs, sugar, chol, sodium, protein, totalMeals);
         }
         return user;
