@@ -1,6 +1,9 @@
 package com.example.alex.fitbytes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by ger on 11/19/16.
@@ -56,14 +59,31 @@ public abstract class Goal {
         return getDescription() + (getCompleted()? " (Done)" : "");
     }
     public String getDateAsString(int d){
-        String dateString = Integer.toString(d);
-        String[] arr = {
-                dateString.substring(0, 4),
-                dateString.substring(4, 6),
-                dateString.substring(6, 8)
-        };
-        String s = String.format("%4s/%2s/%2s", arr[0], arr[1], arr[2]);
-        return s;
+        d+=100;
+        SimpleDateFormat editButtonFormat = new SimpleDateFormat("yyyyMMdd");
+        try{
+            Date date = editButtonFormat.parse(""+d);
+            editButtonFormat = new SimpleDateFormat("MMM dd, yyyy");
+//            month = Integer.parseInt(editButtonFormat.format(date));
+//            editButtonFormat = new SimpleDateFormat("d");
+//            day = Integer.parseInt(editButtonFormat.format(date));
+            String fullDate = editButtonFormat.format(date);
+//            editButtonFormat = new SimpleDateFormat("yyyy");
+//            year = Integer.parseInt(editButtonFormat.format(date));
+//            brokenDate[0] = month;
+//            brokenDate[1] = day;
+//            brokenDate[2] = year;
+            return fullDate;
+
+        } catch (ParseException e){e.printStackTrace();}
+//        String dateString = Integer.toString(d);
+//        String[] arr = {
+//                dateString.substring(0, 4),
+//                dateString.substring(4, 6),
+//                dateString.substring(6, 8)
+//        };
+//        String s = String.format("%4s/%2s/%2s", arr[0], arr[1]+1, arr[2]);
+        return null;
     }
     public boolean canMarkForDelete(){
         return (dueDate < date) && completed;
