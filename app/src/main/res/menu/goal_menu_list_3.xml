@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:name="goal_menu_list">
+    <item android:title="Details"
+        android:id="@+id/details">Delete</item>
+    <item android:title="Remove"
+        android:id="@+id/delete">Delete</item>
+</menu>
