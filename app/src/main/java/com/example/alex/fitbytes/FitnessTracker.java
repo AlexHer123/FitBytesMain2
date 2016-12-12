@@ -42,7 +42,6 @@ public class FitnessTracker extends MainActivity {
     private TabHost host;
     private TabHost.TabSpec currentGoalsTab;
     private TabHost.TabSpec completedGoalsTab;
-    private TabHost.TabSpec expiredGoalsTab;
 
     private void displayToast(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
@@ -55,7 +54,6 @@ public class FitnessTracker extends MainActivity {
 
         goalsListView = (ListView) findViewById(R.id.current_goals);
         goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
-        goalsListViewExpired = (ListView) findViewById(R.id.expired_goals);
 //        getDefaultGoals();
 
         updateGoalAdapters();
@@ -74,10 +72,6 @@ public class FitnessTracker extends MainActivity {
         completedGoalsTab.setContent(R.id.tab2);
         completedGoalsTab.setIndicator(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
         host.addTab(completedGoalsTab);
-        expiredGoalsTab = host.newTabSpec(EXPIRED);
-        expiredGoalsTab.setContent(R.id.tab3);
-        expiredGoalsTab.setIndicator(String.format("%s (%s)", EXPIRED, goalAdapterExpired.getCount()));
-        host.addTab(expiredGoalsTab);
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
@@ -172,8 +166,6 @@ public class FitnessTracker extends MainActivity {
         tv.setText(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
         tv = (TextView) tabHost.getTabWidget().getChildAt(1).findViewById(android.R.id.title);
         tv.setText(String.format("%s (%s)", COMPLETED, goalAdapterCompleted.getCount()));
-        tv = (TextView) tabHost.getTabWidget().getChildAt(2).findViewById(android.R.id.title);
-        tv.setText(String.format("%s (%s)", EXPIRED, goalAdapterExpired.getCount()));
     }
     private void updateGoalAdapters() {
         setGoalAdapters();
@@ -199,7 +191,6 @@ public class FitnessTracker extends MainActivity {
     private void displayAdapters() {
         ((ListView) findViewById(R.id.current_goals)).setAdapter(goalAdapter);
         ((ListView) findViewById(R.id.completed_goals)).setAdapter(goalAdapterCompleted);
-        ((ListView) findViewById(R.id.expired_goals)).setAdapter(goalAdapterExpired);
     }
     /*private void getDefaultGoals(){
         if(goalDB.getAllGoals().isEmpty()){
@@ -226,10 +217,6 @@ public class FitnessTracker extends MainActivity {
         goalsListViewCompeleted = (ListView) findViewById(R.id.completed_goals);
         attachGoalListener(goalsListViewCompeleted);
         goalsListViewCompeleted.setAdapter(goalAdapterCompleted);
-
-        goalsListViewExpired = (ListView) findViewById(R.id.expired_goals);
-        attachGoalListener(goalsListViewExpired);
-        goalsListViewExpired.setAdapter(goalAdapterExpired);
     }
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -352,10 +339,6 @@ public class FitnessTracker extends MainActivity {
                     case R.id.completed_goals:
                         inflater = getMenuInflater();
                         inflater.inflate(R.menu.goal_menu_list_2, menu);
-                        break;
-                    case R.id.expired_goals:
-                        inflater = getMenuInflater();
-                        inflater.inflate(R.menu.goal_menu_list_3, menu);
                         break;
                 }
             }

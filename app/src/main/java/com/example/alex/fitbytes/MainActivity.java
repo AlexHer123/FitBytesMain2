@@ -44,11 +44,12 @@ public class MainActivity extends AppCompatActivity {
 //            for (Goal g : list){
 //                Log.d("DLKFJL", g.toString());
 //            }
+            getDefaultGoals();
         }
         db.removeOldStuff(db.getCurrentDate());
         db.addCurrentDate(date);
         db.createUser();
-        getDefaultGoals();
+
 
         ////////////////////////////////////////////////////////////////////////////////
         if (db.hasMealToday()) {
@@ -128,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         }
         if (id == R.id.action_recipe) {
             Intent intent = new Intent(this, Recipes.class);
-//            Intent intent = new Intent(this, UserRecipe.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
@@ -159,10 +159,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getDefaultGoals(){
-        if(db.getAllGoals().isEmpty()){
-            Goal[] g = {new DailyGoal(), new WeeklyGoal()};
-            for(Goal goal : g) db.addGoal(goal);
-        }
+//        int tempDate = db.getCurrentDate()-100;
+//        Goal daily = db.getDailyGoal(tempDate);
+//        if (daily == null){
+            db.addGoal(new DailyGoal());
+//        }
+
+//        Goal weekly = db.getWeeklyGoal(tempDate);
+//        if (weekly == null){
+//            db.addGoal(new WeeklyGoal());
+//        }
     }
 
     private void createDefaultRecipes(){

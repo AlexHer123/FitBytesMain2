@@ -42,6 +42,7 @@ public class UserProfile extends MainActivity {
         goalList.setText("");
         List<Goal> goals = db.getActiveGoals(db.getCurrentDate());
         for (Goal g:goals){
+            Log.d("IN UP: ", g.getDescription());
             goalList.append("- " + g.getType() + ": " + g.getDescription()+"\n");
         }
         goalList.append("- more...");
