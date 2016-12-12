@@ -300,7 +300,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editText_ur_sodium"
+                android:id="@+id/advMaxProtNum"
                 android:text="0" />
         </TableRow>
 

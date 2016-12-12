@@ -1,5 +1,7 @@
 package com.example.alex.fitbytes;
 
+import java.util.Random;
+
 /**
  * Created by ger on 11/19/16.
  */
@@ -10,11 +12,10 @@ public class Exercise extends Category{
             "sit ups",
             "jumping jacks",
             "squats",
-            "pullups",
-            "running",
+            "pull ups",
+            "jogging",
             "walking",
-            "crunches",
-            "plank"
+            "crunches"
     };
     public Exercise(){
         this.setOption(getDefault());
@@ -25,18 +26,27 @@ public class Exercise extends Category{
     protected String getDefault(){
         String option = DEFAULT_OPTIONS[(int)(Math.random()*DEFAULT_OPTIONS.length-1)];
         String optionDescription;
+        Random random = new Random();
         switch(option){
             case "walking":
-                optionDescription = "Take a walk for 20 minutes";
+                int minutes = 0;
+                do{
+                    minutes = random.nextInt(20);
+                }while(minutes % 5 == 0 && minutes >= 10);
+                optionDescription = String.format("Take a walk for %s minutes", minutes);
                 break;
-            case "running":
-                optionDescription = "Run for 2 miles";
-                break;
-            case "plank":
-                optionDescription = "Plank for 5 minutes";
+            case "jogging":
+                do{
+                    minutes = random.nextInt(20);
+                }while(minutes % 5 == 0 && minutes >= 10);
+                optionDescription = String.format("Jog for %s minutes", minutes);
                 break;
             default:
-                optionDescription = "Do " + (int)(Math.random()*30+10)+ " " + option;
+                int reps = 0;
+                do{
+                    reps = random.nextInt(40);
+                }while(reps % 5 == 0 && reps >= 20);
+                optionDescription = String.format("Finish %s reps of %s", reps, option);
                 break;
         }
         return optionDescription;

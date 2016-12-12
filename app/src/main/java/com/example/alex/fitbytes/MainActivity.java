@@ -1,8 +1,10 @@
 package com.example.alex.fitbytes;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -19,6 +22,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String TOGGLE_NOTIFICATION = "yes";
+    public static final String NOTIFICATION = "no";
     private DBHandler db = new DBHandler(this);
 
     @Override
@@ -36,7 +41,13 @@ public class MainActivity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
         int date = Integer.parseInt(formattedDate);
         int oldDate = db.getCurrentDate();
-        if (date != oldDate){
+        checkIfNotificationIsHidden();
+        /*if(!notificationCanBeDisplayed){
+            ((MenuItem) findViewById(R.id.action_settings)).setTitle("Turn Notifications On");
+        } else {
+            ((MenuItem) findViewById(R.id.action_settings)).setTitle("Turn Notifications Off");
+        }*/
+        /*if (date != oldDate && notificationCanBeDisplayed){
             // Put notifications here
             List<Goal> list = db.getExpiredGoal(oldDate);
 
@@ -57,45 +68,47 @@ public class MainActivity extends AppCompatActivity {
             mBuilder.setSmallIcon(R.mipmap.bread_notif);
             mBuilder.setContentTitle("FitBytes");
             mBuilder.setContentText("You have a meal today!");
+            if (db.hasMealToday() || db.hasExpiredGoals()) {
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+                mBuilder.setSmallIcon(R.mipmap.bread_notif);
+                mBuilder.setContentTitle("FitBytes");
+                mBuilder.setContentText("You have a something today!");
 
-            Intent resultIntent = new Intent(this, MainActivity.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(MainActivity.class);
+                Intent resultIntent = new Intent(this, UserProfile.class);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                stackBuilder.addParentStack(MainActivity.class);
 
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(resultPendingIntent);
 
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            // notificationID allows you to update the notification later on.
-            int notificationID = 001;
-            mNotificationManager.notify(notificationID, mBuilder.build());
-        }
-        ////////////////////////////////////////////////////////////////////////////////////
+                // notificationID allows you to update the notificationCanBeDisplayed later on.
+                int notificationID = 001;
+                mNotificationManager.notify(notificationID, mBuilder.build());
+            }
 
-        ////////////////////////////////////////////////////////////////////////////////
-        if (db.hasExpiredGoals()) {
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-            mBuilder.setSmallIcon(R.mipmap.bread_notif);
-            mBuilder.setContentTitle("FitBytes");
-            mBuilder.setContentText("Some goal(s) has expired.");
+            List<Goal> list = db.getExpiredGoal(oldDate);
 
-            Intent resultIntent = new Intent(this, FitnessTracker.class);
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(FitnessTracker.class);
+            // THIS FOR LOOP JUST PRINTS OUT THE GOAL
+//            for (Goal g : list){
+//                Log.d("DLKFJL", g.toString());
+//            }
 
-            stackBuilder.addNextIntent(resultIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
+        }*/
+        /*db.removeOldStuff(db.getCurrentDate());
+        db.addCurrentDate(date);
+        db.createUser();
+        getDefaultGoals();*/
 
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        ///////////////////////////////////////////////////////////////////////////////
 
-            // notificationID allows you to update the notification later on.
-            int notificationID_2 = 002;
-            mNotificationManager.notify(notificationID_2, mBuilder.build());
-        }
-        ////////////////////////////////////////////////////////////////////////////////////
+        db.removeOldStuff(db.getCurrentDate());
+        db.addCurrentDate(date);
+        db.createUser();
+        getDefaultGoals();
+
 
         createDefaultRecipes();
     }
@@ -146,15 +159,16 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
+            /*Intent intent = new Intent(this, Settings.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+            startActivity(intent);*/
+            toggleNotifications();
             return true;
         }
-        if (id == R.id.action_clear_database) {
+/*        if (id == R.id.action_clear_database) {
             db.resetDatabase();
             return true;
-        }
+        }*/
         return super.onOptionsItemSelected(item);
     }
 
@@ -177,5 +191,20 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i<10; i++){
             db.addDefaultRecipe(ids[i], names[i]);
         }
+    }
+
+    private static boolean notificationCanBeDisplayed;
+    private void toggleNotifications(){
+        SharedPreferences pref = getSharedPreferences(TOGGLE_NOTIFICATION, Context.MODE_PRIVATE);
+        notificationCanBeDisplayed = !notificationCanBeDisplayed;
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean(NOTIFICATION, notificationCanBeDisplayed);
+        editor.commit();
+        Toast.makeText(this, "Notifications are now turned " + (notificationCanBeDisplayed ? "on" : "off"), Toast.LENGTH_LONG).show();
+    }
+    private void checkIfNotificationIsHidden(){
+        SharedPreferences pref = getSharedPreferences(TOGGLE_NOTIFICATION, Context.MODE_PRIVATE);
+        notificationCanBeDisplayed = pref.getBoolean(NOTIFICATION, true);
+        //Toast.makeText(this, "Loaded " + notificationCanBeDisplayed, Toast.LENGTH_SHORT).show();
     }
 }

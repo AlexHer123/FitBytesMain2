@@ -8,7 +8,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:id="@+id/tableLayout">
-        <TableRow>
+        <TableRow android:layout_width="match_parent">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -76,12 +76,29 @@
         </TableRow>
     </TableLayout>
 
-    <Button
-        android:text="Go Back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/goal_go_back"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+
+        android:paddingLeft="4.0dip"
+        android:paddingTop="5.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingBottom="1.0dip"
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:text="Go Back"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:id="@+id/goal_go_back"
+            android:layout_weight="1.0" />
+
+        <Button
+            android:text="Mark as Complete"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:id="@+id/goal_mark_as_complete"
+            android:layout_alignRight="@id/goal_go_back"
+            android:layout_weight="1.0" />
+    </LinearLayout>
+
 </RelativeLayout>

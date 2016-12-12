@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.view.View;
@@ -23,6 +24,9 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import static android.R.attr.width;
+import static com.example.alex.fitbytes.R.attr.height;
 
 public class FitnessTracker extends MainActivity {
     public static final String IN_PROGRESS = "In Progress";
@@ -42,6 +46,8 @@ public class FitnessTracker extends MainActivity {
     private TabHost host;
     private TabHost.TabSpec currentGoalsTab;
     private TabHost.TabSpec completedGoalsTab;
+    private TabHost.TabSpec expiredGoalsTab;
+    private WindowManager.LayoutParams lp;
 
     private void displayToast(String message) {
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
@@ -57,13 +63,18 @@ public class FitnessTracker extends MainActivity {
 //        getDefaultGoals();
 
         updateGoalAdapters();
-        //Button addButton = buildButton(findViewById(R.id.addGoal));
-        FloatingActionButton floatingAddButton = buildFloatButton(findViewById(R.id.addGoalFloating));
+        Button addButton = buildButton(findViewById(R.id.addGoal));
+        //FloatingActionButton floatingAddButton = buildFloatButton(findViewById(R.id.addGoalFloating));
         displayAdapters();
         goalDB.removeGoals();
 
         host =  (TabHost) findViewById(R.id.tab_host);
         host.setup();
+
+        lp = new WindowManager.LayoutParams();
+
+
+
         currentGoalsTab = host.newTabSpec(IN_PROGRESS);
         currentGoalsTab.setContent(R.id.tab1);
         currentGoalsTab.setIndicator(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
@@ -75,6 +86,7 @@ public class FitnessTracker extends MainActivity {
 
         notification = new NotificationCompat.Builder(this);
         notification.setAutoCancel(true);
+
     }
 
     private void toNotify(View view){
@@ -105,15 +117,20 @@ public class FitnessTracker extends MainActivity {
     private View.OnClickListener buildOnClickListener(View view){
         View.OnClickListener listener = null;
         switch(view.getId()){
-            case R.id.addGoalFloating:
+            case R.id.addGoal:
                 listener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_DeviceDefault_DialogWhenLarge);
+                        final Dialog dialog = new Dialog(FitnessTracker.this);
+                        lp.copyFrom(dialog.getWindow().getAttributes());
+                        lp.width = width;
+                        lp.height = height;
+                        dialog.getWindow().setAttributes(lp);
+
                         dialog.setTitle("Set your goal and deadline");
                         dialog.setContentView(R.layout.goal_add_goal_dialog);
                         dialog.show();
-                        final EditText editText = (EditText) dialog.findViewById(R.id.editText_ur_sodium);
+                        final EditText editText = (EditText) dialog.findViewById(R.id.advMaxProtNum);
                         final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
                         datePicker.setMinDate(System.currentTimeMillis() - 1000);
                         Button cancelButton = (Button) dialog.findViewById(R.id.goal_add_goal_cancel);
@@ -160,7 +177,6 @@ public class FitnessTracker extends MainActivity {
         return listener;
     }
     private void updateTabs(){
-        displayToast("Hello");
         TabHost tabHost = host;
         TextView tv = (TextView) tabHost.getTabWidget().getChildAt(0).findViewById(android.R.id.title);
         tv.setText(String.format("%s (%s)", IN_PROGRESS, goalAdapter.getCount()));
@@ -223,13 +239,17 @@ public class FitnessTracker extends MainActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         final int position = info.position;
         currentGoal = goalAdapter.getItem(position);
-        final Dialog dialog = new Dialog(FitnessTracker.this, android.R.style.Theme_Material_Light_DialogWhenLarge);
+        final Dialog dialog = new Dialog(FitnessTracker.this);
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = width;
+        lp.height = height;
+        dialog.getWindow().setAttributes(lp);
         switch(item.getItemId()) {
             case R.id.edit:
                 dialog.setTitle("Edit your goal and deadline");
                 dialog.setContentView(R.layout.goal_add_goal_dialog);
                 dialog.show();
-                final EditText editText = (EditText) dialog.findViewById(R.id.editText_ur_sodium);
+                final EditText editText = (EditText) dialog.findViewById(R.id.advMaxProtNum);
                 final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
                 editText.setText(currentGoal.getDescription());
                 datePicker.setMinDate(System.currentTimeMillis() - 1000);
@@ -284,7 +304,7 @@ public class FitnessTracker extends MainActivity {
                 currentGoalDescription.setText(currentGoal.getDescription());
                 currentGoalDate.setText(currentGoal.getDateAsString(currentGoal.getDate()));
                 currentGoalDeadline.setText(currentGoal.getDateAsString(currentGoal.getDueDate()));
-                //Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
                 cancelButton = (Button) dialog.findViewById(R.id.goal_go_back);
                 cancelButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -292,7 +312,7 @@ public class FitnessTracker extends MainActivity {
                         dialog.dismiss();
                     }
                 });
-                /*if(!currentGoal.getCompleted()){
+                if(!currentGoal.getCompleted()){
                     completionButton.setOnClickListener(
                             new AdapterView.OnClickListener() {
                                 @Override
@@ -321,7 +341,7 @@ public class FitnessTracker extends MainActivity {
                                 }
                             }
                     );
-                }*/
+                }
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -348,7 +368,7 @@ public class FitnessTracker extends MainActivity {
                 new AdapterView.OnItemClickListener(){
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, final int position, long id){
-                        if(goalsListView == goalsListViewExpired) return;
+                        /*if(goalsListView == goalsListViewExpired) return;
                         currentGoal = (Goal) parent.getItemAtPosition(position);
                         if(!currentGoal.getCompleted()){
                             goalDB.setGoalCompleted(currentGoal, true);
@@ -360,6 +380,60 @@ public class FitnessTracker extends MainActivity {
                             currentGoal.setCompleted(false);
                             goalAdapterCompleted.remove(currentGoal);
                             goalAdapter.add(currentGoal);
+                        }*/
+                        if(goalsListView == goalsListViewExpired) return;
+                        currentGoal = (Goal) parent.getItemAtPosition(position);
+                        final Dialog dialog = new Dialog(FitnessTracker.this);
+                        lp.copyFrom(dialog.getWindow().getAttributes());
+                        lp.width = width;
+                        lp.height = height;
+                        dialog.getWindow().setAttributes(lp);
+                        dialog.setTitle("Details");
+                        dialog.setContentView(R.layout.goal_completion_dialog);
+                        dialog.show();
+                        TextView currentGoalDescription = (TextView) dialog.findViewById(R.id.goal_completion_goal_description);
+                        TextView currentGoalDate = (TextView) dialog.findViewById(R.id.goal_completion_goal_date);
+                        TextView currentGoalDeadline = (TextView) dialog.findViewById(R.id.goal_completion_goal_deadline);
+                        currentGoalDescription.setText(currentGoal.getDescription());
+                        currentGoalDate.setText(currentGoal.getDateAsString(currentGoal.getDate()));
+                        currentGoalDeadline.setText(currentGoal.getDateAsString(currentGoal.getDueDate()));
+                        Button completionButton = (Button) dialog.findViewById(R.id.goal_mark_as_complete);
+                        Button cancelButton = (Button) dialog.findViewById(R.id.goal_go_back);
+                        cancelButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                            }
+                        });
+                        if(!currentGoal.getCompleted()){
+                            completionButton.setOnClickListener(
+                                    new AdapterView.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            goalDB.setGoalCompleted(currentGoal, true);
+                                            currentGoal.setCompleted(true);
+                                            dialog.dismiss();
+                                            displayToast("Goal has been completed");
+                                            updateGoalAdapters();
+                                            updateTabs();
+                                        }
+                                    }
+                            );
+                        } else {
+                            completionButton.setText("Mark as Incomplete");
+                            completionButton.setOnClickListener(
+                                    new AdapterView.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            goalDB.setGoalCompleted(currentGoal, false);
+                                            currentGoal.setCompleted(false);
+                                            dialog.dismiss();
+                                            displayToast("Goal is now incomplete");
+                                            updateGoalAdapters();
+                                            updateTabs();
+                                        }
+                                    }
+                            );
                         }
                         updateGoalAdapters();
                         updateTabs();

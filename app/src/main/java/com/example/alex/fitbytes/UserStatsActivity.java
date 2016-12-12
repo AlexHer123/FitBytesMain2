@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-import java.util.Map;
 
 public class UserStatsActivity extends MainActivity {
 
@@ -91,6 +89,6 @@ public class UserStatsActivity extends MainActivity {
         if(totalMeals != 0)
             return nutrient / totalMeals;
         else
-            return -1;
+            return 0;
     }
 }

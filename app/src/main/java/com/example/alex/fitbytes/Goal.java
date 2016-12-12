@@ -97,4 +97,9 @@ public abstract class Goal {
     public int getID(){
         return id;
     }
+
+    //todo remove. used for testing
+    public void forceExpired(){
+        completed = false;
+    }
 }
