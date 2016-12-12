@@ -2,7 +2,9 @@ package com.example.alex.fitbytes;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.MenuItem;
@@ -16,6 +18,11 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,11 +78,7 @@ public class IngredientSearch extends PantryHandler
     protected void doIngredientSearch(JSONArray ingredientArray) {
         try {
             // Set when no results are found
-            if (ingredientArray.length() > 0) {
-                noResults.setVisibility(View.INVISIBLE);
-            } else {
-                noResults.setVisibility(View.VISIBLE);
-            }
+
 
             // Get the id and name of recipes
             ingredientItems = new ArrayList<>();
@@ -85,6 +88,9 @@ public class IngredientSearch extends PantryHandler
                 IngredientItem tempII = new IngredientItem(ingredientName, 0, "");
                 ingredientItems.add(tempII);
             }
+
+
+
         } catch(JSONException e){
             e.printStackTrace();
         }
@@ -95,6 +101,11 @@ public class IngredientSearch extends PantryHandler
         List<String> allIngredients = new ArrayList<>();
         for (IngredientItem i : ingredientItems) {
             allIngredients.add(i.getName());
+        }
+        if (allIngredients.size() > 0) {
+            noResults.setVisibility(View.INVISIBLE);
+        } else {
+            noResults.setVisibility(View.VISIBLE);
         }
 //        ListView ingredientList = (ListView) findViewById(R.id.pantryList);
         ArrayAdapter<String> ingredientAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allIngredients);
@@ -172,20 +183,76 @@ public class IngredientSearch extends PantryHandler
     }
 
 
+    String upcCode;
+
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
+                 upcCode= intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 // Handle successful scan
                 // TODO look up ingredient by upc and add it to pantry
-                Toast.makeText( getApplicationContext(), "Barcode contents = " + contents + ". Barcode type = " + format, Toast.LENGTH_LONG).show();
+                new CallMashapeGetUPCAsync().execute(upcCode);
+
+
             } else if (resultCode == RESULT_CANCELED) {
                 // Handle cancel
                 Toast.makeText( getApplicationContext(), "result canceled", Toast.LENGTH_LONG).show();
             }
         }
     }
+    private String mashapeKey = "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg";
 
+    protected class CallMashapeGetUPCAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        protected HttpResponse<JsonNode> doInBackground(String... msg) {
+
+            HttpResponse<JsonNode> request = null;
+            String search = msg[0].replaceAll("\\s", "+");
+
+            try {
+                request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/products/upc/" + upcCode)
+                        .header("X-Mashape-Key", mashapeKey)
+                        .header("Accept", "application/json")
+                        .asJson();
+            } catch (UnirestException e) {
+                e.printStackTrace();
+            }
+
+            return request;
+        }
+
+        protected void onProgressUpdate(Integer... integers) {
+        }
+
+        protected void onPostExecute(HttpResponse<JsonNode> response) {
+
+            // Get response as object of objects
+            JSONObject obj = response.getBody().getObject();
+            upcIngredientInfo(obj);
+        }
+    }
+    String ingredientName;
+    @Override
+    protected void upcIngredientInfo(JSONObject obj)
+    {
+        try {
+           ingredientName = obj.getString("title");
+
+            IngredientItem upcIngredient = new IngredientItem(ingredientName, 0, "None");
+            ingredientItems = new ArrayList<>();
+            ingredientItems.add(upcIngredient);
+            updateIngredientList();
+
+
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

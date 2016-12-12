@@ -8,7 +8,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.Map;
 
-public class UserStatsActivity extends AppCompatActivity {
+public class UserStatsActivity extends MainActivity {
 
     int lifetimeCalories, lifetimeFat, lifetimeCarbs, lifetimeSugar, lifetimeChol, lifetimeSodium, lifetimeProtein;
     int totalMeals;
@@ -50,19 +50,36 @@ public class UserStatsActivity extends AppCompatActivity {
         TextView lifeSugarText = (TextView)findViewById(R.id.userStatsSugarTotal);
         lifeSugarText.setText("" + lifetimeSugar);
 
-        //// TODO: add text feilds to layout
-//        TextView lifeCholText = (TextView)findViewById(R.id.userStatsCholTotal);
-//        lifeCholText.setText("" + lifeCholText);
-//
-//        TextView lifeSodiumText = (TextView)findViewById(R.id.userStatsSodiumTotal);
-//        lifeSodiumText.setText("" + lifetimeSodium);
-//
-//        TextView lifeProteinText = (TextView)findViewById(R.id.userStatsProteinTotal);
-//        lifeProteinText.setText("" + lifetimeProtein);
+        TextView lifeCholText = (TextView)findViewById(R.id.userStatsCholTotal);
+        lifeCholText.setText("" + lifetimeChol);
+
+        TextView lifeSodiumText = (TextView)findViewById(R.id.userStatsSodiumTotal);
+        lifeSodiumText.setText("" + lifetimeSodium);
+
+        TextView lifeProteinText = (TextView)findViewById(R.id.userStatsProteinTotal);
+        lifeProteinText.setText("" + lifetimeProtein);
 
 
         TextView mealCal = (TextView)findViewById(R.id.userStatCalPerMeal);
         mealCal.setText("" + perMeal(lifetimeCalories));
+
+        TextView mealFat = (TextView)findViewById(R.id.userStatsFatPerMeal);
+        mealFat.setText("" + perMeal(lifetimeFat));
+
+        TextView mealCarbs = (TextView)findViewById(R.id.userStatsCarbsPerMeal);
+        mealCarbs.setText("" + perMeal(lifetimeCarbs));
+
+        TextView mealSugar = (TextView)findViewById(R.id.userStatsSugarPerMeal);
+        mealSugar.setText("" + perMeal(lifetimeSugar));
+
+        TextView mealChol = (TextView)findViewById(R.id.userStatsCholPerMeal);
+        mealChol.setText("" + perMeal(lifetimeChol));
+
+        TextView mealSodium = (TextView)findViewById(R.id.userStatsSodiumPerMeal);
+        mealSodium.setText("" + perMeal(lifetimeSodium));
+
+        TextView mealProtein = (TextView)findViewById(R.id.userStatsProteinPerMeal);
+        mealProtein.setText("" + perMeal(lifetimeProtein));
 }
 
     /**
