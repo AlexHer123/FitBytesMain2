@@ -504,6 +504,18 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
+    public boolean hasMealToday(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        int today = getCurrentDate();
+
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + today + "";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if(cursor.moveToFirst())
+            return false;
+        else return true;
+    }
+
     public boolean updateMealPlan(int oldDate, int newDate, MealPlanItem mpi) {
         // Check if the new date is already in the database
         if (oldDate != newDate) {
