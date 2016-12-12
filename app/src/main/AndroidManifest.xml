@@ -18,6 +18,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MealPlan"
+            android:label="Meal Planner"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FitnessTracker"
@@ -25,26 +26,33 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".IngredientSearch"
+            android:label="Pantry"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Recipes"
+            android:label="Recipe"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".UpcomingPlans"
+            android:label="Meal Planner"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserInfo"
+            android:label="Profile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserStatsActivity"
+            android:label="Profile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".CalendarPicker"
+            android:label="Meal Planner"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserProfile"
+            android:label="FitBytes"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,9 +62,11 @@
         </activity>
         <activity
             android:name=".RecipeInfo"
+            android:label="Recipe"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Pantry"
+            android:label="Pantry"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <!--
@@ -74,7 +84,8 @@
             android:label="@string/title_activity_settings" />
         <!-- <activity android:name=".BarcodeScanner" /> -->
         <!-- <activity android:name=".RecipeHandler" /> -->
-        <activity android:name=".UserRecipe"></activity>
+        <activity android:name=".UserRecipe"
+            android:label="Recipe"/>
     </application>
 
 </manifest>
