@@ -88,30 +88,6 @@ public class MainActivity extends AppCompatActivity {
         getDefaultGoals();
 
 
-
-        ////////////////////////////////////////////////////////////////////////////////
-//        if (db.hasExpiredGoals()) {
-//            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-//            mBuilder.setSmallIcon(R.mipmap.bread_notif);
-//            mBuilder.setContentTitle("FitBytes");
-//            mBuilder.setContentText("Some goal(s) has expired.");
-//
-//            Intent resultIntent = new Intent(this, FitnessTracker.class);
-//            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//            stackBuilder.addParentStack(FitnessTracker.class);
-//
-//            stackBuilder.addNextIntent(resultIntent);
-//            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//            mBuilder.setContentIntent(resultPendingIntent);
-//
-//            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            // notificationID allows you to update the notification later on.
-//            int notificationID_2 = 002;
-//            mNotificationManager.notify(notificationID_2, mBuilder.build());
-//        }
-        ////////////////////////////////////////////////////////////////////////////////////
-
         createDefaultRecipes();
     }
 
