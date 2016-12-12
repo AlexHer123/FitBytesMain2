@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NotificationCompat;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -136,7 +135,7 @@ public class FitnessTracker extends MainActivity {
                         dialog.setTitle("Set your goal and deadline");
                         dialog.setContentView(R.layout.goal_add_goal_dialog);
                         dialog.show();
-                        final EditText editText = (EditText) dialog.findViewById(R.id.editText_ur_sodium);
+                        final EditText editText = (EditText) dialog.findViewById(R.id.advMaxProtNum);
                         final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
                         datePicker.setMinDate(System.currentTimeMillis() - 1000);
                         Button cancelButton = (Button) dialog.findViewById(R.id.goal_add_goal_cancel);
@@ -262,7 +261,7 @@ public class FitnessTracker extends MainActivity {
                 dialog.setTitle("Edit your goal and deadline");
                 dialog.setContentView(R.layout.goal_add_goal_dialog);
                 dialog.show();
-                final EditText editText = (EditText) dialog.findViewById(R.id.editText_ur_sodium);
+                final EditText editText = (EditText) dialog.findViewById(R.id.advMaxProtNum);
                 final DatePicker datePicker = (DatePicker) dialog.findViewById(R.id.datePicker);
                 editText.setText(currentGoal.getDescription());
                 datePicker.setMinDate(System.currentTimeMillis() - 1000);

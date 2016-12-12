@@ -2,7 +2,6 @@ package com.example.alex.fitbytes;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +29,7 @@ public class UserRecipe extends MainActivity {
                 EditText carb = (EditText)findViewById(R.id.editText_ur_carbs);
                 EditText sugar = (EditText)findViewById(R.id.editText_ur_sugar);
                 EditText chol = (EditText)findViewById(R.id.editText_ur_cholesterol);
-                EditText sodium = (EditText)findViewById(R.id.editText_ur_sodium);
+                EditText sodium = (EditText)findViewById(R.id.advMaxProtNum);
                 EditText protein = (EditText)findViewById(R.id.editText_ur_protein);
                 EditText ingredient = (EditText)findViewById(R.id.editText_ur_ingredients);
                 EditText direction = (EditText)findViewById(R.id.editText_ur_directions);

@@ -74,6 +74,123 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
 
         if (!fromMP) cancelButton.setVisibility(View.INVISIBLE);
         else createButton.setVisibility(View.INVISIBLE);
+
+        Button advButton = (Button) findViewById(R.id.advanced_search_button);
+        advButton.setOnClickListener(new AdapterView.OnClickListener() {
+            //Advanced Search Pop up
+            @Override
+            public void onClick(View v) {
+                dialog = new Dialog(Recipes.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.activity_advpopup);
+                dialog.show();
+
+                final TextView searchText = (TextView) dialog.findViewById(R.id.advSearch);
+                final TextView maxCalText = (TextView) dialog.findViewById(R.id.advMaxCalNum);
+                final TextView minCalText = (TextView) dialog.findViewById(R.id.advMinCalNum);
+                final TextView maxCarbText = (TextView) dialog.findViewById(R.id.advMaxCarbNum);
+                final TextView minCarbText = (TextView) dialog.findViewById(R.id.advMinCarbNum);
+                final TextView maxFatText = (TextView) dialog.findViewById(R.id.advMaxFatNum);
+                final TextView minFatText = (TextView) dialog.findViewById(R.id.advMinFatNum);
+                final TextView maxProtText = (TextView) dialog.findViewById(R.id.advMaxProtNum);
+                final TextView minProtText = (TextView) dialog.findViewById(R.id.advMinProtNum);
+
+                Button searchButton = (Button) dialog.findViewById(R.id.advpopsearch);
+                searchButton.setOnClickListener(new AdapterView.OnClickListener() {
+                    //Advanced Search Button handling
+                    @Override
+                    public void onClick(View v) {
+                        //Set protected variables here
+                        //Query
+                        if(searchText.getText().toString().isEmpty())
+                        {
+                            advQuery = "";
+                        }
+                        else {
+                            advQuery += searchText.getText().toString();
+                        }
+
+                        //MaxCalories
+                        if(maxCalText.getText().toString().isEmpty())
+                        {
+                            advCalMax = "";
+                        }
+                        else {
+                            advCalMax += maxCalText.getText().toString();
+                        }
+
+                        //MaxCarbs
+                        if(maxCarbText.getText().toString().isEmpty())
+                        {
+                            advCarbMax = "";
+                        }
+                        else {
+                            advCarbMax += maxCarbText.getText().toString();
+                        }
+
+                        //MaxFat
+                        if(maxFatText.getText().toString().isEmpty())
+                        {
+                            advFatMax = "";
+                        }
+                        else {
+                            advFatMax += maxFatText.getText().toString();
+                        }
+
+                        //MaxProtein
+                        if(maxProtText.getText().toString().isEmpty())
+                        {
+                            advProtMax = "";
+                        }
+                        else {
+                            advProtMax += maxProtText.getText().toString();
+                        }
+
+                        //MinCalories
+                        if(minCalText.getText().toString().isEmpty())
+                        {
+                            advCalMin = "";
+                        }
+                        else {
+                            advCalMin += minCalText.getText().toString();
+                        }
+
+                        //MinCarbs
+                        if(minCarbText.getText().toString().isEmpty())
+                        {
+                            advCarbMin = "";
+                        }
+                        else {
+                            advCarbMin += minCarbText.getText().toString();
+                        }
+
+                        //MinFat
+                        if(minFatText.getText().toString().isEmpty())
+                        {
+                            advFatMin = "";
+                        }
+                        else {
+                            advFatMin += minFatText.getText().toString();
+                        }
+
+                        //MinProtein
+                        if(minProtText.getText().toString().isEmpty())
+                        {
+                            advProtMin = "";
+                        }
+                        else {
+                            advProtMin += minProtText.getText().toString();
+                        }
+
+                        dialog.dismiss();
+                        queryString = searchText.getText().toString();
+                        new CallMashapeGetAdvRecipeAsync().execute(searchText.getText().toString());
+                        }
+                    }
+                );
+
+            }
+        });
     }
 
     /*Using this to pass in the description via a different JSON obj via Summarize Recipe*/
@@ -288,8 +405,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
                 });
                 if (!fromMP) recipeSelect.setVisibility(View.INVISIBLE);
             }
-
-
         });
     }
 
