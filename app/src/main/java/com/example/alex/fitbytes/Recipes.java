@@ -4,19 +4,16 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 import org.json.JSONException;
@@ -26,15 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Recipes extends RecipeHandler implements SearchView.OnQueryTextListener {
-    //    private String[] recipes = {"PB&J", "Ramen", "Cereal", "Grilled Cheese", "Spaghetti"};
-    //private List<String> recipes = new ArrayList<>();
     private int USER_RECIPE_MODIFIER = 1000000;
 
     private DBHandler db = new DBHandler(this);
     private SearchView recipeSearchView;
     private List<RecipeItem> recipeItems = new ArrayList<>();
     private List<String> recipeList = new ArrayList<>();
-//    private List<RecipeItem> uri = new ArrayList<>();
     private Boolean fromMP = false;
     private int selectedRecipeID;
     private int selectedRecipeCalories = 0;
@@ -299,33 +293,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
 
         dialog.show();
     }
-//    private class RecipeItem {
-//        private int recipeID;
-//        private String recipeName;
-//        private int type; // 0 = Default, 1 = user, 2 = API
-//
-//        public int getType() {
-//            return type;
-//        }
-//
-//        public void setType(int type) {
-//            this.type = type;
-//        }
-//
-//        public RecipeItem(int id, String name, int t) {
-//            recipeID = id;
-//            recipeName = name;
-//            type = t;
-//        }
-//
-//        public int getRecipeID() {
-//            return recipeID;
-//        }
-//
-//        public String getName() {
-//            return recipeName;
-//        }
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -350,9 +317,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
     private void createRecipeList() {
         /*For API recipe items*/
         final List<String> allRecipes = new ArrayList<>();
-//        for (RecipeItem u : uri){
-//            allRecipes.add(u.getName());
-//        }
         for (RecipeItem r : recipeItems) {
             allRecipes.add(r.getName());
         }
@@ -362,7 +326,6 @@ public class Recipes extends RecipeHandler implements SearchView.OnQueryTextList
         } else {
             noResults.setVisibility(View.VISIBLE);
         }
-//        final List<String> userRecipes = new ArrayList<>();
         ListView recipeDropdown = (ListView) findViewById(R.id.recipe_list);
 
         ArrayAdapter<String> recipeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allRecipes);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,18 +216,6 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    /*public Goal getGoal(Goal.Type type){
-        String selectQuery = String.format(
-                "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_TYPE, type
-        );
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        if(cursor == null){
-
-        }
-    }*/
-
     public Goal getGoal(String name) {
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'", TABLE_FITNESS_TRACKER, GOAL_DESCRIPTION, name
@@ -352,6 +339,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return null;
     }
+
     public Goal getWeeklyGoal(int dur){
         String selectQuery = String.format(
                 "SELECT * FROM %s WHERE %s = '%s'",
@@ -594,10 +582,10 @@ public class DBHandler extends SQLiteOpenHelper {
         }
     }
 
-    public boolean hasMealToday(int date) {
+    public boolean hasMealToday() {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + date + "";
+        String selectQuery = "SELECT * FROM " + TABLE_MEALPLAN + " WHERE " + MP_col_2_DATE + " = " + getCurrentDate() + "";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst())
@@ -715,18 +703,6 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return false;
     }
-
-//    public String getRecipe(String name) {
-//        // Search for recipe
-//        String selectQuery = "SELECT * FROM " + TABLE_RECIPES + " WHERE " + TR_col_2_NAME + " = '" + name + "'";
-//        SQLiteDatabase db = this.getWritableDatabase();
-//        Cursor cursor = db.rawQuery(selectQuery, null);
-//
-//        if (cursor.moveToFirst()) {
-//            return cursor.getString(1);
-//        }
-//        return "NONE";
-//    }
 
     public List<RecipeItem> getDefaultRecipes() {
         List<RecipeItem> recipeList = new ArrayList();

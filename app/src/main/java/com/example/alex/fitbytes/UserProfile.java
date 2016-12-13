@@ -3,8 +3,6 @@ package com.example.alex.fitbytes;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -42,7 +40,6 @@ public class UserProfile extends MainActivity {
         goalList.setText("");
         List<Goal> goals = db.getActiveGoals(db.getCurrentDate());
         for (Goal g:goals){
-            Log.d("IN UP: ", g.getDescription());
             goalList.append("- " + g.getType() + ": " + g.getDescription()+"\n");
         }
         goalList.append("- more...");
@@ -83,7 +80,6 @@ public class UserProfile extends MainActivity {
             // Set the BMI values
             if (resultCode == Activity.RESULT_OK) {
                 db.updateUser(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
-//                user = new UserItem(intent.getStringExtra("name"), intent.getIntExtra("height", 0), intent.getIntExtra("weight", 0), intent.getDoubleExtra("BMI", 0));
                 user = db.getUser();
                 fillOutInformation();
             }
@@ -140,7 +136,6 @@ public class UserProfile extends MainActivity {
             Date date = MDYFormat.parse(currentDate);
             MDYFormat = new SimpleDateFormat("MMM d");
             currentDate = MDYFormat.format(date);
-//            stringDates.add(thisDate + " : " + p.getSize() + " Meal(s) planned.");
         } catch (ParseException e){ e.printStackTrace(); }
         return currentDate;
     }

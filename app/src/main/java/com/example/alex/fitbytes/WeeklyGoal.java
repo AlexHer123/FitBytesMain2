@@ -46,7 +46,7 @@ public class WeeklyGoal extends Goal {
         setType(Type.WEEKLY);
     }
     public String toString(){
-        return "Weekly: " + getDescription() + (getCompleted()? " (Done)" : "");
+        return "Weekly: " + getDescription() + (getCompleted()? " (Done)" : (isExpired()? " (Overdue)" : ""));
     }
     private int getUpdatedDate(){
         Calendar c = Calendar.getInstance();

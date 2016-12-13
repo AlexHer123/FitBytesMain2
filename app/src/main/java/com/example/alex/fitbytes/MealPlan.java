@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
@@ -48,9 +47,7 @@ public class MealPlan extends MainActivity {
             setSelectedDate(oldDate);
             writeDateTextView(convertDates(mpItem));
             selectedRecipeID = mpItem.getRecipeID();
-//            selectedRecipeName = mpItem.getRecipeName();
             mpItem.printContents();
-//            writeRecipeTextView(selectedRecipeName);
             setEditVisibility(View.VISIBLE);
         }
 
@@ -172,7 +169,6 @@ public class MealPlan extends MainActivity {
             if(resultCode == Activity.RESULT_OK){
                 selectedRecipeID = intent.getIntExtra("recipeID", -1);
                 selectedRecipeName = intent.getStringExtra("recipeName");
-//                mpItem.setRecipe(selectedRecipeID, selectedRecipeName);
                 boolean added = mpItem.addRecipe(selectedRecipeID,selectedRecipeName);
                 if (!added) displayPopup("Cannot add meal.");
                 updateRecipeSpinner();

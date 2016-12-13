@@ -23,7 +23,7 @@ import java.util.ArrayList;
 
 public abstract class RecipeHandler extends MainActivity {
 
-    private String mashapeKey = "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg";
+    private String mashapeKey = "INSERT MASHAPE KEY HERE";
     private int searchAmount = 100;
     protected int selectedRecipeID;
     protected String selectedRecipeName;
@@ -155,7 +155,7 @@ public abstract class RecipeHandler extends MainActivity {
             String result = buildAdvQueryString(search);
             try {
                 request = Unirest.get(result)
-                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
+                        .header("X-Mashape-Key", mashapeKey)
                         .header("Accept", "application/json")
                         .asJson();
             } catch (UnirestException e) {
@@ -213,7 +213,7 @@ public abstract class RecipeHandler extends MainActivity {
             try {
                 //Search request for 'Get Recipe Information' method of api
                 request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/" + selectedRecipeID + "/information?includeNutrition=true")
-                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
+                        .header("X-Mashape-Key", mashapeKey)
                         .header("Accept", "application/json")
                         .asJson();
             } catch (UnirestException e) {
@@ -253,7 +253,7 @@ public abstract class RecipeHandler extends MainActivity {
             try {
                 //Search request for 'Summarize Recipe' method of api
                 request = Unirest.get("https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/"+selectedRecipeID+"/summary")
-                        .header("X-Mashape-Key", "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg")
+                        .header("X-Mashape-Key", mashapeKey)
                         .header("Accept", "application/json")
                         .asJson();
             } catch (UnirestException e) {

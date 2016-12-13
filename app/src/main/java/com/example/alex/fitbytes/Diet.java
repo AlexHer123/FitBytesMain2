@@ -20,7 +20,7 @@ public class Diet extends Category {
         String option = DEFAULT_OPTIONS[(int)(Math.random()*DEFAULT_OPTIONS.length-1)];
         String optionDescription;
         switch(option){
-            case "meal":
+            case "meal plan":
                 optionDescription = String.format("Create a %s", option);
                 break;
             case "calories":

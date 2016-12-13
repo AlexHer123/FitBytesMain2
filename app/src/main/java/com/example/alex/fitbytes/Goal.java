@@ -85,10 +85,15 @@ public abstract class Goal {
 //        String s = String.format("%4s/%2s/%2s", arr[0], arr[1]+1, arr[2]);
         return null;
     }
+
     public boolean canMarkForDelete(){
         return (dueDate < date) && completed;
     }
     public boolean isExpired(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+        String formattedDate = df.format(c.getTime());
+        int newDate = Integer.parseInt(formattedDate);
         return (dueDate < date) && !completed;
     }
     public void setID(int id){

@@ -1,10 +1,7 @@
 package com.example.alex.fitbytes;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -134,100 +131,10 @@ public class RecipeInfo extends RecipeHandler {
                 ingItems.add(item);
             }
 
-            fillInfoHelper(obj.getString("title"),(int) caloriesObj.getDouble("amount"), (int) fatObj.getDouble("amount"),(int) carbObj.getDouble("amount"),(int) sugarObj.getDouble("amount"),(int) cholObj.getDouble("amount"),(int) sodiumObj.getDouble("amount"),(int) proteinObj.getDouble("amount"),(int) obj.getDouble("readyInMinutes"),(int) obj.getDouble("servings"),obj.getString("instructions"), ingItems, obj.getString("image"));
-//
-//            selectedRecipeCalories = (int) caloriesObj.getDouble("amount");
-//            selectedRecipeFat = (int) fatObj.getDouble("amount");
-//            selectedRecipeCarbs = (int) carbObj.getDouble("amount");
-//            selectedRecipeSugar = (int) sugarObj.getDouble("amount");
-//            selectedRecipeChol = (int) cholObj.getDouble("amount");
-//            selectedRecipeSodium = (int) sodiumObj.getDouble("amount");
-//            selectedRecipeProtein = (int) proteinObj.getDouble("amount");
+            fillInfoHelper(obj.getString("title"),(int) caloriesObj.getDouble("amount"), (int) fatObj.getDouble("amount"),(int) carbObj.getDouble("amount"),
+                    (int) sugarObj.getDouble("amount"),(int) cholObj.getDouble("amount"),(int) sodiumObj.getDouble("amount"),(int) proteinObj.getDouble("amount"),
+                    (int) obj.getDouble("readyInMinutes"),(int) obj.getDouble("servings"),obj.getString("instructions"), ingItems, obj.getString("image"));
 
-//            selectedRecipeReadyTime = (int) obj.getDouble("readyInMinutes");
-//            selectedRecipeServings = (int) obj.getDouble("servings");
-//            selectedRecipeInstructions = obj.getString("instructions");
-//            selectedRecipeName = obj.getString("title");
-
-//            String imageURL = obj.getString("image");
-            /*Goes through JSON array to get each ingredient's name, value, and measurement which is contained in the originalString of each ingredient JSON object*/
-
-//
-//            List<String> ingredientNames = new ArrayList<>();
-//
-//            for(ingItem i: ingItems)
-//            {
-//                ingredientNames.add(i.getFullName());
-//            }
-//
-//            ListView ingredientsList = (ListView) findViewById(R.id.ingredientList);
-//            ArrayAdapter<String> ingAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ingredientNames)
-//            {
-//                @Override
-//                public View getView(int position, View convertView, ViewGroup parent){
-//                    // Get the current item from ListView
-//                    View view = super.getView(position,convertView,parent);
-//                    if(position %2 == 1)
-//                    {
-//                        // Set a background color for ListView regular row/item
-//                        view.setBackgroundColor(Color.parseColor("#3F51B5"));
-//                    }
-//                    else
-//                    {
-//                        // Set the background color for alternate row/item
-//                        view.setBackgroundColor(Color.parseColor("#303F9F"));
-//                    }
-//                    return view;
-//                }
-//            };
-//            ingredientsList.setAdapter(ingAdapter);
-//
-//            /*Picasso is a library for loading images and makes it easy to load images into ImageViews*/
-//            ImageView recipeImage = (ImageView) findViewById(R.id.imageView);
-//            Picasso.with(RecipeInfo.this).load(imageURL).resize(800,800).centerInside().into(recipeImage);
-//
-//            TextView recipeName = (TextView)findViewById(R.id.mp_recipe_name);
-//            recipeName.setText(selectedRecipeName);
-//
-//            TextView servingsText = (TextView) findViewById(R.id.recipe_servings_text);
-//            servingsText.setText("Servings: "+selectedRecipeServings);
-//
-//            TextView readyInText = (TextView) findViewById(R.id.recipe_ready_text);
-//            int hours = selectedRecipeReadyTime / 60;
-//            int minutes = selectedRecipeReadyTime % 60;
-//            if (hours <= 0)
-//            {
-//                readyInText.setText("Ready in: "+minutes+" min");
-//            }
-//            else
-//            {
-//                readyInText.setText("Ready in: "+hours+" hour(s) "+minutes+" min");
-//            }
-//
-//            TextView mealCalText = (TextView) findViewById(R.id.recipe_calorie_text);
-//            mealCalText.setText("Calories: "+selectedRecipeCalories);
-//
-//            TextView fatText = (TextView) findViewById(R.id.recipe_fat_text);
-//            fatText.setText("Fat: "+selectedRecipeFat+"g");
-//
-//            TextView carbText = (TextView) findViewById(R.id.recipe_carb_text);
-//            carbText.setText("Carbs: "+selectedRecipeCarbs+"g");
-//
-//            TextView sugarText = (TextView) findViewById(R.id.recipe_sugar_text);
-//            sugarText.setText("Sugar: "+selectedRecipeSugar+"g");
-//
-//            TextView cholText = (TextView) findViewById(R.id.recipe_chol_text);
-//            cholText.setText("Cholesterol: "+selectedRecipeChol+"mg");
-//
-//            TextView sodiumText = (TextView) findViewById(R.id.recipe_sodium_text);
-//            sodiumText.setText("Sodium: "+selectedRecipeSodium+"mg");
-//
-//            TextView proteinText = (TextView) findViewById(R.id.recipe_protein_text);
-//            proteinText.setText("Protein: "+selectedRecipeProtein+"g");
-//
-//            TextView mealInstructText = (TextView) findViewById(R.id.recipe_directions_text);
-//            selectedRecipeInstructions = selectedRecipeInstructions.replaceAll("\\s{2,}", "\n");
-//            mealInstructText.setText(handleStringNull(selectedRecipeInstructions));
 
         } catch (JSONException e) {
             e.printStackTrace();

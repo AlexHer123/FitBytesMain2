@@ -2,7 +2,6 @@ package com.example.alex.fitbytes;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -201,7 +200,7 @@ public class IngredientSearch extends PantryHandler
             }
         }
     }
-    private String mashapeKey = "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg";
+    private String mashapeKey = "INSERT MASHAPE KEY HERE";
 
     protected class CallMashapeGetUPCAsync extends AsyncTask<String, Integer, HttpResponse<JsonNode>> {
 

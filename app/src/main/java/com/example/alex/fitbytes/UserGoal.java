@@ -21,5 +21,7 @@ public class UserGoal extends Goal {
     public String getDescription() {
         return super.getDescription();
     }
-
+    public String toString() {
+        return getDescription() + (getCompleted() ? " (Done)" : (isExpired() ? " (Overdue)" : ""));
+    }
 }

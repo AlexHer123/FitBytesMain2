@@ -208,12 +208,7 @@ public class FitnessTracker extends MainActivity {
         ((ListView) findViewById(R.id.current_goals)).setAdapter(goalAdapter);
         ((ListView) findViewById(R.id.completed_goals)).setAdapter(goalAdapterCompleted);
     }
-    /*private void getDefaultGoals(){
-        if(goalDB.getAllGoals().isEmpty()){
-            Goal[] g = {new DailyGoal(), new WeeklyGoal()};
-            for(Goal goal : g) goalDB.addGoal(goal);
-        }
-    }*/
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

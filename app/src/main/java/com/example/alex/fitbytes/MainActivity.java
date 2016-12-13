@@ -1,6 +1,5 @@
 package com.example.alex.fitbytes;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -10,7 +9,6 @@ import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.content.Intent;
@@ -42,37 +40,19 @@ public class MainActivity extends AppCompatActivity {
         int date = Integer.parseInt(formattedDate);
         int oldDate = db.getCurrentDate();
         checkIfNotificationIsHidden();
-        /*if(!notificationCanBeDisplayed){
-            ((MenuItem) findViewById(R.id.action_settings)).setTitle("Turn Notifications On");
-        } else {
-            ((MenuItem) findViewById(R.id.action_settings)).setTitle("Turn Notifications Off");
-        }*/
-        /*if (date != oldDate && notificationCanBeDisplayed){
-            // Put notifications here
-            List<Goal> list = db.getExpiredGoal(oldDate);
 
-            // THIS FOR LOOP JUST PRINTS OUT THE GOAL
-//            for (Goal g : list){
-//                Log.d("DLKFJL", g.toString());
-//            }
+        if (date != oldDate && notificationCanBeDisplayed){
+            List<Goal> list = db.getExpiredGoal(oldDate);
             getDefaultGoals();
         }
-        db.removeOldStuff(db.getCurrentDate());
-        db.addCurrentDate(date);
-        db.createUser();
 
 
-        ////////////////////////////////////////////////////////////////////////////////
         if (db.hasMealToday()) {
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
-            mBuilder.setSmallIcon(R.mipmap.bread_notif);
-            mBuilder.setContentTitle("FitBytes");
-            mBuilder.setContentText("You have a meal today!");
             if (db.hasMealToday() || db.hasExpiredGoals()) {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
                 mBuilder.setSmallIcon(R.mipmap.bread_notif);
                 mBuilder.setContentTitle("FitBytes");
-                mBuilder.setContentText("You have a something today!");
+                mBuilder.setContentText("You have an upcoming meal today!");
 
                 Intent resultIntent = new Intent(this, UserProfile.class);
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
@@ -91,26 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
             List<Goal> list = db.getExpiredGoal(oldDate);
 
-            // THIS FOR LOOP JUST PRINTS OUT THE GOAL
-//            for (Goal g : list){
-//                Log.d("DLKFJL", g.toString());
-//            }
+        }
 
-        }*/
-        /*db.removeOldStuff(db.getCurrentDate());
-        db.addCurrentDate(date);
-        db.createUser();
-        getDefaultGoals();*/
-
-        ///////////////////////////////////////////////////////////////////////////////
-
-        db.removeOldStuff(db.getCurrentDate());
-        db.addCurrentDate(date);
-        db.createUser();
-        getDefaultGoals();
-
-
-        createDefaultRecipes();
+        if (date!=oldDate) {
+            db.removeOldStuff(db.getCurrentDate());
+            db.addCurrentDate(date);
+            db.createUser();
+            getDefaultGoals();
+            createDefaultRecipes();
+        }
     }
 
     @Override
@@ -165,19 +134,12 @@ public class MainActivity extends AppCompatActivity {
             toggleNotifications();
             return true;
         }
-/*        if (id == R.id.action_clear_database) {
-            db.resetDatabase();
-            return true;
-        }*/
         return super.onOptionsItemSelected(item);
     }
 
     private void getDefaultGoals(){
         int tempDate = db.getCurrentDate()-100;
-//        Goal daily = db.getDailyGoal(tempDate);
-//        if (daily == null){
-            db.addGoal(new DailyGoal());
-//        }
+        db.addGoal(new DailyGoal());
 
         Goal weekly = db.getWeeklyGoal(tempDate);
         if (weekly == null){
@@ -205,6 +167,5 @@ public class MainActivity extends AppCompatActivity {
     private void checkIfNotificationIsHidden(){
         SharedPreferences pref = getSharedPreferences(TOGGLE_NOTIFICATION, Context.MODE_PRIVATE);
         notificationCanBeDisplayed = pref.getBoolean(NOTIFICATION, true);
-        //Toast.makeText(this, "Loaded " + notificationCanBeDisplayed, Toast.LENGTH_SHORT).show();
     }
 }

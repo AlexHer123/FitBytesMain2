@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.example.alex.fitbytes.R;
 
 /**
  * Created by ger on 11/16/16.

@@ -34,7 +34,7 @@ public class DailyGoal extends Goal {
         setType(Type.DAILY);
     }
     public String toString(){
-        return "Daily: " + getDescription() + (getCompleted()? " (Done)" : "");
+        return "Daily: " + getDescription() + (getCompleted()? " (Done)" : (isExpired()? " (Overdue)" : ""));
     }
     private int getUpdatedDate(){
         Calendar c = Calendar.getInstance();

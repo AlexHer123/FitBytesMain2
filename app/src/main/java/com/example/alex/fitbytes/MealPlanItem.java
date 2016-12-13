@@ -15,7 +15,6 @@ import java.util.Map;
 public class MealPlanItem implements Serializable {
     private int mpDate;
     private int recipeID;
-//    private String recipeName;
     private Map<Integer, String> recipes;
 
     public MealPlanItem(){
@@ -58,7 +57,6 @@ public class MealPlanItem implements Serializable {
     public int getRecipeID(String name){
         List<Map.Entry<Integer, String>> entries = new ArrayList<>(recipes.entrySet());
         for (Map.Entry<Integer, String> entry : entries){
-//            if (entry.getValue().equals(name)) {
             if (name.contains(entry.getValue())){
                 return entry.getKey();
             }

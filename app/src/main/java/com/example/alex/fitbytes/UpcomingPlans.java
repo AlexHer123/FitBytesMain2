@@ -4,9 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,7 +36,6 @@ public class UpcomingPlans extends MainActivity {
         setContentView(R.layout.activity_upcoming_plans);
 
         noPlans = (TextView)findViewById(R.id.textView_up_meals);
-//        mpItems = db.getAllPlans();
         mpItems = db.getAllMealPlans();
         createMeals(convertDates(mpItems));
 
@@ -59,8 +56,6 @@ public class UpcomingPlans extends MainActivity {
         if (requestCode == 1) {
             // Set the selected date values
             if(resultCode == Activity.RESULT_OK){
-//                mpItems = db.getAllPlans();
-//                createMeals(convertDates(mpItems));
 
                 mpItems = db.getAllMealPlans();
                 createMeals(convertDates(mpItems));
@@ -100,8 +95,6 @@ public class UpcomingPlans extends MainActivity {
                 final String selectedRow = parent.getItemAtPosition(position).toString();
                 String[] breakRow = selectedRow.split(" : ");
                 final String rowDate = breakRow[0];
-//                final String rowRecipe = breakRow[1];
-//                final int[] brokenDate = separateDate(rowDate);
 
                 final List<String> recipeNames = mpItems.get(position).getRecipeNames();
                 final int[] brokenDate = separateDate(mpItems.get(position).getDate());

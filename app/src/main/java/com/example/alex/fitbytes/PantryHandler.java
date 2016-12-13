@@ -1,11 +1,8 @@
 package com.example.alex.fitbytes;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -13,7 +10,6 @@ import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -24,7 +20,7 @@ public abstract class PantryHandler extends MainActivity {
 
     private int searchAmount = 100;
     private String searchString;
-    private String mashapeKey = "SHGsb9KyiumshnFBRwVT6uI1GXhpp1e1ymyjsn0ZMG86kcd2xg";
+    private String mashapeKey = "INSERT MASHAPE KEY HERE";
     private ProgressDialog dialog;
 
     @Override
@@ -64,13 +60,7 @@ public abstract class PantryHandler extends MainActivity {
                 dialog.dismiss();
             }
             // Get response as object of objects
-//            JSONObject obj = response.getBody().getObject();
             JSONArray obj = response.getBody().getArray();
-//            try {
-//                for (int i = 0; i < obj.length(); i++) {
-//                    Log.d("ELEMENT " + i, obj.get(i).toString());
-//                }
-//            }catch (JSONException e){e.printStackTrace();}
 
             doIngredientSearch(obj);
         }
